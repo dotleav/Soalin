@@ -4,296 +4,628 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Quiz App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --border: #334155;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --accent: #6366f1;
-    --correct: #16a34a;
-    --wrong: #dc2626;
+    --bg: #0d1117;
+    --bg-alt: #0a0e14;
+    --card: #161b22;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text: #f0f6fc;
+    --text-secondary: #c9d1d9;
+    --muted: #8b949e;
+    --muted2: #6e7681;
+    --muted3: #484f58;
+    --accent: #e8a838;
+    --accent-soft: #e8a83818;
+    --correct: #4ade80;
+    --correct-strong: #16a34a;
+    --wrong: #f87171;
+    --wrong-strong: #ef4444;
+    --blue: #58a6ff;
+    --blue-strong: #1f6feb;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     background: var(--bg);
-    color: var(--text);
-    display: flex;
-    justify-content: center;
-    padding: 24px 16px 80px;
+    color: var(--text-secondary);
   }
-  .wrap { width: 100%; max-width: 720px; }
-  h1 { font-size: 1.4rem; margin-bottom: 4px; }
-  .sub { color: var(--muted); margin-bottom: 20px; font-size: 0.9rem; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .wrap { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
 
-  .progress-bar {
-    height: 6px;
-    background: var(--border);
+  /* ── Sticky header ── */
+  .headerZone { position: sticky; top: 0; z-index: 50; }
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border-light);
+    padding: 12px 0;
+  }
+  .headerInner { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .note {
+    background: #e8a83810;
+    border: 1px solid #e8a83830;
+    border-radius: 8px;
+    padding: 7px 12px;
+    margin-bottom: 10px;
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .note b { color: #e8a83899; font-weight: 600; }
+  .titleRow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  h1 {
+    font-family: "DM Serif Display", Georgia, serif;
+    color: var(--accent);
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .tracker { text-align: right; min-width: 70px; }
+  .tracker .count { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+  .tracker .sub { color: var(--muted2); font-size: 0.65rem; line-height: 1.3; }
+  .tracker .sub .ok { color: var(--correct); }
+
+  .modeBar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 0;
+  }
+  .modeBarInner {
+    max-width: 720px; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .pillBtn {
+    padding: 5px 15px;
     border-radius: 999px;
-    overflow: hidden;
-    margin-bottom: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
   }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.2s ease;
+  .pillBtn.active { background: var(--accent); color: var(--bg); border: none; }
+  .resetBtn {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 0.72rem;
+    color: var(--muted2);
+    background: none;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 999px;
+    transition: all 0.15s;
   }
+  .resetBtn:hover { color: var(--text-secondary); border-color: var(--muted3); }
 
-  .card {
+  /* ── Filter bar ── */
+  .filterBar {
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-alt);
+    padding: 10px 0;
+  }
+  .filterInner {
+    max-width: 720px; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .filterLabel {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 0.68rem; color: var(--muted3); flex-shrink: 0;
+  }
+  .catPill {
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .catPill.active { background: var(--accent); color: var(--bg); font-weight: 700; border: none; }
+  .shuffleBtn {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .shuffleBtn.active { background: var(--accent); color: var(--bg); border: none; }
+
+  /* ── Tracker card (progress) ── */
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+  .progressCard {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 12px 16px;
     margin-bottom: 16px;
   }
-  .qid { color: var(--muted); font-size: 0.8rem; margin-bottom: 6px; }
-  .qtext { font-size: 1.05rem; margin-bottom: 12px; line-height: 1.5; }
-  .qimg, .eximg {
-    max-width: 100%;
-    border-radius: 10px;
-    margin: 8px 0 14px;
-    display: block;
+  .progressTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+  .progressTop .left { font-size: 0.82rem; color: var(--muted); }
+  .progressTop .left .num { color: var(--accent); font-weight: 700; }
+  .progressTop .left .num.total { color: var(--text-secondary); }
+  .statChip { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .progressTrack { background: var(--border-light); border-radius: 999px; height: 5px; overflow: hidden; }
+  .progressFill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.4s ease; }
+
+  .doneBanner {
+    background: var(--accent-soft);
+    border: 1px solid #e8a83840;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .doneBanner .title { color: var(--accent); font-weight: 700; font-size: 0.88rem; }
+  .doneBanner .sub { color: var(--text-secondary); font-size: 0.82rem; }
+
+  /* ── Question card (continuous scroll list) ── */
+  .qList { display: flex; flex-direction: column; gap: 20px; }
+  .qCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .qMeta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .catBadge {
+    font-size: 0.68rem; font-weight: 600;
+    padding: 3px 10px; border-radius: 999px;
+    background: rgba(88,166,255,0.15); color: var(--blue);
+    border: 1px solid rgba(88,166,255,0.3);
+  }
+  .qText { color: var(--text); font-size: 0.88rem; line-height: 1.65; margin: 0 0 16px; }
+  .qNum { font-family: "JetBrains Mono", monospace; color: var(--accent); font-weight: 700; margin-right: 6px; }
+  .qImg, .exImg {
+    width: 100%; object-fit: contain; max-height: 280px;
+    background: #fff; display: block; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 14px;
   }
 
+  .options { display: flex; flex-direction: column; gap: 8px; }
   .option {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 13px;
     border-radius: 10px;
-    margin-bottom: 8px;
+    background: var(--border-light);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
     cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
   }
-  .option:hover { border-color: var(--accent); }
-  .option input { margin-top: 3px; }
-  .option.selected { border-color: var(--accent); background: rgba(99,102,241,0.12); }
-  .option.correct { border-color: var(--correct); background: rgba(22,163,74,0.15); }
-  .option.wrong { border-color: var(--wrong); background: rgba(220,38,38,0.15); }
-  .option .label { font-weight: 600; margin-right: 4px; }
+  .option:hover:not(.locked) { border-color: #e8a83860; }
+  .option.selected { border-color: var(--accent); background: rgba(232,168,56,0.1); }
+  .option.correct { background: rgba(22,163,74,0.13); border-color: #16a34a60; color: #86efac; }
+  .option.wrong { background: rgba(239,68,68,0.13); border-color: #ef444460; color: #fca5a5; }
+  .option.faded { background: var(--card); border-color: var(--border-light); color: var(--muted3); }
+  .letter {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700; font-size: 11px;
+    width: 24px; height: 24px; border-radius: 50%;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); color: var(--muted);
+    margin-top: 1px; transition: all 0.15s;
+  }
+  .letter.correct { background: var(--correct-strong); border: none; color: #fff; }
+  .letter.wrong { background: var(--wrong-strong); border: none; color: #fff; }
+  .letter.faded { border-color: var(--border-light); color: var(--muted3); }
+  .optText { font-size: 0.82rem; line-height: 1.55; flex: 1; }
+  .icon { flex-shrink: 0; margin-top: 2px; font-size: 0.85rem; }
+  .icon.ok { color: var(--correct); }
+  .icon.no { color: var(--wrong); }
 
   .explanation {
-    margin-top: 14px;
+    background: rgba(31,111,235,0.1);
+    border: 1px solid rgba(31,111,235,0.33);
+    border-radius: 10px;
     padding: 14px;
-    border-radius: 10px;
-    background: rgba(99,102,241,0.08);
-    border: 1px solid var(--border);
-    font-size: 0.92rem;
-    line-height: 1.5;
-    display: none;
+    margin-top: 14px;
+    animation: fadeIn 0.25s ease;
   }
-  .explanation.show { display: block; }
-  .explanation .tag { color: var(--accent); font-weight: 600; font-size: 0.8rem; margin-bottom: 6px; }
-
-  .nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; }
-  button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 0.95rem;
-    cursor: pointer;
+  .explanation .tag {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--blue); font-weight: 600; font-size: 0.78rem; margin-bottom: 6px;
   }
-  button.secondary { background: var(--border); color: var(--text); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .explanation p { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.65; margin: 0; }
 
-  .summary { text-align: center; }
-  .summary .score { font-size: 2.2rem; font-weight: 700; margin: 12px 0; }
-  .review-list { text-align: left; margin-top: 20px; }
-  .review-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-  .review-item .status { font-weight: 600; }
-  .review-item .status.ok { color: var(--correct); }
-  .review-item .status.no { color: var(--wrong); }
-
-  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  select {
-    background: var(--card);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 6px 10px;
+  /* ── Bottom finish bar (exam mode) ── */
+  .finishBar {
+    position: sticky; bottom: 0; z-index: 40;
+    background: linear-gradient(to top, var(--bg) 60%, transparent);
+    padding: 20px 0 4px;
+    margin-top: 8px;
   }
+  .finishBtn {
+    width: 100%; padding: 14px;
+    background: var(--accent); color: var(--bg);
+    font-weight: 700; font-size: 1rem;
+    border-radius: 12px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity 0.15s;
+  }
+  .finishBtn:hover { opacity: 0.88; }
+  .finishBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── Summary ── */
+  .scoreHero {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 24px; margin-bottom: 14px; text-align: center;
+  }
+  .scoreHero .trophy { font-size: 2rem; margin-bottom: 8px; }
+  .scoreHero .pct {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(3rem, 15vw, 4.5rem); font-weight: 700; line-height: 1;
+  }
+  .scoreHero .gradeLabel { font-size: 0.9rem; font-weight: 600; margin-top: 6px; }
+  .scoreHero .subline { color: var(--muted2); font-size: 0.78rem; margin-top: 4px; }
+
+  .statsGrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 14px; }
+  .statBox { border-radius: 12px; padding: 14px; text-align: center; border: 1px solid; }
+  .statBox .val { font-family: "JetBrains Mono", monospace; font-size: 1.6rem; font-weight: 700; }
+  .statBox .lbl { font-size: 0.7rem; margin-top: 4px; opacity: 0.8; }
+
+  .restartBtn {
+    width: 100%; padding: 14px;
+    background: var(--accent); color: var(--bg);
+    font-weight: 700; font-size: 1rem;
+    border-radius: 12px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 20px;
+    transition: opacity 0.15s;
+  }
+  .restartBtn:hover { opacity: 0.88; }
+
+  .reviewList { display: flex; flex-direction: column; gap: 16px; }
+
+  .empty { color: var(--muted2); text-align: center; margin-top: 60px; font-size: 0.88rem; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Quiz App</h1>
-  <div class="sub" id="subInfo">Memuat soal...</div>
+<div class="headerZone">
+  <header>
+    <div class="headerInner">
+      <div class="note">🗿 <b>Catatan:</b> Hiya yg lagi blajar.</div>
+      <div class="titleRow">
+        <h1>Quiz App</h1>
+        <div class="tracker" id="trackerBox" style="display:none;">
+          <div class="count mono" id="trackerCount">0/0</div>
+          <div class="sub">dijawab · benar <span class="ok" id="trackerCorrect">0</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <div class="topbar" id="topbar" style="display:none;">
-    <span id="counter"></span>
-    <div style="display:flex; gap:8px;">
-      <select id="categorySelect"></select>
-      <select id="modeSelect">
-        <option value="exam">Mode Ujian (jawaban di akhir)</option>
-        <option value="practice">Mode Latihan (langsung lihat jawaban)</option>
-      </select>
+  <div class="modeBar">
+    <div class="modeBarInner" id="modeBarInner" style="display:none;">
+      <button class="pillBtn active" data-mode="practice" id="modePracticeBtn">Mode Latihan</button>
+      <button class="pillBtn" data-mode="exam" id="modeExamBtn">Mode Ujian</button>
+      <button class="resetBtn" id="resetBtn">↺ Reset</button>
     </div>
   </div>
 
-  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-  <div id="quizArea"></div>
-  <div id="summaryArea" style="display:none;"></div>
+  <div class="filterBar">
+    <div class="filterInner" id="filterInner" style="display:none;">
+      <span class="filterLabel">⚲ Topik:</span>
+      <div id="catPills" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+      <button class="shuffleBtn" id="shuffleBtn">⤨ Acak OFF</button>
+    </div>
+  </div>
 </div>
+
+<main>
+  <div class="empty" id="loadingMsg">Memuat soal...</div>
+  <div id="quizArea" style="display:none;"></div>
+  <div id="summaryArea" style="display:none;"></div>
+</main>
 
 <script type="module">
 import { questions as allQuestions } from "./data/questions.js";
 
 const quizArea = document.getElementById("quizArea");
 const summaryArea = document.getElementById("summaryArea");
-const subInfo = document.getElementById("subInfo");
-const counterEl = document.getElementById("counter");
-const progressFill = document.getElementById("progressFill");
-const topbar = document.getElementById("topbar");
-const modeSelect = document.getElementById("modeSelect");
-const categorySelect = document.getElementById("categorySelect");
+const loadingMsg = document.getElementById("loadingMsg");
+const trackerBox = document.getElementById("trackerBox");
+const trackerCount = document.getElementById("trackerCount");
+const trackerCorrect = document.getElementById("trackerCorrect");
+const modeBarInner = document.getElementById("modeBarInner");
+const filterInner = document.getElementById("filterInner");
+const catPillsEl = document.getElementById("catPills");
+const shuffleBtn = document.getElementById("shuffleBtn");
+const resetBtn = document.getElementById("resetBtn");
+const modePracticeBtn = document.getElementById("modePracticeBtn");
+const modeExamBtn = document.getElementById("modeExamBtn");
 
-let current = 0;
-let answers = {}; // id -> chosen letter
-let mode = "exam";
+let answers = {};      // id -> chosen letter
+let mode = "practice";  // "practice" | "exam"
+let category = "Semua Kategori";
+let shuffleOn = false;
+let finished = false;  // exam mode: true after "Lihat Hasil" pressed
 let questions = allQuestions;
+let baseOrder = allQuestions;
 
 const categories = ["Semua Kategori", ...new Set(allQuestions.map(q => q.category).filter(Boolean))];
 
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 if (!allQuestions || allQuestions.length === 0) {
-  subInfo.textContent = "Belum ada soal. Tambahkan manual di data/questions.js atau jalankan: npm run convert -- file.docx";
+  loadingMsg.textContent = "Belum ada soal. Tambahkan manual di data/questions.js atau jalankan: npm run convert -- file.docx";
 } else {
-  subInfo.textContent = `${allQuestions.length} soal dimuat.`;
-  topbar.style.display = "flex";
-  categorySelect.innerHTML = categories.map(c => `<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join("");
+  loadingMsg.style.display = "none";
+  quizArea.style.display = "block";
+  trackerBox.style.display = "block";
+  modeBarInner.style.display = "flex";
+  filterInner.style.display = "flex";
+
+  catPillsEl.innerHTML = categories.map(c =>
+    `<button class="catPill${c === category ? " active" : ""}" data-cat="${escapeAttr(c)}">${escapeHtml(c === "Semua Kategori" ? "Semua" : c)}</button>`
+  ).join("");
+
+  applyFilter();
   render();
 }
 
-categorySelect.addEventListener("change", () => {
-  const val = categorySelect.value;
-  questions = val === "Semua Kategori" ? allQuestions : allQuestions.filter(q => q.category === val);
-  current = 0;
-  answers = {};
-  quizArea.style.display = "block";
-  topbar.style.display = "flex";
-  summaryArea.style.display = "none";
+catPillsEl.addEventListener("click", (e) => {
+  const btn = e.target.closest(".catPill");
+  if (!btn) return;
+  category = btn.dataset.cat;
+  [...catPillsEl.children].forEach(b => b.classList.toggle("active", b.dataset.cat === category));
+  applyFilter();
   render();
 });
 
-modeSelect.addEventListener("change", () => {
-  mode = modeSelect.value;
+shuffleBtn.addEventListener("click", () => {
+  shuffleOn = !shuffleOn;
+  shuffleBtn.classList.toggle("active", shuffleOn);
+  shuffleBtn.textContent = `⤨ Acak ${shuffleOn ? "ON" : "OFF"}`;
+  applyFilter();
   render();
 });
+
+modePracticeBtn.addEventListener("click", () => switchMode("practice"));
+modeExamBtn.addEventListener("click", () => switchMode("exam"));
+
+function switchMode(m) {
+  if (m === mode) return;
+  mode = m;
+  finished = false;
+  modePracticeBtn.classList.toggle("active", mode === "practice");
+  modeExamBtn.classList.toggle("active", mode === "exam");
+  render();
+}
+
+resetBtn.addEventListener("click", () => {
+  answers = {};
+  finished = false;
+  render();
+});
+
+function applyFilter() {
+  const base = category === "Semua Kategori" ? allQuestions : allQuestions.filter(q => q.category === category);
+  baseOrder = base;
+  questions = shuffleOn ? shuffleArray(base) : base;
+}
+
+function updateTracker() {
+  const answeredCount = questions.filter(q => answers[q.id] !== undefined).length;
+  const correctCount = questions.filter(q => answers[q.id] === q.answer).length;
+  trackerCount.textContent = `${answeredCount}/${questions.length}`;
+  trackerCorrect.textContent = correctCount;
+}
 
 function render() {
-  if (current >= questions.length) return renderSummary();
+  summaryArea.style.display = "none";
+  quizArea.style.display = "block";
+  updateTracker();
 
-  const q = questions[current];
-  counterEl.textContent = `Soal ${current + 1} / ${questions.length}`;
-  progressFill.style.width = `${((current) / questions.length) * 100}%`;
+  if (questions.length === 0) {
+    quizArea.innerHTML = `<div class="empty">Tidak ada soal pada kategori ini.</div>`;
+    return;
+  }
 
-  const chosen = answers[q.id];
-  const answered = chosen !== undefined;
-  const showAnswer = mode === "practice" && answered;
+  const answeredCount = questions.filter(q => answers[q.id] !== undefined).length;
+  const correctCount = questions.filter(q => answers[q.id] === q.answer).length;
+  const pct = questions.length > 0 ? Math.round((answeredCount / questions.length) * 100) : 0;
+  const allAnswered = answeredCount === questions.length;
+  const revealAll = mode === "practice" || (mode === "exam" && finished);
 
-  quizArea.innerHTML = `
-    <div class="card">
-      <div class="qid">ID: ${escapeHtml(q.id)}${q.category ? ` · ${escapeHtml(q.category)}` : ""}</div>
-      <div class="qtext">${escapeHtml(q.question)}</div>
-      ${(q.questionImages || []).map(src => `<img class="qimg" src="${src}" alt="gambar soal">`).join("")}
-      <div class="options">
-        ${Object.entries(q.options).map(([letter, text]) => {
-          let cls = "option";
-          if (chosen === letter) cls += " selected";
-          if (showAnswer) {
-            if (letter === q.answer) cls += " correct";
-            else if (letter === chosen) cls += " wrong";
-          }
-          return `
-            <label class="${cls}" data-letter="${letter}">
-              <input type="radio" name="opt" value="${letter}" ${chosen === letter ? "checked" : ""}>
-              <span><span class="label">${letter}.</span>${escapeHtml(text)}</span>
-            </label>
-          `;
-        }).join("")}
-      </div>
-      ${mode === "practice" ? `
-        <div class="explanation ${showAnswer ? "show" : ""}" id="expBox">
-          <div class="tag">Penjelasan</div>
-          <div>${escapeHtml(q.explanation || "(tidak ada penjelasan)")}</div>
-          ${(q.explanationImages || []).map(src => `<img class="eximg" src="${src}" alt="gambar penjelasan">`).join("")}
+  let html = `
+    <div class="progressCard">
+      <div class="progressTop">
+        <span class="left">Sudah dijawab: <span class="num mono">${answeredCount}</span> / Total: <span class="num total mono">${questions.length}</span></span>
+        <div style="display:flex; gap:12px;">
+          <span class="statChip"><span class="dot" style="background:var(--correct);"></span><span class="mono" style="color:var(--correct); font-weight:700;">${correctCount}</span><span style="color:var(--muted2);">benar</span></span>
+          <span class="statChip"><span class="dot" style="background:var(--wrong);"></span><span class="mono" style="color:var(--wrong); font-weight:700;">${answeredCount - correctCount}</span><span style="color:var(--muted2);">salah</span></span>
         </div>
-      ` : ""}
-      <div class="nav">
-        <button class="secondary" id="prevBtn" ${current === 0 ? "disabled" : ""}>Sebelumnya</button>
-        <button id="nextBtn">${current === questions.length - 1 ? "Selesai" : "Berikutnya"}</button>
       </div>
+      <div class="progressTrack"><div class="progressFill" style="width:${pct}%;"></div></div>
     </div>
   `;
 
-  quizArea.querySelectorAll(".option").forEach(opt => {
+  if (mode === "practice" && allAnswered) {
+    html += `
+      <div class="doneBanner">
+        <span style="font-size:1.3rem;">🏆</span>
+        <div>
+          <span class="title">Selesai! </span>
+          <span class="sub">Skor akhir: ${correctCount}/${questions.length} (${Math.round((correctCount/questions.length)*100)}%)</span>
+        </div>
+      </div>
+    `;
+  }
+
+  html += `<div class="qList">`;
+  questions.forEach((q, idx) => {
+    html += renderQuestionCard(q, idx + 1, revealAll);
+  });
+  html += `</div>`;
+
+  if (mode === "exam" && !finished) {
+    html += `
+      <div class="finishBar">
+        <button class="finishBtn" id="finishBtn" ${answeredCount === 0 ? "disabled" : ""}>🏁 Lihat Hasil (${answeredCount}/${questions.length} dijawab)</button>
+      </div>
+    `;
+  }
+
+  quizArea.innerHTML = html;
+
+  quizArea.querySelectorAll(".option[data-letter]").forEach(opt => {
     opt.addEventListener("click", () => {
+      const qid = opt.dataset.qid;
       const letter = opt.dataset.letter;
-      answers[q.id] = letter;
+      if (answers[qid] !== undefined) return;
+      answers[qid] = letter;
       render();
     });
   });
 
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    current = Math.max(0, current - 1);
-    render();
-  });
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    current += 1;
-    render();
-  });
+  const finishBtn = document.getElementById("finishBtn");
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      finished = true;
+      renderSummary();
+    });
+  }
+}
+
+function renderQuestionCard(q, qNum, revealAnswer) {
+  const chosen = answers[q.id];
+  const isAnswered = chosen !== undefined;
+  const showState = revealAnswer && isAnswered;
+
+  const optionsHtml = Object.entries(q.options).map(([letter, text]) => {
+    let cls = "option";
+    let letterCls = "letter";
+    let icon = "";
+    const locked = isAnswered ? "locked" : "";
+
+    if (!showState) {
+      if (chosen === letter) cls += " selected";
+    } else {
+      if (letter === q.answer) {
+        cls += " correct"; letterCls += " correct";
+        if (chosen === letter) icon = `<span class="icon ok">✓</span>`;
+      } else if (letter === chosen) {
+        cls += " wrong"; letterCls += " wrong";
+        icon = `<span class="icon no">✕</span>`;
+      } else {
+        cls += " faded"; letterCls += " faded";
+      }
+    }
+
+    return `
+      <button class="${cls} ${locked}" data-qid="${escapeAttr(q.id)}" data-letter="${escapeAttr(letter)}">
+        <span class="${letterCls}">${letter}</span>
+        <span class="optText">${escapeHtml(text)}</span>
+        ${icon}
+      </button>
+    `;
+  }).join("");
+
+  const explanationHtml = showState ? `
+    <div class="explanation">
+      <div class="tag">📖 Penjelasan</div>
+      <p>${escapeHtml(q.explanation || "(tidak ada penjelasan)")}</p>
+      ${(q.explanationImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")}
+    </div>
+  ` : "";
+
+  return `
+    <div class="qCard">
+      <div class="qMeta">
+        ${q.category ? `<span class="catBadge">${escapeHtml(q.category)}</span>` : ""}
+      </div>
+      <p class="qText"><span class="qNum mono">${qNum}.</span>${escapeHtml(q.question)}</p>
+      ${(q.questionImages || []).map(src => `<img class="qImg" src="${src}" alt="gambar soal">`).join("")}
+      <div class="options">${optionsHtml}</div>
+      ${explanationHtml}
+    </div>
+  `;
 }
 
 function renderSummary() {
   quizArea.style.display = "none";
-  topbar.style.display = "none";
-  progressFill.style.width = "100%";
   summaryArea.style.display = "block";
 
   let correctCount = 0;
-  const reviewHtml = questions.map(q => {
+  let wrongCount = 0;
+  let skipped = 0;
+  questions.forEach(q => {
     const chosen = answers[q.id];
-    const isCorrect = chosen === q.answer;
-    if (isCorrect) correctCount++;
-    return `
-      <div class="review-item">
-        <div class="status ${isCorrect ? "ok" : "no"}">${isCorrect ? "✓ Benar" : "✗ Salah"}</div>
-        <div>${escapeHtml(q.question)}</div>
-        <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">
-          Jawabanmu: ${chosen ? `${chosen}. ${escapeHtml(q.options[chosen] || "")}` : "(tidak dijawab)"}<br>
-          Kunci: ${q.answer}. ${escapeHtml(q.options[q.answer] || "")}
-        </div>
-        ${q.explanation ? `<div style="margin-top:6px;font-size:0.85rem;">${escapeHtml(q.explanation)}</div>` : ""}
-        ${(q.explanationImages || []).map(src => `<img class="eximg" src="${src}" alt="gambar penjelasan">`).join("")}
-      </div>
-    `;
-  }).join("");
+    if (chosen === undefined) skipped++;
+    else if (chosen === q.answer) correctCount++;
+    else wrongCount++;
+  });
 
-  const pct = Math.round((correctCount / questions.length) * 100);
+  const total = questions.length;
+  const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+  const gradeColor = pct >= 80 ? "var(--correct)" : pct >= 60 ? "var(--accent)" : "var(--wrong)";
+  const gradeLabel = pct >= 80 ? "Sangat Baik" : pct >= 60 ? "Cukup Baik" : "Perlu Belajar Lagi";
 
-  summaryArea.innerHTML = `
-    <div class="card summary">
-      <div>Hasil Quiz</div>
-      <div class="score">${correctCount} / ${questions.length}</div>
-      <div style="color:var(--muted);">${pct}% benar</div>
-      <button id="restartBtn" style="margin-top:14px;">Ulangi Quiz</button>
-      <div class="review-list">${reviewHtml}</div>
+  let html = `
+    <div class="scoreHero">
+      <div class="trophy">🏆</div>
+      <div class="pct" style="color:${gradeColor};">${pct}%</div>
+      <div class="gradeLabel" style="color:${gradeColor};">${gradeLabel}</div>
+      <div class="subline">${correctCount} dari ${total} soal benar</div>
     </div>
+    <div class="statsGrid">
+      <div class="statBox" style="background:#16a34a20; border-color:#16a34a40; color:var(--correct);">
+        <div class="val mono">${correctCount}</div><div class="lbl">Benar</div>
+      </div>
+      <div class="statBox" style="background:#ef444420; border-color:#ef444440; color:var(--wrong);">
+        <div class="val mono">${wrongCount}</div><div class="lbl">Salah</div>
+      </div>
+    </div>
+    ${skipped > 0 ? `<div style="text-align:center; color:var(--muted2); font-size:0.78rem; margin-bottom:14px;">${skipped} soal tidak dijawab</div>` : ""}
+    <button class="restartBtn" id="restartBtn">↺ Ulangi Quiz</button>
+    <div class="reviewList">
   `;
 
+  questions.forEach((q, idx) => {
+    html += renderQuestionCard(q, idx + 1, true);
+  });
+
+  html += `</div>`;
+  summaryArea.innerHTML = html;
+
   document.getElementById("restartBtn").addEventListener("click", () => {
-    current = 0;
     answers = {};
-    quizArea.style.display = "block";
-    topbar.style.display = "flex";
-    summaryArea.style.display = "none";
+    finished = false;
     render();
+  });
+
+  // Review cards are static (no click handlers needed since already answered)
+  summaryArea.querySelectorAll(".option[data-letter]").forEach(opt => {
+    opt.style.cursor = "default";
   });
 }
 
