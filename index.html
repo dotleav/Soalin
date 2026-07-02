@@ -48,17 +48,6 @@
     padding: 12px 0;
   }
   .headerInner { max-width: 720px; margin: 0 auto; padding: 0 16px; }
-  .note {
-    background: #e8a83810;
-    border: 1px solid #e8a83830;
-    border-radius: 8px;
-    padding: 7px 12px;
-    margin-bottom: 10px;
-    font-size: 0.7rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-  .note b { color: #e8a83899; font-weight: 600; }
   .titleRow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
   h1 {
     font-family: "DM Serif Display", Georgia, serif;
@@ -109,11 +98,11 @@
   .resetBtn:hover { color: var(--text-secondary); border-color: var(--muted3); }
 
   .hideToggleBtn {
-    display: flex; align-items: center; gap: 4px;
-    font-size: 0.72rem;
+    display: flex; align-items: center; justify-content: center;
     background: none;
     cursor: pointer;
-    padding: 4px 9px;
+    width: 30px; height: 28px;
+    padding: 0;
     border-radius: 999px;
     transition: all 0.2s;
     flex-shrink: 0;
@@ -121,8 +110,11 @@
     color: var(--muted2);
   }
   .hideToggleBtn.active { color: var(--accent); border-color: #e8a83860; }
-  .hideToggleBtn .arrow { display: inline-block; transition: transform 0.3s; font-size: 0.8rem; }
+  .hideToggleBtn .arrow { display: inline-block; transition: transform 0.3s; font-size: 0.85rem; }
   .hideToggleBtn.active .arrow { transform: rotate(180deg); }
+
+  /* Saat header disembunyikan, hanya tombol toggle yang tetap tampil */
+  .modeBarInner.onlyToggle > *:not(.hideToggleBtn) { display: none; }
 
   .muteBtn {
     background: none;
@@ -147,24 +139,7 @@
     max-width: 720px; margin: 0 auto; padding: 0 16px;
     display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
   }
-  .filterLabel {
-    display: flex; align-items: center; gap: 3px;
-    font-size: 0.68rem; color: var(--muted3); flex-shrink: 0;
-  }
-  .catPill {
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 0.68rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .catPill.active { background: var(--accent); color: var(--bg); font-weight: 700; border: none; }
   .shuffleBtn {
-    margin-left: auto;
     display: flex; align-items: center; gap: 4px;
     padding: 3px 10px;
     border-radius: 999px;
@@ -216,14 +191,8 @@
     padding: 20px;
     animation: fadeIn 0.3s ease;
   }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { transform: translateY(6px); } to { transform: translateY(0); } }
   .qMeta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-  .catBadge {
-    font-size: 0.68rem; font-weight: 600;
-    padding: 3px 10px; border-radius: 999px;
-    background: rgba(88,166,255,0.15); color: var(--blue);
-    border: 1px solid rgba(88,166,255,0.3);
-  }
   .imgBadge { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: var(--blue); }
   .qText { color: var(--text); font-size: 0.88rem; line-height: 1.65; margin: 0 0 16px; }
   .qNum { font-family: "JetBrains Mono", monospace; color: var(--accent); font-weight: 700; margin-right: 6px; }
@@ -348,7 +317,7 @@
 
   @keyframes timerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
   @keyframes timeoutFlash { 0%, 100% { background-color: transparent; } 50% { background-color: rgba(239, 68, 68, 0.08); } }
-  @keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideDown { from { transform: translateY(-8px); } to { transform: translateY(0); } }
 
   .timeoutNotice {
     background: rgba(239,68,68,0.09); border: 1px solid rgba(239,68,68,0.25);
@@ -418,7 +387,6 @@ import { questions as allQuestions } from "./data/questions.js";
 const LOAD_BATCH = 15; // jumlah soal yang dimuat sekaligus, biar Mode Latihan gak lag
 const LS_KEY = "soalin_biasa_progress";
 const MUTE_KEY = "soalin_muted";
-const ALL_CAT = "Semua Kategori";
 
 const DIFFICULTY_CONFIG = {
   cheetah:  { label: "Cheetah",      emoji: "🐆", timerSeconds: 30,  desc: "am fast boi",                          color: "#f59e0b" },
@@ -427,18 +395,7 @@ const DIFFICULTY_CONFIG = {
   bekicot:  { label: "Bekicot",      emoji: "🐌", timerSeconds: 0,   desc: "mode biasa aja kalau gitu",            color: "#c084fc" },
 };
 
-const CATEGORY_PALETTE = [
-  { bg: "rgba(88,166,255,0.15)",  color: "#58a6ff", border: "rgba(88,166,255,0.3)" },
-  { bg: "rgba(74,222,128,0.15)",  color: "#4ade80", border: "rgba(74,222,128,0.3)" },
-  { bg: "rgba(192,132,252,0.15)", color: "#c084fc", border: "rgba(192,132,252,0.3)" },
-  { bg: "rgba(251,146,60,0.15)",  color: "#fb923c", border: "rgba(251,146,60,0.3)" },
-  { bg: "rgba(248,113,113,0.15)", color: "#f87171", border: "rgba(248,113,113,0.3)" },
-  { bg: "rgba(250,204,21,0.15)",  color: "#facc15", border: "rgba(250,204,21,0.3)" },
-  { bg: "rgba(45,212,191,0.15)",  color: "#2dd4bf", border: "rgba(45,212,191,0.3)" },
-];
-
 const app = document.getElementById("app");
-const categories = [ALL_CAT, ...new Set(allQuestions.map(q => q.category).filter(Boolean))];
 
 // ── Utils ──────────────────────────────────────────────────────────────────
 function shuffleArray(arr) {
@@ -456,15 +413,6 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;");
 }
 function escapeAttr(str) { return escapeHtml(str); }
-function hashStr(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-  return Math.abs(h);
-}
-function catColorFor(cat) {
-  if (!cat) return CATEGORY_PALETTE[0];
-  return CATEGORY_PALETTE[hashStr(cat) % CATEGORY_PALETTE.length];
-}
 
 // ── Audio (benar/salah) ──────────────────────────────────────────────────
 const audioBenar = new Audio("./benar.mp3");
@@ -497,7 +445,6 @@ function loadBiasa() {
 function saveBiasa() {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify({
-      selectedCategory: biasaCategory,
       shuffleOn: biasaShuffleOn,
       answersMap: biasaAnswersMap,
     }));
@@ -513,15 +460,13 @@ let headerHidden = false;
 
 // Mode Latihan (biasa) — dipersist ke localStorage
 let biasaLoaded = false;
-let biasaCategory = ALL_CAT;
 let biasaShuffleOn = false;
 let biasaAnswersMap = {}; // id soal -> huruf jawaban
 let biasaVisibleCount = LOAD_BATCH;
-let shuffleOrderCache = {}; // cache urutan acak per kategori, biar stabil saat pindah2 kategori
+let shuffleOrderCache = {}; // cache urutan acak, biar stabil selama sesi
 
 // Mode Tentamen — ephemeral, tidak disimpan
 let tentamenState = "setup"; // "setup" | "running" | "finished"
-let tentamenCategory = ALL_CAT;
 let tentamenShuffleOn = false;
 let tentamenDifficulty = "normal";
 let tentamenQuestions = [];
@@ -536,7 +481,6 @@ let tentamenAdvanceHandle = null;
 function initBiasa() {
   const saved = loadBiasa();
   if (saved) {
-    biasaCategory = saved.selectedCategory || ALL_CAT;
     biasaShuffleOn = !!saved.shuffleOn;
     biasaAnswersMap = saved.answersMap || {};
   }
@@ -544,18 +488,17 @@ function initBiasa() {
   biasaLoaded = true;
 }
 
-// ── Mode Latihan: hitung daftar soal aktif (kategori + shuffle) ──────────
+// ── Mode Latihan: hitung daftar soal aktif (shuffle) ─────────────────────
 function computeBiasaAll() {
-  const base = biasaCategory === ALL_CAT ? allQuestions : allQuestions.filter(q => q.category === biasaCategory);
+  const key = "__shuffle";
   if (!biasaShuffleOn) {
-    delete shuffleOrderCache[biasaCategory + "__shuffle"];
-    return base;
+    delete shuffleOrderCache[key];
+    return allQuestions;
   }
-  const key = biasaCategory + "__shuffle";
   const cached = shuffleOrderCache[key];
-  const baseIds = new Set(base.map(q => q.id));
-  if (cached && cached.length === base.length && cached.every(q => baseIds.has(q.id))) return cached;
-  const shuffled = shuffleArray(base);
+  const baseIds = new Set(allQuestions.map(q => q.id));
+  if (cached && cached.length === allQuestions.length && cached.every(q => baseIds.has(q.id))) return cached;
+  const shuffled = shuffleArray(allQuestions);
   shuffleOrderCache[key] = shuffled;
   return shuffled;
 }
@@ -566,15 +509,6 @@ function handleResetBiasa() {
   biasaAnswersMap = {};
   biasaVisibleCount = LOAD_BATCH;
   shuffleOrderCache = {};
-  render();
-}
-function handleBiasaFilterChange(cat) {
-  biasaCategory = cat;
-  const allQ = computeBiasaAll();
-  const answeredInCat = allQ.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
-  const minVisible = Math.max(answeredInCat + LOAD_BATCH, LOAD_BATCH);
-  biasaVisibleCount = Math.min(minVisible, allQ.length || LOAD_BATCH);
-  saveBiasa();
   render();
 }
 function handleBiasaShuffleToggle() {
@@ -615,13 +549,36 @@ function startTentamenTimerLoop() {
       tentamenAdvanceHandle = setTimeout(advanceOrFinish, 1800);
     } else {
       timeLeft -= 1;
-      render();
+      updateTimerDOM();
     }
   }, 1000);
 }
+
+// ── Update tampilan timer secara langsung (tanpa render ulang seluruh halaman) ──
+// Ini mencegah "blink" karena kartu soal & animasi ikut dibuat ulang tiap detik.
+function updateTimerDOM() {
+  const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
+  const maxTime = cfg.timerSeconds || 1;
+  const isUrgent = timeLeft <= 10 && tentamenDifficulty !== "bekicot";
+  const timerPct = (timeLeft / maxTime) * 100;
+  const timerNumEl = document.getElementById("timerNum");
+  const timerFillEl = document.getElementById("timerFill");
+  const timerCardEl = document.getElementById("timerCard");
+  const timerLabelEl = document.getElementById("timerLabel");
+  if (!timerNumEl || !timerFillEl || !timerCardEl) return;
+
+  timerNumEl.textContent = String(timeLeft).padStart(2, "0");
+  timerNumEl.style.color = isUrgent ? "var(--wrong-strong)" : cfg.color;
+  timerNumEl.classList.toggle("pulse", isUrgent);
+
+  timerFillEl.style.width = timerPct + "%";
+  timerFillEl.style.background = isUrgent ? "var(--wrong-strong)" : cfg.color;
+
+  timerCardEl.classList.toggle("urgent", isUrgent);
+  if (timerLabelEl) timerLabelEl.classList.toggle("urgent", isUrgent);
+}
 function handleStartTentamen() {
-  const base = tentamenCategory === ALL_CAT ? allQuestions : allQuestions.filter(q => q.category === tentamenCategory);
-  const qs = tentamenShuffleOn ? shuffleArray(base) : base;
+  const qs = tentamenShuffleOn ? shuffleArray(allQuestions) : allQuestions;
   if (!qs.length) return;
   tentamenQuestions = qs;
   tentamenAnswers = new Array(qs.length).fill(null);
@@ -694,7 +651,6 @@ window.addEventListener("beforeunload", (e) => {
 function renderQuestionCard(q, qNum, chosen, revealAnswer) {
   const isAnswered = chosen !== undefined && chosen !== null;
   const showState = revealAnswer && isAnswered;
-  const cc = catColorFor(q.category);
 
   const optionsHtml = Object.entries(q.options).map(([letter, text]) => {
     let cls = "option";
@@ -740,7 +696,6 @@ function renderQuestionCard(q, qNum, chosen, revealAnswer) {
   return `
     <div class="qCard">
       <div class="qMeta">
-        ${q.category ? `<span class="catBadge" style="background:${cc.bg}; color:${cc.color}; border-color:${cc.border};">${escapeHtml(q.category)}</span>` : ""}
         ${(q.questionImages || []).length > 0 ? `<span class="imgBadge">\uD83D\uDDBC\uFE0F Bergambar</span>` : ""}
       </div>
       <p class="qText"><span class="qNum mono">${qNum}.</span>${escapeHtml(q.question)}</p>
@@ -775,7 +730,6 @@ function renderHeaderZone() {
   }
 
   const showFilterBar = quizMode === "biasa" || (quizMode === "tentamen" && tentamenState === "setup");
-  const activeCategory = quizMode === "biasa" ? biasaCategory : tentamenCategory;
   const activeShuffle = quizMode === "biasa" ? biasaShuffleOn : tentamenShuffleOn;
   const showReset = (quizMode === "biasa" && biasaLoaded) || (quizMode === "tentamen" && tentamenState !== "setup");
 
@@ -784,7 +738,6 @@ function renderHeaderZone() {
       <div class="headerCollapse${headerHidden ? " hidden" : ""}">
         <header>
           <div class="headerInner">
-            <div class="note">\uD83D\uDDFF <b>Catatan:</b> Soal ini dibuat untuk latihan dan tidak menjamin akan sama persis dengan soal ujian sesungguhnya.</div>
             <div class="titleRow">
               <h1>Quiz App</h1>
               ${trackerHtml}
@@ -794,9 +747,9 @@ function renderHeaderZone() {
       </div>
 
       <div class="modeBar">
-        <div class="modeBarInner">
-          <button class="hideToggleBtn${headerHidden ? " active" : ""}" id="hideHeaderBtn" title="${headerHidden ? "Tampilkan header" : "Sembunyikan header"}">
-            <span class="arrow">\u25B2</span> ${headerHidden ? "Tampilkan" : "Sembunyikan"}
+        <div class="modeBarInner${headerHidden ? " onlyToggle" : ""}">
+          <button class="hideToggleBtn${headerHidden ? " active" : ""}" id="hideHeaderBtn" title="${headerHidden ? "Tampilkan header" : "Sembunyikan header"}" aria-label="${headerHidden ? "Tampilkan header" : "Sembunyikan header"}">
+            <span class="arrow">\u25B2</span>
           </button>
           <button class="muteBtn${isMuted ? "" : " on"}" id="muteBtn" title="${isMuted ? "Nyalakan suara" : "Matikan suara"}">${isMuted ? "\uD83D\uDD07" : "\uD83D\uDD0A"}</button>
           <button class="pillBtn${quizMode === "biasa" ? " active" : ""}" data-mode="biasa">Mode Latihan</button>
@@ -805,13 +758,9 @@ function renderHeaderZone() {
         </div>
       </div>
 
-      ${showFilterBar ? `
+      ${showFilterBar && !headerHidden ? `
       <div class="filterBar">
         <div class="filterInner">
-          <span class="filterLabel">\u269B Topik:</span>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            ${categories.map(c => `<button class="catPill${activeCategory === c ? " active" : ""}" data-cat="${escapeAttr(c)}">${escapeHtml(c === ALL_CAT ? "Semua" : c)}</button>`).join("")}
-          </div>
           <button class="shuffleBtn${activeShuffle ? " active" : ""}" id="shuffleBtn">\u2928 Acak ${activeShuffle ? "ON" : "OFF"}</button>
         </div>
       </div>` : ""}
@@ -876,7 +825,7 @@ function renderBiasaMode() {
 
 // ── Render: Tentamen — setup ──────────────────────────────────────────────
 function renderTentamenSetup() {
-  const qCount = (tentamenCategory === ALL_CAT ? allQuestions : allQuestions.filter(q => q.category === tentamenCategory)).length;
+  const qCount = allQuestions.length;
   const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
   const timerSec = cfg.timerSeconds;
   const estLabel = (() => {
@@ -948,16 +897,16 @@ function renderTentamenRunning() {
   if (total > 15) html += `<span class="dotsOverflow">+${total - 15}</span>`;
   html += `</div></div>`;
 
-  html += `<div class="timerCard${isUrgent ? " urgent" : ""}${isTimeout ? " timeoutFlash" : ""}">
+  html += `<div class="timerCard${isUrgent ? " urgent" : ""}${isTimeout ? " timeoutFlash" : ""}" id="timerCard">
     <div class="timerTop">
-      <div class="timerLabel${isUrgent ? " urgent" : ""}">
+      <div class="timerLabel${isUrgent ? " urgent" : ""}" id="timerLabel">
         \u23F1 ${tentamenDifficulty === "bekicot" ? "No timer \uD83D\uDC0C" : isAnswering ? "Waktu tersisa" : isTimeout ? "Waktu habis!" : "Selesai"}
       </div>
-      <span class="timerNum${isUrgent ? " pulse" : ""}" style="color:${isUrgent ? "var(--wrong-strong)" : cfg.color};">
+      <span class="timerNum${isUrgent ? " pulse" : ""}" id="timerNum" style="color:${isUrgent ? "var(--wrong-strong)" : cfg.color};">
         ${tentamenDifficulty === "bekicot" ? "\u221E" : String(isAnswering ? timeLeft : isTimeout ? 0 : timeLeft).padStart(2, "0")}
       </span>
     </div>
-    <div class="timerTrack"><div class="timerFill" style="background:${isUrgent ? "var(--wrong-strong)" : cfg.color}; width:${tentamenDifficulty === "bekicot" ? 100 : isAnswering ? timerPct : isTimeout ? 0 : 100}%;"></div></div>
+    <div class="timerTrack"><div class="timerFill" id="timerFill" style="background:${isUrgent ? "var(--wrong-strong)" : cfg.color}; width:${tentamenDifficulty === "bekicot" ? 100 : isAnswering ? timerPct : isTimeout ? 0 : 100}%;"></div></div>
   </div>`;
 
   html += renderQuestionCard(q, qNum, tentamenAnswers[currentIdx], qPhase !== "answering");
@@ -1075,13 +1024,6 @@ function attachHandlers() {
   if (resetBtn) resetBtn.addEventListener("click", () => {
     if (quizMode === "biasa") handleResetBiasa();
     else handleResetTentamen();
-  });
-
-  app.querySelectorAll(".catPill[data-cat]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (quizMode === "biasa") handleBiasaFilterChange(btn.dataset.cat);
-      else { tentamenCategory = btn.dataset.cat; render(); }
-    });
   });
 
   const shuffleBtnEl = document.getElementById("shuffleBtn");
