@@ -166,8 +166,10 @@ export const questions = [
   {
     "id": "Q11",
     "category": "",
-    "question": "Perhatikan gambaran EKG berikut. Apakah diagnosis irama jantung yang paling tepat?",
-    "questionImages": [],
+    "question": "Perhatikan gambaran EKG berikut. Apakah diagnosis irama jantung yang paling tepat? ",
+    "questionImages": [
+      "images/img-001.png"
+    ],
     "options": {
       "A": "Ventricular fibrillation",
       "B": "Ventricular tachycardia monomorfik",
@@ -184,7 +186,7 @@ export const questions = [
     "category": "",
     "question": "Torsades de Pointes paling sering dipicu oleh fenomena... ",
     "questionImages": [
-      "images/img-001.png"
+      "images/img-002.png"
     ],
     "options": {
       "A": "Wenckebach phenomenon",
@@ -200,10 +202,8 @@ export const questions = [
   {
     "id": "Q13",
     "category": "",
-    "question": "Seorang pasien tuberkulosis paru telah menjalani pengobatan OAT selama 2 bulan. Hasil BTA sudah negatif dan foto toraks menunjukkan perbaikan. Pasien kemudian pergi ke luar kota sehingga menghentikan pengobatan selama 1 minggu. Tata laksana yang paling tepat adalah... ",
-    "questionImages": [
-      "images/img-002.png"
-    ],
+    "question": "Seorang pasien tuberkulosis paru telah menjalani pengobatan OAT selama 2 bulan. Hasil BTA sudah negatif dan foto toraks menunjukkan perbaikan. Pasien kemudian pergi ke luar kota sehingga menghentikan pengobatan selama 1 minggu. Tata laksana yang paling tepat adalah...",
+    "questionImages": [],
     "options": {
       "A": "Mengulang pengobatan OAT dari awal",
       "B": "Melanjutkan pengobatan OAT sesuai regimen sebelumnya",
@@ -840,8 +840,10 @@ export const questions = [
   {
     "id": "Q50",
     "category": "",
-    "question": "Pada pemeriksaan patologi anatomi jantung ditemukan Aschoff bodies (Aschoff nodules). Temuan tersebut paling khas untuk...",
-    "questionImages": [],
+    "question": "Pada pemeriksaan patologi anatomi jantung ditemukan Aschoff bodies (Aschoff nodules). Temuan tersebut paling khas untuk... ",
+    "questionImages": [
+      "images/img-028.png"
+    ],
     "options": {
       "A": "Endokarditis infektif",
       "B": "Kardiomiopati dilatasi",
@@ -852,7 +854,6 @@ export const questions = [
     "answer": "E",
     "explanation": "Aschoff bodies merupakan lesi patognomonik pada Rheumatic Heart Disease (penyakit jantung rematik) yang terjadi sebagai komplikasi demam rematik akut akibat infeksi Streptococcus pyogenes. ",
     "explanationImages": [
-      "images/img-028.png",
       "images/img-029.png"
     ]
   },
@@ -981,7 +982,7 @@ export const questions = [
   {
     "id": "Q58",
     "category": "",
-    "question": "Perhatikan gambar ekokardiografi berikut. Pasien datang dengan hipotensi, distensi vena jugularis, dan bunyi jantung melemah. Diagnosis yang paling tepat adalah...",
+    "question": "Perhatikan gambar ekokardiografi berikut. Pasien datang dengan hipotensi, distensi vena jugularis, dan bunyi jantung melemah. Diagnosis yang paling tepat adalah... ",
     "questionImages": [
       "images/img-035.png"
     ],
