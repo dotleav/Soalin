@@ -1,0 +1,12 @@
+{
+  "name": "quiz-app",
+  "version": "1.0.0",
+  "description": "Quiz app dengan konversi otomatis soal dari file .docx",
+  "type": "module",
+  "scripts": {
+    "convert": "node scripts/convert-docx.js"
+  },
+  "dependencies": {
+    "mammoth": "^1.7.2"
+  }
+}

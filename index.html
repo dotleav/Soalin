@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-alt: #0a0e14;
+    --card: #161b22;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text: #f0f6fc;
+    --text-secondary: #c9d1d9;
+    --muted: #8b949e;
+    --muted2: #6e7681;
+    --muted3: #484f58;
+    --accent: #e8a838;
+    --accent-soft: #e8a83818;
+    --correct: #4ade80;
+    --correct-strong: #16a34a;
+    --wrong: #f87171;
+    --wrong-strong: #ef4444;
+    --blue: #58a6ff;
+    --blue-strong: #1f6feb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-secondary);
+  }
+  .mono { font-family: "JetBrains Mono", monospace; }
+  .wrap { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 16px 60px; }
+
+  /* ── Sticky header ── */
+  .headerZone { position: sticky; top: 0; z-index: 50; }
+  .headerCollapse { overflow: hidden; transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1); max-height: 170px; }
+  .headerCollapse.hidden { max-height: 0; }
+  header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border-light);
+    padding: 12px 0;
+  }
+  .headerInner { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  .titleRow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  h1 {
+    font-family: "DM Serif Display", Georgia, serif;
+    color: var(--accent);
+    font-size: clamp(1.1rem, 4vw, 1.6rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+  .tracker { text-align: right; min-width: 70px; }
+  .tracker .count { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+  .tracker .sub { color: var(--muted2); font-size: 0.65rem; line-height: 1.3; }
+  .tracker .sub .ok { color: var(--correct); }
+
+  .modeBar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 0;
+  }
+  .modeBarInner {
+    max-width: 720px; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .pillBtn {
+    padding: 5px 15px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .pillBtn.active { background: var(--accent); color: var(--bg); border: none; }
+  .resetBtn {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 0.72rem;
+    color: var(--muted2);
+    background: none;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 999px;
+    transition: all 0.15s;
+  }
+  .resetBtn:hover { color: var(--text-secondary); border-color: var(--muted3); }
+
+  .hideToggleBtn {
+    display: flex; align-items: center; justify-content: center;
+    background: none;
+    cursor: pointer;
+    width: 30px; height: 28px;
+    padding: 0;
+    border-radius: 999px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    color: var(--muted2);
+  }
+  .hideToggleBtn.active { color: var(--accent); border-color: #e8a83860; }
+  .hideToggleBtn .arrow { display: inline-block; transition: transform 0.3s; font-size: 0.85rem; }
+  .hideToggleBtn.active .arrow { transform: rotate(180deg); }
+
+  /* Saat header disembunyikan, hanya tombol toggle yang tetap tampil */
+  .modeBarInner.onlyToggle > *:not(.hideToggleBtn) { display: none; }
+
+  .muteBtn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    color: var(--muted2);
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .muteBtn.on { color: var(--accent); border-color: #e8a83860; }
+
+  /* ── Filter bar ── */
+  .filterBar {
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-alt);
+    padding: 10px 0;
+  }
+  .filterInner {
+    max-width: 720px; margin: 0 auto; padding: 0 16px;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .shuffleBtn {
+    display: flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .shuffleBtn.active { background: var(--accent); color: var(--bg); border: none; }
+
+  /* ── Tracker card (progress) ── */
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px; }
+  .progressCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .progressTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+  .progressTop .left { font-size: 0.82rem; color: var(--muted); }
+  .progressTop .left .num { color: var(--accent); font-weight: 700; }
+  .progressTop .left .num.total { color: var(--text-secondary); }
+  .statChip { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .progressTrack { background: var(--border-light); border-radius: 999px; height: 5px; overflow: hidden; }
+  .progressFill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.4s ease; }
+
+  .doneBanner {
+    background: var(--accent-soft);
+    border: 1px solid #e8a83840;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .doneBanner .title { color: var(--accent); font-weight: 700; font-size: 0.88rem; }
+  .doneBanner .sub { color: var(--text-secondary); font-size: 0.82rem; }
+
+  /* ── Question card (continuous scroll list) ── */
+  .qList { display: flex; flex-direction: column; gap: 20px; }
+  .qCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { transform: translateY(6px); } to { transform: translateY(0); } }
+  .qMeta { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .imgBadge { display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: var(--blue); }
+  .qText { color: var(--text); font-size: 0.88rem; line-height: 1.65; margin: 0 0 16px; }
+  .qNum { font-family: "JetBrains Mono", monospace; color: var(--accent); font-weight: 700; margin-right: 6px; }
+  .qImg, .exImg {
+    width: 100%; object-fit: contain; max-height: 280px;
+    background: #fff; display: block; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 14px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 13px;
+    border-radius: 10px;
+    background: var(--border-light);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    width: 100%;
+  }
+  .option:hover:not(.locked) { border-color: #e8a83860; background: rgba(232,168,56,0.05); }
+  .option.locked { cursor: default; }
+  .option.selected { border-color: var(--accent); background: rgba(232,168,56,0.1); }
+  .option.correct { background: rgba(22,163,74,0.13); border-color: #16a34a60; color: #86efac; }
+  .option.wrong { background: rgba(239,68,68,0.13); border-color: #ef444460; color: #fca5a5; }
+  .option.faded { background: var(--card); border-color: var(--border-light); color: var(--muted3); }
+  .letter {
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700; font-size: 11px;
+    width: 24px; height: 24px; border-radius: 50%;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); color: var(--muted);
+    margin-top: 1px; transition: all 0.15s;
+  }
+  .letter.correct { background: var(--correct-strong); border: none; color: #fff; }
+  .letter.wrong { background: var(--wrong-strong); border: none; color: #fff; }
+  .letter.faded { border-color: var(--border-light); color: var(--muted3); }
+  .optText { font-size: 0.82rem; line-height: 1.55; flex: 1; }
+  .icon { flex-shrink: 0; margin-top: 2px; font-size: 0.85rem; }
+  .icon.ok { color: var(--correct); }
+  .icon.no { color: var(--wrong); }
+
+  .skipNote {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--muted); font-size: 0.78rem;
+    margin-top: 10px;
+  }
+
+  .explanation {
+    background: rgba(31,111,235,0.1);
+    border: 1px solid rgba(31,111,235,0.33);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 14px;
+    animation: fadeIn 0.25s ease;
+  }
+  .explanation .tag {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--blue); font-weight: 600; font-size: 0.78rem; margin-bottom: 6px;
+  }
+  .explanation p { color: var(--text-secondary); font-size: 0.8rem; line-height: 1.65; margin: 0; }
+
+  /* ── Load more (Mode Latihan pagination) ── */
+  .loadMoreBtn {
+    width: 100%; margin-top: 20px; padding: 13px;
+    background: var(--card); border: 1px solid var(--border); color: var(--accent);
+    font-weight: 600; font-size: 0.85rem; border-radius: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.15s;
+  }
+  .loadMoreBtn:hover { border-color: #e8a83860; }
+
+  /* ── Tentamen: difficulty selector ── */
+  .sectionLabel { font-size: 0.72rem; color: var(--muted2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .diffGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .diffCard {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    padding: 18px 16px; border-radius: 14px; border: 1px solid var(--border);
+    background: var(--card); cursor: pointer; transition: all 0.18s; text-align: left; min-height: 110px;
+  }
+  .diffCard.active { border-width: 2px; }
+  .diffTop { display: flex; align-items: center; gap: 8px; }
+  .diffEmoji { font-size: 1.5rem; line-height: 1; }
+  .diffLabel { font-weight: 700; font-size: 1rem; }
+  .diffDesc { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+  .diffTimer { font-family: "JetBrains Mono", monospace; font-size: 0.75rem; font-weight: 700; }
+
+  .statsRow3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .statBox2 { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+  .statBox2 .val { font-family: "JetBrains Mono", monospace; color: var(--accent); font-size: 1.35rem; font-weight: 700; }
+  .statBox2 .lbl { color: var(--muted2); font-size: 0.72rem; margin-top: 4px; }
+
+  .startTentamenBtn {
+    width: 100%; padding: 14px; color: var(--bg); font-weight: 700; font-size: 1rem;
+    border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; gap: 8px; transition: opacity 0.15s;
+  }
+  .startTentamenBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .startTentamenBtn:hover:not(:disabled) { opacity: 0.88; }
+
+  /* ── Tentamen: running ── */
+  .tentamenTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .tentamenTop .qOf { font-size: 0.78rem; color: var(--muted); }
+  .dotsRow { display: flex; gap: 4px; align-items: center; }
+  .dotItem { width: 8px; height: 8px; border-radius: 50%; background: var(--border-light); transition: all 0.2s; }
+  .dotItem.done { background: var(--accent); }
+  .dotItem.current { width: 18px; height: 8px; border-radius: 4px; background: #e8a83870; }
+  .dotsOverflow { color: var(--muted3); font-size: 0.65rem; margin-left: 2px; }
+
+  .timerCard { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; transition: border-color 0.3s; }
+  .timerCard.urgent { border-color: #ef444440; }
+  .timerCard.timeoutFlash { animation: timeoutFlash 0.6s ease-in-out 3; }
+  .timerTop { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .timerLabel { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--muted); }
+  .timerLabel.urgent { color: var(--wrong-strong); }
+  .timerNum { font-family: "JetBrains Mono", monospace; font-size: 2.2rem; font-weight: 700; line-height: 1; }
+  .timerNum.pulse { animation: timerPulse 0.75s ease-in-out infinite; }
+  .timerTrack { background: var(--border-light); border-radius: 999px; height: 6px; overflow: hidden; }
+  .timerFill { height: 100%; border-radius: 999px; transition: width 1s linear, background-color 0.3s; }
+
+  @keyframes timerPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+  @keyframes timeoutFlash { 0%, 100% { background-color: transparent; } 50% { background-color: rgba(239, 68, 68, 0.08); } }
+  @keyframes slideDown { from { transform: translateY(-8px); } to { transform: translateY(0); } }
+
+  .timeoutNotice {
+    background: rgba(239,68,68,0.09); border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 10px; padding: 10px 14px; margin-top: 14px;
+    display: flex; align-items: center; gap: 8px;
+    animation: slideDown 0.22s ease-out both;
+  }
+  .timeoutNotice span { color: #f87171; font-size: 0.82rem; font-weight: 500; }
+
+  .nextBtn {
+    width: 100%; padding: 13px; background: var(--accent); color: var(--bg);
+    font-weight: 700; font-size: 0.95rem; border-radius: 12px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    transition: opacity 0.15s; margin-top: 14px;
+    animation: slideDown 0.22s ease-out both;
+  }
+  .nextBtn:hover { opacity: 0.88; }
+
+  /* ── Summary / hasil ── */
+  .scoreHero {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 24px; margin-bottom: 14px; text-align: center;
+  }
+  .scoreHero .trophy { font-size: 2rem; margin-bottom: 8px; }
+  .scoreHero .pct {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(3rem, 15vw, 4.5rem); font-weight: 700; line-height: 1;
+  }
+  .scoreHero .gradeLabel { font-size: 0.9rem; font-weight: 600; margin-top: 6px; }
+  .scoreHero .subline { color: var(--muted2); font-size: 0.78rem; margin-top: 4px; }
+
+  .statsGrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 14px; }
+  .statsGrid.statsGrid3 { grid-template-columns: repeat(3,1fr); }
+  .statBox { border-radius: 12px; padding: 14px; text-align: center; border: 1px solid; }
+  .statBox .val { font-family: "JetBrains Mono", monospace; font-size: 1.6rem; font-weight: 700; }
+  .statBox .lbl { font-size: 0.7rem; margin-top: 4px; opacity: 0.8; }
+
+  .distBar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; gap: 2px; }
+  .distLegend { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.68rem; color: var(--muted2); }
+
+  .restartBtn {
+    width: 100%; padding: 14px;
+    background: var(--accent); color: var(--bg);
+    font-weight: 700; font-size: 1rem;
+    border-radius: 12px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 20px;
+    transition: opacity 0.15s;
+  }
+  .restartBtn:hover { opacity: 0.88; }
+
+  .reviewLabel { font-size: 0.78rem; color: var(--muted2); margin-bottom: 12px; }
+  .reviewList { display: flex; flex-direction: column; gap: 16px; }
+
+  .empty { color: var(--muted2); text-align: center; margin-top: 60px; font-size: 0.88rem; }
+
+  .quiz-fade-in { animation: fadeIn 0.28s ease-out both; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script type="module">
+import { questions as allQuestions } from "./data/questions.js";
+
+// ── Constants ──────────────────────────────────────────────────────────────
+const LOAD_BATCH = 15; // jumlah soal yang dimuat sekaligus, biar Mode Latihan gak lag
+const LS_KEY = "soalin_biasa_progress";
+const MUTE_KEY = "soalin_muted";
+
+const DIFFICULTY_CONFIG = {
+  cheetah:  { label: "Cheetah",      emoji: "🐆", timerSeconds: 30,  desc: "am fast boi",                          color: "#f59e0b" },
+  normal:   { label: "Orang Normal", emoji: "🧍", timerSeconds: 60,  desc: "dasar normies",                        color: "#58a6ff" },
+  folivora: { label: "Folivora",     emoji: "🦥", timerSeconds: 300, desc: "pasti pas ditanya jawabannya \u201Chah?\u201D", color: "#86efac" },
+  bekicot:  { label: "Bekicot",      emoji: "🐌", timerSeconds: 0,   desc: "mode biasa aja kalau gitu",            color: "#c084fc" },
+};
+
+const app = document.getElementById("app");
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+function escapeAttr(str) { return escapeHtml(str); }
+
+// ── Audio (benar/salah) ──────────────────────────────────────────────────
+const audioBenar = new Audio("./benar.mp3");
+const audioSalah = new Audio("./salah.mp3");
+let isMuted = localStorage.getItem(MUTE_KEY) === "true";
+function playSound(correct) {
+  if (isMuted) return;
+  const a = correct ? audioBenar : audioSalah;
+  try {
+    a.currentTime = 0;
+    a.play().catch(() => { /* diblokir kebijakan browser, abaikan */ });
+  } catch { /* noop */ }
+}
+function toggleMute() {
+  isMuted = !isMuted;
+  localStorage.setItem(MUTE_KEY, String(isMuted));
+  render();
+}
+
+// ── LocalStorage — Mode Latihan (persist across refresh & tab close) ──────
+function loadBiasa() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object" && "answersMap" in parsed) return parsed;
+    return null;
+  } catch { return null; }
+}
+function saveBiasa() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      shuffleOn: biasaShuffleOn,
+      answersMap: biasaAnswersMap,
+    }));
+  } catch { /* quota exceeded — abaikan diam-diam */ }
+}
+function clearBiasa() {
+  try { localStorage.removeItem(LS_KEY); } catch { /* noop */ }
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+let quizMode = "biasa"; // "biasa" | "tentamen"
+let headerHidden = false;
+
+// Mode Latihan (biasa) — dipersist ke localStorage
+let biasaLoaded = false;
+let biasaShuffleOn = false;
+let biasaAnswersMap = {}; // id soal -> huruf jawaban
+let biasaVisibleCount = LOAD_BATCH;
+let shuffleOrderCache = {}; // cache urutan acak, biar stabil selama sesi
+
+// Mode Tentamen — ephemeral, tidak disimpan
+let tentamenState = "setup"; // "setup" | "running" | "finished"
+let tentamenShuffleOn = false;
+let tentamenDifficulty = "normal";
+let tentamenQuestions = [];
+let tentamenAnswers = []; // array sejajar index: huruf | "skipped" | null
+let currentIdx = 0;
+let timeLeft = 0;
+let qPhase = "answering"; // "answering" | "answered_manual" | "answered_timeout"
+let tentamenTimerHandle = null;
+let tentamenAdvanceHandle = null;
+
+// ── Init Mode Latihan dari localStorage ──────────────────────────────────
+function initBiasa() {
+  const saved = loadBiasa();
+  if (saved) {
+    biasaShuffleOn = !!saved.shuffleOn;
+    biasaAnswersMap = saved.answersMap || {};
+  }
+  biasaVisibleCount = LOAD_BATCH;
+  biasaLoaded = true;
+}
+
+// ── Mode Latihan: hitung daftar soal aktif (shuffle) ─────────────────────
+function computeBiasaAll() {
+  const key = "__shuffle";
+  if (!biasaShuffleOn) {
+    delete shuffleOrderCache[key];
+    return allQuestions;
+  }
+  const cached = shuffleOrderCache[key];
+  const baseIds = new Set(allQuestions.map(q => q.id));
+  if (cached && cached.length === allQuestions.length && cached.every(q => baseIds.has(q.id))) return cached;
+  const shuffled = shuffleArray(allQuestions);
+  shuffleOrderCache[key] = shuffled;
+  return shuffled;
+}
+
+// ── Mode Latihan: handlers ───────────────────────────────────────────────
+function handleResetBiasa() {
+  clearBiasa();
+  biasaAnswersMap = {};
+  biasaVisibleCount = LOAD_BATCH;
+  shuffleOrderCache = {};
+  render();
+}
+function handleBiasaShuffleToggle() {
+  biasaShuffleOn = !biasaShuffleOn;
+  biasaVisibleCount = LOAD_BATCH;
+  saveBiasa();
+  render();
+}
+function handleBiasaLoadMore() {
+  const allQ = computeBiasaAll();
+  biasaVisibleCount = Math.min(biasaVisibleCount + LOAD_BATCH, allQ.length);
+  render();
+}
+function handleAnswerBiasa(qId, letter) {
+  if (biasaAnswersMap[qId] !== undefined && biasaAnswersMap[qId] !== null) return;
+  const q = allQuestions.find(x => x.id === qId);
+  biasaAnswersMap[qId] = letter;
+  saveBiasa();
+  playSound(!!q && letter === q.answer);
+  render();
+}
+
+// ── Mode Tentamen: handlers ──────────────────────────────────────────────
+function stopTentamenTimerLoop() {
+  if (tentamenTimerHandle) { clearInterval(tentamenTimerHandle); tentamenTimerHandle = null; }
+  if (tentamenAdvanceHandle) { clearTimeout(tentamenAdvanceHandle); tentamenAdvanceHandle = null; }
+}
+function startTentamenTimerLoop() {
+  stopTentamenTimerLoop();
+  tentamenTimerHandle = setInterval(() => {
+    if (quizMode !== "tentamen" || tentamenState !== "running" || qPhase !== "answering") return;
+    if (tentamenDifficulty === "bekicot") return; // no timer
+    if (timeLeft <= 1) {
+      timeLeft = 0;
+      tentamenAnswers[currentIdx] = "skipped";
+      qPhase = "answered_timeout";
+      render();
+      tentamenAdvanceHandle = setTimeout(advanceOrFinish, 1800);
+    } else {
+      timeLeft -= 1;
+      updateTimerDOM();
+    }
+  }, 1000);
+}
+
+// ── Update tampilan timer secara langsung (tanpa render ulang seluruh halaman) ──
+// Ini mencegah "blink" karena kartu soal & animasi ikut dibuat ulang tiap detik.
+function updateTimerDOM() {
+  const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
+  const maxTime = cfg.timerSeconds || 1;
+  const isUrgent = timeLeft <= 10 && tentamenDifficulty !== "bekicot";
+  const timerPct = (timeLeft / maxTime) * 100;
+  const timerNumEl = document.getElementById("timerNum");
+  const timerFillEl = document.getElementById("timerFill");
+  const timerCardEl = document.getElementById("timerCard");
+  const timerLabelEl = document.getElementById("timerLabel");
+  if (!timerNumEl || !timerFillEl || !timerCardEl) return;
+
+  timerNumEl.textContent = String(timeLeft).padStart(2, "0");
+  timerNumEl.style.color = isUrgent ? "var(--wrong-strong)" : cfg.color;
+  timerNumEl.classList.toggle("pulse", isUrgent);
+
+  timerFillEl.style.width = timerPct + "%";
+  timerFillEl.style.background = isUrgent ? "var(--wrong-strong)" : cfg.color;
+
+  timerCardEl.classList.toggle("urgent", isUrgent);
+  if (timerLabelEl) timerLabelEl.classList.toggle("urgent", isUrgent);
+}
+function handleStartTentamen() {
+  const qs = tentamenShuffleOn ? shuffleArray(allQuestions) : allQuestions;
+  if (!qs.length) return;
+  tentamenQuestions = qs;
+  tentamenAnswers = new Array(qs.length).fill(null);
+  currentIdx = 0;
+  timeLeft = DIFFICULTY_CONFIG[tentamenDifficulty].timerSeconds;
+  qPhase = "answering";
+  tentamenState = "running";
+  render();
+  startTentamenTimerLoop();
+}
+function handleResetTentamen() {
+  tentamenState = "setup";
+  tentamenQuestions = [];
+  tentamenAnswers = [];
+  stopTentamenTimerLoop();
+  render();
+}
+function handleAnswerTentamen(letter) {
+  if (tentamenAnswers[currentIdx] !== null && tentamenAnswers[currentIdx] !== undefined) return;
+  const q = tentamenQuestions[currentIdx];
+  tentamenAnswers[currentIdx] = letter;
+  playSound(letter === q.answer);
+  qPhase = "answered_manual";
+  render();
+}
+function advanceOrFinish() {
+  if (tentamenAdvanceHandle) { clearTimeout(tentamenAdvanceHandle); tentamenAdvanceHandle = null; }
+  if (currentIdx >= tentamenQuestions.length - 1) {
+    tentamenState = "finished";
+    stopTentamenTimerLoop();
+  } else {
+    currentIdx += 1;
+    timeLeft = DIFFICULTY_CONFIG[tentamenDifficulty].timerSeconds;
+    qPhase = "answering";
+  }
+  render();
+}
+
+// ── Mode switch ───────────────────────────────────────────────────────────
+function handleModeChange(m) {
+  if (m === quizMode) return;
+  quizMode = m;
+  if (m === "tentamen") {
+    tentamenState = "setup";
+    tentamenQuestions = [];
+    tentamenAnswers = [];
+  }
+  stopTentamenTimerLoop();
+  render();
+}
+
+// ── Klik opsi jawaban (delegasi, dipakai Latihan & Tentamen) ─────────────
+function onOptionClick(qid, letter) {
+  if (quizMode === "biasa") {
+    handleAnswerBiasa(qid, letter);
+  } else if (quizMode === "tentamen" && tentamenState === "running" && qPhase === "answering") {
+    handleAnswerTentamen(letter);
+  }
+}
+
+// ── beforeunload — hanya warning saat tentamen sedang berjalan ───────────
+window.addEventListener("beforeunload", (e) => {
+  if (quizMode === "tentamen" && tentamenState === "running") {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
+
+// ── Render: kartu soal (dipakai di semua mode) ────────────────────────────
+function renderQuestionCard(q, qNum, chosen, revealAnswer) {
+  const isAnswered = chosen !== undefined && chosen !== null;
+  const showState = revealAnswer && isAnswered;
+
+  const optionsHtml = Object.entries(q.options).map(([letter, text]) => {
+    let cls = "option";
+    let letterCls = "letter";
+    let icon = "";
+    const locked = isAnswered ? " locked" : "";
+
+    if (!showState) {
+      if (chosen === letter) cls += " selected";
+    } else {
+      if (letter === q.answer) {
+        cls += " correct"; letterCls += " correct";
+        if (chosen === letter) icon = `<span class="icon ok">\u2713</span>`;
+      } else if (letter === chosen) {
+        cls += " wrong"; letterCls += " wrong";
+        icon = `<span class="icon no">\u2715</span>`;
+      } else {
+        cls += " faded"; letterCls += " faded";
+      }
+    }
+
+    return `
+      <button class="${cls}${locked}" data-qid="${escapeAttr(q.id)}" data-letter="${escapeAttr(letter)}">
+        <span class="${letterCls}">${letter}</span>
+        <span class="optText">${escapeHtml(text)}</span>
+        ${icon}
+      </button>
+    `;
+  }).join("");
+
+  const skipNoteHtml = (showState && chosen === "skipped")
+    ? `<div class="skipNote">\u23ED\uFE0F Soal ini dilewati (waktu habis)</div>`
+    : "";
+
+  const explanationHtml = showState ? `
+    <div class="explanation">
+      <div class="tag">\uD83D\uDCD6 Penjelasan</div>
+      <p>${escapeHtml(q.explanation || "(tidak ada penjelasan)")}</p>
+      ${(q.explanationImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")}
+    </div>
+  ` : "";
+
+  return `
+    <div class="qCard">
+      <div class="qMeta">
+        ${(q.questionImages || []).length > 0 ? `<span class="imgBadge">\uD83D\uDDBC\uFE0F Bergambar</span>` : ""}
+      </div>
+      <p class="qText"><span class="qNum mono">${qNum}.</span>${escapeHtml(q.question)}</p>
+      ${(q.questionImages || []).map(src => `<img class="qImg" src="${src}" alt="gambar soal">`).join("")}
+      <div class="options">${optionsHtml}</div>
+      ${skipNoteHtml}
+      ${explanationHtml}
+    </div>
+  `;
+}
+
+// ── Render: header + mode bar + filter bar ────────────────────────────────
+function renderHeaderZone() {
+  const totalQ = allQuestions.length;
+  let trackerHtml = "";
+  if (quizMode === "biasa" && biasaLoaded) {
+    const answeredCount = allQuestions.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
+    const correctCount = allQuestions.filter(q => biasaAnswersMap[q.id] === q.answer).length;
+    trackerHtml = `
+      <div class="tracker">
+        <div class="count mono">${answeredCount}/${totalQ}</div>
+        <div class="sub">dijawab \u00B7 benar <span class="ok">${correctCount}</span></div>
+      </div>
+    `;
+  } else if (quizMode === "tentamen" && tentamenState === "running") {
+    trackerHtml = `
+      <div class="tracker">
+        <div class="count mono">${currentIdx + 1}/${tentamenQuestions.length}</div>
+        <div class="sub">soal</div>
+      </div>
+    `;
+  }
+
+  const showFilterBar = quizMode === "biasa" || (quizMode === "tentamen" && tentamenState === "setup");
+  const activeShuffle = quizMode === "biasa" ? biasaShuffleOn : tentamenShuffleOn;
+  const showReset = (quizMode === "biasa" && biasaLoaded) || (quizMode === "tentamen" && tentamenState !== "setup");
+
+  return `
+    <div class="headerZone">
+      <div class="headerCollapse${headerHidden ? " hidden" : ""}">
+        <header>
+          <div class="headerInner">
+            <div class="titleRow">
+              <h1>Quiz App</h1>
+              ${trackerHtml}
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <div class="modeBar">
+        <div class="modeBarInner${headerHidden ? " onlyToggle" : ""}">
+          <button class="hideToggleBtn${headerHidden ? " active" : ""}" id="hideHeaderBtn" title="${headerHidden ? "Tampilkan header" : "Sembunyikan header"}" aria-label="${headerHidden ? "Tampilkan header" : "Sembunyikan header"}">
+            <span class="arrow">\u25B2</span>
+          </button>
+          <button class="muteBtn${isMuted ? "" : " on"}" id="muteBtn" title="${isMuted ? "Nyalakan suara" : "Matikan suara"}">${isMuted ? "\uD83D\uDD07" : "\uD83D\uDD0A"}</button>
+          <button class="pillBtn${quizMode === "biasa" ? " active" : ""}" data-mode="biasa">Mode Latihan</button>
+          <button class="pillBtn${quizMode === "tentamen" ? " active" : ""}" data-mode="tentamen">Mode Tentamen</button>
+          ${showReset ? `<button class="resetBtn" id="resetBtn">\u21BA Reset</button>` : ""}
+        </div>
+      </div>
+
+      ${showFilterBar && !headerHidden ? `
+      <div class="filterBar">
+        <div class="filterInner">
+          <button class="shuffleBtn${activeShuffle ? " active" : ""}" id="shuffleBtn">\u2928 Acak ${activeShuffle ? "ON" : "OFF"}</button>
+        </div>
+      </div>` : ""}
+    </div>
+  `;
+}
+
+// ── Render: Mode Latihan ──────────────────────────────────────────────────
+function renderBiasaMode() {
+  const allQ = computeBiasaAll();
+  const visible = allQ.slice(0, biasaVisibleCount);
+  const answeredCount = allQ.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
+  const correctCount = allQ.filter(q => biasaAnswersMap[q.id] === q.answer).length;
+  const totalCount = allQ.length;
+  const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
+  const allDone = answeredCount === totalCount && totalCount > 0;
+  const hasMore = biasaVisibleCount < totalCount;
+  const remaining = totalCount - visible.length;
+
+  let html = `
+    <div class="progressCard">
+      <div class="progressTop">
+        <span class="left">Sudah dijawab: <span class="num mono">${answeredCount}</span> / Total: <span class="num total mono">${totalCount}</span></span>
+        <div style="display:flex; gap:12px;">
+          <span class="statChip"><span class="dot" style="background:var(--correct);"></span><span class="mono" style="color:var(--correct); font-weight:700;">${correctCount}</span><span style="color:var(--muted2);">benar</span></span>
+          <span class="statChip"><span class="dot" style="background:var(--wrong);"></span><span class="mono" style="color:var(--wrong); font-weight:700;">${answeredCount - correctCount}</span><span style="color:var(--muted2);">salah</span></span>
+        </div>
+      </div>
+      <div class="progressTrack"><div class="progressFill" style="width:${pct}%;"></div></div>
+    </div>
+  `;
+
+  if (allDone) {
+    html += `
+      <div class="doneBanner">
+        <span style="font-size:1.3rem;">\uD83C\uDFC6</span>
+        <div>
+          <span class="title">Selesai! </span>
+          <span class="sub">Skor akhir: ${correctCount}/${totalCount} (${Math.round((correctCount/totalCount)*100)}%)</span>
+        </div>
+      </div>
+    `;
+  }
+
+  if (totalCount === 0) {
+    html += `<div class="empty">Tidak ada soal pada kategori ini.</div>`;
+    return html;
+  }
+
+  html += `<div class="qList">`;
+  visible.forEach((q, idx) => {
+    html += renderQuestionCard(q, idx + 1, biasaAnswersMap[q.id], true);
+  });
+  html += `</div>`;
+
+  if (hasMore) {
+    html += `<button class="loadMoreBtn" id="loadMoreBtn">\u2794 Lebih banyak (${Math.min(LOAD_BATCH, remaining)})</button>`;
+  }
+
+  return html;
+}
+
+// ── Render: Tentamen — setup ──────────────────────────────────────────────
+function renderTentamenSetup() {
+  const qCount = allQuestions.length;
+  const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
+  const timerSec = cfg.timerSeconds;
+  const estLabel = (() => {
+    if (timerSec === 0) return "\u221E";
+    const totalSec = qCount * timerSec;
+    if (totalSec < 60) return `${totalSec} dtk`;
+    return `${Math.ceil(totalSec / 60)} menit`;
+  })();
+  const timerLabel = timerSec === 0 ? "\u221E" : `${timerSec}s`;
+
+  let html = `<div class="quiz-fade-in">`;
+  html += `<div style="margin-bottom:16px;">
+    <div class="sectionLabel">Tingkat Kesulitan</div>
+    <div class="diffGrid">`;
+  Object.keys(DIFFICULTY_CONFIG).forEach(d => {
+    const dcfg = DIFFICULTY_CONFIG[d];
+    const active = tentamenDifficulty === d;
+    html += `
+      <button class="diffCard${active ? " active" : ""}" data-diff="${d}" style="${active ? `border-color:${dcfg.color}; background:${dcfg.color}18;` : ""}">
+        <div class="diffTop">
+          <span class="diffEmoji">${dcfg.emoji}</span>
+          <span class="diffLabel" style="color:${active ? dcfg.color : "var(--text)"};">${dcfg.label}</span>
+        </div>
+        <div class="diffDesc">${escapeHtml(dcfg.desc)}</div>
+        <div class="diffTimer" style="color:${active ? dcfg.color : "var(--muted3)"};">${dcfg.timerSeconds === 0 ? "5-7 hari kerja" : `${dcfg.timerSeconds}s / soal`}</div>
+      </button>
+    `;
+  });
+  html += `</div></div>`;
+
+  html += `<div class="statsRow3">
+    <div class="statBox2"><div class="val">${qCount}</div><div class="lbl">Soal</div></div>
+    <div class="statBox2"><div class="val">${timerLabel}</div><div class="lbl">Timer/soal</div></div>
+    <div class="statBox2"><div class="val">${estLabel}</div><div class="lbl">Estimasi</div></div>
+  </div>`;
+
+  html += `<button class="startTentamenBtn" id="startTentamenBtn" style="background:${cfg.color};" ${qCount === 0 ? "disabled" : ""}>
+    \u25B6 Mulai Tentamen \u2014 ${cfg.emoji} ${cfg.label}
+  </button>`;
+  html += `</div>`;
+  return html;
+}
+
+// ── Render: Tentamen — running ────────────────────────────────────────────
+function renderTentamenRunning() {
+  const q = tentamenQuestions[currentIdx];
+  if (!q) return `<div class="empty">Tidak ada soal.</div>`;
+  const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
+  const maxTime = cfg.timerSeconds || 1;
+  const isAnswering = qPhase === "answering";
+  const isManual = qPhase === "answered_manual";
+  const isTimeout = qPhase === "answered_timeout";
+  const isUrgent = timeLeft <= 10 && isAnswering && tentamenDifficulty !== "bekicot";
+  const timerPct = tentamenDifficulty === "bekicot" ? 100 : (timeLeft / maxTime) * 100;
+  const total = tentamenQuestions.length;
+  const qNum = currentIdx + 1;
+
+  let html = `<div class="quiz-fade-in">`;
+
+  html += `<div class="tentamenTop">
+    <span class="qOf">Soal <span class="mono" style="color:var(--accent); font-weight:700;">${qNum}</span> dari ${total}</span>
+    <div class="dotsRow">`;
+  const dotCount = Math.min(total, 15);
+  for (let i = 0; i < dotCount; i++) {
+    const done = i < qNum - 1;
+    const current = i === qNum - 1;
+    html += `<div class="dotItem${done ? " done" : ""}${current ? " current" : ""}"></div>`;
+  }
+  if (total > 15) html += `<span class="dotsOverflow">+${total - 15}</span>`;
+  html += `</div></div>`;
+
+  html += `<div class="timerCard${isUrgent ? " urgent" : ""}${isTimeout ? " timeoutFlash" : ""}" id="timerCard">
+    <div class="timerTop">
+      <div class="timerLabel${isUrgent ? " urgent" : ""}" id="timerLabel">
+        \u23F1 ${tentamenDifficulty === "bekicot" ? "No timer \uD83D\uDC0C" : isAnswering ? "Waktu tersisa" : isTimeout ? "Waktu habis!" : "Selesai"}
+      </div>
+      <span class="timerNum${isUrgent ? " pulse" : ""}" id="timerNum" style="color:${isUrgent ? "var(--wrong-strong)" : cfg.color};">
+        ${tentamenDifficulty === "bekicot" ? "\u221E" : String(isAnswering ? timeLeft : isTimeout ? 0 : timeLeft).padStart(2, "0")}
+      </span>
+    </div>
+    <div class="timerTrack"><div class="timerFill" id="timerFill" style="background:${isUrgent ? "var(--wrong-strong)" : cfg.color}; width:${tentamenDifficulty === "bekicot" ? 100 : isAnswering ? timerPct : isTimeout ? 0 : 100}%;"></div></div>
+  </div>`;
+
+  html += renderQuestionCard(q, qNum, tentamenAnswers[currentIdx], qPhase !== "answering");
+
+  if (isTimeout) {
+    html += `<div class="timeoutNotice">\u26A0\uFE0F <span>Waktu habis! Soal ini dihitung terlewati. Melanjutkan\u2026</span></div>`;
+  }
+
+  if (isManual) {
+    html += `<button class="nextBtn" id="nextTentamenBtn">${qNum < total ? "\u2794 Soal Berikutnya" : "\uD83C\uDFC6 Lihat Hasil"}</button>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+// ── Render: Tentamen — hasil ──────────────────────────────────────────────
+function renderTentamenResults() {
+  const total = tentamenQuestions.length;
+  const correct = tentamenAnswers.filter((a, i) => typeof a === "string" && a !== "skipped" && a === tentamenQuestions[i]?.answer).length;
+  const skipped = tentamenAnswers.filter(a => a === "skipped").length;
+  const wrong = total - correct - skipped;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+  const gradeColor = pct >= 80 ? "var(--correct)" : pct >= 60 ? "var(--accent)" : "var(--wrong)";
+  const gradeLabel = pct >= 80 ? "Sangat Baik" : pct >= 60 ? "Cukup Baik" : "Perlu Belajar Lagi";
+
+  let html = `<div class="quiz-fade-in">`;
+
+  html += `
+    <div class="scoreHero">
+      <div class="trophy">\uD83C\uDFC6</div>
+      <div class="pct" style="color:${gradeColor};">${pct}%</div>
+      <div class="gradeLabel" style="color:${gradeColor};">${gradeLabel}</div>
+      <div class="subline">${correct} dari ${total} soal benar</div>
+    </div>
+  `;
+
+  html += `
+    <div class="statsGrid statsGrid3">
+      <div class="statBox" style="background:#16a34a20; border-color:#16a34a40; color:var(--correct);"><div class="val mono">${correct}</div><div class="lbl">Benar</div></div>
+      <div class="statBox" style="background:#ef444420; border-color:#ef444440; color:var(--wrong);"><div class="val mono">${wrong}</div><div class="lbl">Salah</div></div>
+      <div class="statBox" style="background:#94a3b818; border-color:#94a3b835; color:#94a3b8;"><div class="val mono">${skipped}</div><div class="lbl">Terlewati</div></div>
+    </div>
+  `;
+
+  html += `
+    <div class="progressCard">
+      <div style="font-size:0.75rem; color:var(--muted2); margin-bottom:8px;">Distribusi jawaban</div>
+      <div class="distBar">
+        ${correct > 0 ? `<div style="flex:${correct}; background:var(--correct);"></div>` : ""}
+        ${wrong > 0 ? `<div style="flex:${wrong}; background:var(--wrong);"></div>` : ""}
+        ${skipped > 0 ? `<div style="flex:${skipped}; background:#475569;"></div>` : ""}
+      </div>
+      <div class="distLegend">
+        <span style="color:var(--correct);">${pct}% benar</span>
+        <span style="color:var(--wrong);">${total ? Math.round((wrong/total)*100) : 0}% salah</span>
+        <span style="color:#94a3b8;">${total ? Math.round((skipped/total)*100) : 0}% terlewati</span>
+      </div>
+    </div>
+  `;
+
+  html += `<button class="restartBtn" id="restartTentamenBtn">\u21BA Ulangi Tentamen</button>`;
+
+  html += `<div class="reviewLabel">Detail jawaban:</div>`;
+  html += `<div class="reviewList">`;
+  tentamenQuestions.forEach((q, idx) => {
+    html += renderQuestionCard(q, idx + 1, tentamenAnswers[idx], true);
+  });
+  html += `</div>`;
+
+  html += `</div>`;
+  return html;
+}
+
+// ── Render utama ───────────────────────────────────────────────────────────
+function render() {
+  if (!allQuestions || allQuestions.length === 0) {
+    app.innerHTML = `<div class="empty">Belum ada soal. Tambahkan manual di data/questions.js atau jalankan: npm run convert -- file.docx</div>`;
+    return;
+  }
+
+  let html = renderHeaderZone();
+  html += `<main class="wrap">`;
+
+  if (quizMode === "biasa") {
+    html += biasaLoaded ? renderBiasaMode() : `<div class="empty">Memuat soal\u2026</div>`;
+  } else {
+    if (tentamenState === "setup") html += renderTentamenSetup();
+    else if (tentamenState === "running") html += renderTentamenRunning();
+    else html += renderTentamenResults();
+  }
+
+  html += `</main>`;
+  app.innerHTML = html;
+  attachHandlers();
+}
+
+// ── Pasang semua event listener setelah tiap render ───────────────────────
+function attachHandlers() {
+  app.querySelectorAll(".option[data-letter]").forEach(btn => {
+    btn.addEventListener("click", () => onOptionClick(btn.dataset.qid, btn.dataset.letter));
+  });
+
+  const hideBtn = document.getElementById("hideHeaderBtn");
+  if (hideBtn) hideBtn.addEventListener("click", () => { headerHidden = !headerHidden; render(); });
+
+  const muteBtn = document.getElementById("muteBtn");
+  if (muteBtn) muteBtn.addEventListener("click", toggleMute);
+
+  app.querySelectorAll(".pillBtn[data-mode]").forEach(btn => {
+    btn.addEventListener("click", () => handleModeChange(btn.dataset.mode));
+  });
+
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) resetBtn.addEventListener("click", () => {
+    if (quizMode === "biasa") handleResetBiasa();
+    else handleResetTentamen();
+  });
+
+  const shuffleBtnEl = document.getElementById("shuffleBtn");
+  if (shuffleBtnEl) shuffleBtnEl.addEventListener("click", () => {
+    if (quizMode === "biasa") handleBiasaShuffleToggle();
+    else { tentamenShuffleOn = !tentamenShuffleOn; render(); }
+  });
+
+  const loadMoreBtn = document.getElementById("loadMoreBtn");
+  if (loadMoreBtn) loadMoreBtn.addEventListener("click", handleBiasaLoadMore);
+
+  app.querySelectorAll(".diffCard[data-diff]").forEach(btn => {
+    btn.addEventListener("click", () => { tentamenDifficulty = btn.dataset.diff; render(); });
+  });
+
+  const startBtn = document.getElementById("startTentamenBtn");
+  if (startBtn) startBtn.addEventListener("click", handleStartTentamen);
+
+  const nextBtn = document.getElementById("nextTentamenBtn");
+  if (nextBtn) nextBtn.addEventListener("click", advanceOrFinish);
+
+  const restartTentamenBtn = document.getElementById("restartTentamenBtn");
+  if (restartTentamenBtn) restartTentamenBtn.addEventListener("click", handleResetTentamen);
+}
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+initBiasa();
+render();
+</script>
+</body>
+</html>
