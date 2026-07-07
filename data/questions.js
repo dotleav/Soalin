@@ -151,7 +151,7 @@ export const questions = [
       "D": "Retensio sisa plasenta",
       "E": "Semua benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Kompresi bimanual uterus dilakukan sebagai tatalaksana perdarahan pascasalin akibat atonia uteri, yaitu kegagalan uterus berkontraksi optimal setelah plasenta lahir. ",
     "explanationImages": [
       "images/img-005.png"
@@ -1085,11 +1085,11 @@ export const questions = [
     "questionImages": [],
     "options": {
       "A": "Streptococcus beta hemoliticus",
-      "E": "S. aeroginosa",
+      "B": "S. aeroginosa",
       "C": "S. aureus",
       "D": "Pseudomonas sp"
     },
-    "answer": "A",
+    "answer": "C",
     "explanation": "Payudara nyeri, bengkak, kemerahan, dan demam pada ibu menyusui merupakan gambaran mastitis, tersering disebabkan oleh Staphylococcus aureus yang masuk melalui puting yang lecet.",
     "explanationImages": []
   },
@@ -1679,7 +1679,7 @@ export const questions = [
       "D": "Hyaline membrane disease",
       "E": "Trisomi 13"
     },
-    "answer": "C",
+    "answer": "B",
     "explanation": "Gerakan janin berkurang, wajah datar (facies), anggota gerak deformitas, dan hipoplasia paru pada bayi dari ibu dengan riwayat oligohidramnion berat sesuai dengan agenesis renal bilateral (sindrom Potter).",
     "explanationImages": []
   },
@@ -3812,7 +3812,7 @@ export const questions = [
       "D": "Sindrom Patau",
       "E": "Toksoplasmosis kongenital"
     },
-    "answer": "A",
+    "answer": "C",
     "explanation": "Wajah datar (flat facies, saddle nose) disertai distres napas pada bayi baru lahir merupakan gambaran khas sindrom down",
     "explanationImages": []
   },
