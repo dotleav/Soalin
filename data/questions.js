@@ -256,7 +256,7 @@ export const questions = [
       "D": "Infeksi saluran kencing",
       "E": "Infeksi menular seksual"
     },
-    "answer": "C",
+    "answer": "A",
     "explanation": "Usia kehamilan 38 minggu (aterm) bukan merupakan faktor risiko ketuban pecah dini; faktor risikonya justru meliputi janin besar, infeksi saluran kemih, infeksi menular seksual, dan merokok (termasuk perokok pasif dari suami). ",
     "explanationImages": [
       "images/img-010.png"
