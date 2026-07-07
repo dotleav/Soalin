@@ -90,7 +90,7 @@ export const questions = [
   {
     "id": "Q6",
     "category": "",
-    "question": "Penyakit glomerulonephritis yang paling banyak terjadi pada orang dewasa adalah",
+    "question": "Penyakit glomerulonephritis yang paling banyak menyebabkan sindrom nephrotik pada orang dewasa adalah",
     "questionImages": [],
     "options": {
       "A": "Minimal change disease",
@@ -99,14 +99,16 @@ export const questions = [
       "D": "Glomerulonephritis fokal segmental",
       "E": "Glomerulonefritik cresentik"
     },
-    "answer": "B",
-    "explanation": "Glomerulonefritis membranoproliferatif merupakan salah satu penyebab tersering glomerulonefritis primer pada dewasa, sedangkan minimal change disease lebih sering pada anak.",
-    "explanationImages": []
+    "answer": "D",
+    "explanation": "Glomerulonefritis fokal segmental merupakan salah satu penyebab tersering sindrom nefrotik pada orang dewasa, sedangkan minimal change disease lebih sering pada anak. ",
+    "explanationImages": [
+      "images/img-003.png"
+    ]
   },
   {
     "id": "Q7",
     "category": "",
-    "question": "Heparin merupakan contoh salah satu obat yang tidak dapat menembus barrier plasenta karena..",
+    "question": "Heparin merupakan contoh salah satu obat yang tidak dapat menembus barier plasenta karena..",
     "questionImages": [],
     "options": {
       "A": "Berat molekul besar",
@@ -116,8 +118,10 @@ export const questions = [
       "E": "Waktu paruh singkat"
     },
     "answer": "A",
-    "explanation": "Heparin memiliki berat molekul besar sehingga tidak dapat melewati sawar plasenta, berbeda dengan obat lipofilik atau berat molekul kecil yang mudah menembus plasenta.",
-    "explanationImages": []
+    "explanation": "Heparin memiliki berat molekul besar sehingga tidak dapat melewati sawar plasenta, berbeda dengan obat lipofilik atau berat molekul kecil yang mudah menembus plasenta. ",
+    "explanationImages": [
+      "images/img-004.png"
+    ]
   },
   {
     "id": "Q8",
@@ -150,7 +154,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Kompresi bimanual uterus dilakukan sebagai tatalaksana perdarahan pascasalin akibat atonia uteri, yaitu kegagalan uterus berkontraksi optimal setelah plasenta lahir. ",
     "explanationImages": [
-      "images/img-003.png"
+      "images/img-005.png"
     ]
   },
   {
@@ -168,8 +172,8 @@ export const questions = [
     "answer": "A",
     "explanation": "Kategori keamanan obat FDA kategori A menunjukkan studi terkontrol pada wanita hamil tidak menunjukkan risiko terhadap janin pada trimester manapun, merupakan kategori paling aman.  ",
     "explanationImages": [
-      "images/img-004.png",
-      "images/img-005.png"
+      "images/img-006.png",
+      "images/img-007.png"
     ]
   },
   {
@@ -187,13 +191,13 @@ export const questions = [
     "answer": "B",
     "explanation": "CA-125 merupakan tumor marker utama untuk kista/tumor ovarium tipe epitel, sedangkan AFP lebih spesifik untuk tumor sel germinal (yolk sac tumor) dan BRCA1/2 adalah marker genetik risiko kanker payudara-ovarium herediter. ",
     "explanationImages": [
-      "images/img-006.png"
+      "images/img-008.png"
     ]
   },
   {
     "id": "Q12",
     "category": "",
-    "question": "Pada kasus emphysematous nefritis pada xray polos akan ditemukan",
+    "question": "Pada kasus emphysematous nefritis pada x ray polos akan ditemukan",
     "questionImages": [],
     "options": {
       "A": "Opasitas disekelilingi proyeksi ren",
@@ -214,7 +218,7 @@ export const questions = [
     "options": {
       "A": "Lochea rubra",
       "B": "Lochea sanguinolenta",
-      "C": "Lochea sanguinuous",
+      "C": "Lochea sanguineous",
       "D": "Lochea serosa",
       "E": "Lochea alba"
     },
@@ -231,12 +235,14 @@ export const questions = [
       "A": "Segera minum analgetic dengan pesan bila nyeri tidak hilang segera kembali",
       "B": "Kompres hangat segera",
       "C": "Segera kirim ke rs terdekat yang ada dokter urologi/bedah saat itu juga",
-      "D": "Injeksi anestesi local untuk menghilangkan nyeri",
-      "E": "Diberikan spasmolitika untuk mengurangi ketegangan otot cremaster"
+      "D": "Injeksi anestesi lokal untuk menghilangkan nyeri",
+      "E": "Diberikan spasmolitika untuk mengurangi ketegangan otot kremaster"
     },
     "answer": "C",
-    "explanation": "Pada kecurigaan torsio testis akut, tindakan yang harus segera dilakukan adalah merujuk ke fasilitas dengan dokter urologi/bedah untuk eksplorasi dan detorsi segera, karena viabilitas testis sangat bergantung pada waktu (golden period ±6 jam).",
-    "explanationImages": []
+    "explanation": "Pada kecurigaan torsio testis akut, tindakan yang harus segera dilakukan adalah merujuk ke fasilitas dengan dokter urologi/bedah untuk eksplorasi dan detorsi segera, karena viabilitas testis sangat bergantung pada waktu (golden period ±6 jam). ",
+    "explanationImages": [
+      "images/img-009.png"
+    ]
   },
   {
     "id": "Q15",
@@ -251,8 +257,10 @@ export const questions = [
       "E": "Infeksi menular seksual"
     },
     "answer": "C",
-    "explanation": "Usia kehamilan 38 minggu (aterm) bukan merupakan faktor risiko ketuban pecah dini; faktor risikonya justru meliputi janin besar, infeksi saluran kemih, infeksi menular seksual, dan merokok (termasuk perokok pasif dari suami).",
-    "explanationImages": []
+    "explanation": "Usia kehamilan 38 minggu (aterm) bukan merupakan faktor risiko ketuban pecah dini; faktor risikonya justru meliputi janin besar, infeksi saluran kemih, infeksi menular seksual, dan merokok (termasuk perokok pasif dari suami). ",
+    "explanationImages": [
+      "images/img-010.png"
+    ]
   },
   {
     "id": "Q16",
@@ -266,9 +274,11 @@ export const questions = [
       "D": "Kegagalan kehamilan kurang dari 12 bulan setelah melakukan hubungan seksual secara teratur",
       "E": "Kegagalan kehamilan setelah 6 bulan mencoba dengan kontrasepsi"
     },
-    "answer": "A",
-    "explanation": "Infertilitas pada wanita didefinisikan sebagai kegagalan terjadinya kehamilan setelah 12 bulan atau lebih melakukan hubungan seksual teratur tanpa kontrasepsi.",
-    "explanationImages": []
+    "answer": "E",
+    "explanation": "Infertilitas pada wanita didefinisikan sebagai kegagalan terjadinya kehamilan setelah 6 bulan atau lebih melakukan hubungan seksual teratur tanpa kontrasepsi. ",
+    "explanationImages": [
+      "images/img-011.png"
+    ]
   },
   {
     "id": "Q17",
@@ -276,15 +286,20 @@ export const questions = [
     "question": "Istilah abortus dimana kehamilan masih dapat berlanjut disebut dengan",
     "questionImages": [],
     "options": {
-      "A": "Abortus iminens",
+      "A": "Abortus imminens",
       "B": "Abortus insipiens",
       "C": "Abortus inkomplit",
       "D": "Abortus komplit",
       "E": "Abortus provokatus"
     },
     "answer": "A",
-    "explanation": "Abortus imminens adalah ancaman keguguran dengan perdarahan pervaginam namun serviks masih tertutup dan kehamilan berpotensi tetap dapat dipertahankan/berlanjut.",
-    "explanationImages": []
+    "explanation": "Abortus imminens adalah ancaman keguguran dengan perdarahan pervaginam namun serviks masih tertutup dan kehamilan berpotensi tetap dapat dipertahankan/berlanjut.    ",
+    "explanationImages": [
+      "images/img-012.png",
+      "images/img-013.png",
+      "images/img-014.png",
+      "images/img-015.png"
+    ]
   },
   {
     "id": "Q18",
@@ -293,14 +308,16 @@ export const questions = [
     "questionImages": [],
     "options": {
       "A": "Letak lintang dengan janin aterm",
-      "B": "Presentasi muka dengan dagu/ mentum di anterior",
+      "B": "Presentasi muka dengan mentum di anterior",
       "C": "Presentasi muka dengan mentum di posterior",
       "D": "Hydrocephalus pada janin aterm",
       "E": "Disporposi kepala panggul"
     },
     "answer": "B",
-    "explanation": "Persalinan pervaginam dapat dilakukan pada presentasi muka dengan posisi dagu (mentum) di anterior, karena diameter kepala yang melewati jalan lahir masih memungkinkan; mentum posterior justru menyulitkan persalinan.",
-    "explanationImages": []
+    "explanation": "Persalinan pervaginam dapat dilakukan pada presentasi muka dengan posisi dagu (mentum) di anterior, karena diameter kepala yang melewati jalan lahir masih memungkinkan; mentum posterior justru menyulitkan persalinan. ",
+    "explanationImages": [
+      "images/img-016.png"
+    ]
   },
   {
     "id": "Q19",
@@ -315,8 +332,10 @@ export const questions = [
       "E": "Pasien usia tua"
     },
     "answer": "B",
-    "explanation": "Retensi urin berulang merupakan salah satu indikasi absolut pembedahan (misalnya TURP) pada BPH, selain hematuria makroskopik berulang, ISK berulang, batu kandung kemih, dan gagal ginjal akibat obstruksi.",
-    "explanationImages": []
+    "explanation": "Retensi urin berulang merupakan salah satu indikasi absolut pembedahan (misalnya TURP) pada BPH, selain hematuria makroskopik berulang, ISK berulang, batu kandung kemih, dan gagal ginjal akibat obstruksi. ",
+    "explanationImages": [
+      "images/img-017.png"
+    ]
   },
   {
     "id": "Q20",
@@ -331,15 +350,17 @@ export const questions = [
       "E": "Fluconazole 150 mg dosis tunggal"
     },
     "answer": "B",
-    "explanation": "Gambaran discharge vagina kekuningan berbusa, pH vagina tinggi (>4,5), dan strawberry cervix merupakan tanda khas trikomoniasis; terapi lini pertama adalah metronidazol 2 gram per oral dosis tunggal.",
-    "explanationImages": []
+    "explanation": "Gambaran discharge vagina kekuningan berbusa, pH vagina tinggi (>4,5), dan strawberry cervix merupakan tanda khas trikomoniasis; terapi lini pertama adalah metronidazol 2 gram per oral dosis tunggal. ",
+    "explanationImages": [
+      "images/img-018.png"
+    ]
   },
   {
     "id": "Q21",
     "category": "",
     "question": "Anak laki2 16 tahun datang diantar ayahnya dengan keluhan gatal2 di beberapa bagian tubuh, gatal disertai dengan ruam kemerahan, pada beberapa bagian muncul nanah, gatal lebih terasa pada malam hari. Pasien tidak mau membersihkan kasurnya dan sering tidur tanpa menggunakan Kasur. Kondisi klinis diatas disebabkan oleh… ",
     "questionImages": [
-      "images/img-007.png"
+      "images/img-019.png"
     ],
     "options": {
       "A": "Sarcoptes scabei",
@@ -365,8 +386,11 @@ export const questions = [
       "E": "Sindroma pada kehamilan 22 minggu dengan proteinuria +2, tensi 150/90 mmHg, coma"
     },
     "answer": "C",
-    "explanation": "Preeklamsia didefinisikan sebagai hipertensi (≥140/90 mmHg) yang timbul setelah usia kehamilan 20 minggu disertai proteinuria bermakna (≥+2 pada dipstick atau ≥300 mg/24 jam).",
-    "explanationImages": []
+    "explanation": "Preeklamsia didefinisikan sebagai hipertensi (≥140/90 mmHg) yang timbul setelah usia kehamilan 20 minggu disertai proteinuria bermakna (≥+2 pada dipstick atau ≥300 mg/24 jam).  ",
+    "explanationImages": [
+      "images/img-020.png",
+      "images/img-021.png"
+    ]
   },
   {
     "id": "Q23",
@@ -381,8 +405,10 @@ export const questions = [
       "E": "Sindrom metabolic"
     },
     "answer": "B",
-    "explanation": "Sindrom nefrotik ditandai dengan proteinuria masif, hipoalbuminemia, edema, dan hiperlipidemia akibat kerusakan membran basalis glomerulus yang meningkatkan permeabilitas terhadap protein.",
-    "explanationImages": []
+    "explanation": "Sindrom nefrotik ditandai dengan proteinuria masif, hipoalbuminemia, edema, dan hiperlipidemia akibat kerusakan membran basalis glomerulus yang meningkatkan permeabilitas terhadap protein. ",
+    "explanationImages": [
+      "images/img-022.png"
+    ]
   },
   {
     "id": "Q24",
@@ -413,13 +439,15 @@ export const questions = [
       "E": "GNA"
     },
     "answer": "A",
-    "explanation": "Definisi acute kidney injury (AKI) adalah penurunan fungsi ginjal mendadak dalam 48 jam, ditandai peningkatan kreatinin serum ≥0,3 mg/dL atau penurunan produksi urin (oliguria).",
-    "explanationImages": []
+    "explanation": "Definisi acute kidney injury (AKI) adalah penurunan fungsi ginjal mendadak dalam 48 jam, ditandai peningkatan kreatinin serum ≥0,3 mg/dL atau penurunan produksi urin (oliguria). ",
+    "explanationImages": [
+      "images/img-023.png"
+    ]
   },
   {
     "id": "Q26",
     "category": "",
-    "question": "Entrokel grade II adalah",
+    "question": "Enterokel grade II adalah",
     "questionImages": [],
     "options": {
       "A": "Herniasi cul-de-sac setengah jarak menuju himen",
@@ -429,8 +457,11 @@ export const questions = [
       "E": "Herniasi cul-de-sac tiga per empat jarak menuju himen"
     },
     "answer": "A",
-    "explanation": "Enterokel (herniasi cul-de-sac Douglas berisi usus) grade II menurut sistem pengukuran POP-Q/Baden-Walker menunjukkan herniasi hingga sekitar setengah jarak menuju himen.",
-    "explanationImages": []
+    "explanation": "Enterokel (herniasi cul-de-sac Douglas berisi usus) grade II menurut sistem pengukuran POP-Q/Baden-Walker menunjukkan herniasi hingga sekitar setengah jarak menuju himen.  ",
+    "explanationImages": [
+      "images/img-024.png",
+      "images/img-025.png"
+    ]
   },
   {
     "id": "Q27",
@@ -445,13 +476,15 @@ export const questions = [
       "E": "ANCA (Anti-neutrophil cytoplasmic antibody)"
     },
     "answer": "A",
-    "explanation": "Hematuria disertai peningkatan ureum-kreatinin akut pada laki-laki muda tanpa gejala saluran kemih bawah mengarah pada glomerulonefritis progresif cepat akibat antibodi anti-membran basalis glomerulus (penyakit Goodpasture).",
-    "explanationImages": []
+    "explanation": "Hematuria disertai peningkatan ureum-kreatinin akut pada laki-laki muda tanpa gejala saluran kemih bawah mengarah pada glomerulonefritis progresif cepat akibat antibodi anti-membran basalis glomerulus (penyakit Goodpasture). ",
+    "explanationImages": [
+      "images/img-026.png"
+    ]
   },
   {
     "id": "Q28",
     "category": "",
-    "question": "Ibu nita 25 tahun hamil pertama dengan usia kehamilan 30 minggu, datang ke poli kandungan dengan keluhan merasa sulit bernafas karena perutnya yang membesar. Tinggi fundusnya 36 cm, perutnya tampak tegang berkilap dan DJJnya terasa jauh dan lemah. Nampaknya ibu Nita mengalami",
+    "question": "Ibu nita 25 tahun hamil pertama dengan usia kehamilan 30 minggu, datang ke poli kandungan dengan keluhan merasa sulit bernafas karena perutnya yang membesar. Tinggi fundusnya 36 cm, perutnya tampak tegang berkilap dan DJ Jnya terasa jauh dan lemah. Nampaknya ibu Nita mengalami…",
     "questionImages": [],
     "options": {
       "A": "Makrosomi",
@@ -461,8 +494,11 @@ export const questions = [
       "E": "Kehamilan dengan kista ovari"
     },
     "answer": "C",
-    "explanation": "Perut tegang berkilap dengan tinggi fundus uteri jauh melebihi usia kehamilan dan keluhan sesak napas merupakan gambaran khas polihidramnion akibat penumpukan cairan amnion berlebih.",
-    "explanationImages": []
+    "explanation": "Perut tegang berkilap dengan tinggi fundus uteri jauh melebihi usia kehamilan dan keluhan sesak napas merupakan gambaran khas polihidramnion akibat penumpukan cairan amnion berlebih.  ",
+    "explanationImages": [
+      "images/img-027.png",
+      "images/img-028.png"
+    ]
   },
   {
     "id": "Q29",
@@ -470,20 +506,22 @@ export const questions = [
     "question": "Kista yang merupakan sisa dari mesonephron adalah",
     "questionImages": [],
     "options": {
-      "A": "Kista ductus wolfii",
+      "A": "Kista Gartner",
       "B": "Kista sebasea",
-      "C": "Kista inclusi epidermal",
+      "C": "Kista inklusi epidermal",
       "D": "Kista bartholini",
       "E": "Kista ductus nuck"
     },
     "answer": "A",
-    "explanation": "Kista duktus Wolffii (mesonefrik) merupakan sisa embriologis duktus mesonefros (Wolffii) yang mengalami regresi tidak sempurna.",
-    "explanationImages": []
+    "explanation": "Kista duktus Wolffii (mesonefrik) merupakan sisa embriologis duktus mesonefros (Wolffii) yang mengalami regresi tidak sempurna. ",
+    "explanationImages": [
+      "images/img-029.png"
+    ]
   },
   {
     "id": "Q30",
     "category": "",
-    "question": "Ibu ani golongan darahnya O Rh negative, suaminya memiliki golongan darah O Rh positif. Ibu ani perlu mendapatkan suntikan immunoglobulin Rhesus0 (D)",
+    "question": "Ibu ani golongan darahnya O Rh negative, suaminya memiliki golongan darah O Rh positif. Ibu ani perlu mendapatkan suntikan immunoglobulin Rhesus 0 (D)",
     "questionImages": [],
     "options": {
       "A": "Segera setelah hamil anak pertama",
@@ -493,8 +531,11 @@ export const questions = [
       "E": "Segera setelah menikah"
     },
     "answer": "B",
-    "explanation": "Ibu dengan Rhesus negatif yang menikah dengan suami Rhesus positif berisiko mengalami inkompatibilitas Rhesus pada kehamilan berikutnya sehingga memerlukan pemberian anti-D imunoglobulin (RhoGAM) pascasalin.",
-    "explanationImages": []
+    "explanation": "Ibu dengan Rhesus negatif yang menikah dengan suami Rhesus positif berisiko mengalami inkompatibilitas Rhesus pada kehamilan berikutnya sehingga memerlukan pemberian anti-D imunoglobulin (RhoGAM) pascasalin.  ",
+    "explanationImages": [
+      "images/img-030.png",
+      "images/img-031.png"
+    ]
   },
   {
     "id": "Q31",
@@ -509,8 +550,11 @@ export const questions = [
       "E": "1"
     },
     "answer": "A",
-    "explanation": "Ruptur perineum tingkat/grade yang mengenai korpus perineal namun belum mengenai sfingter ani eksterna diklasifikasikan sebagai laserasi perineum derajat II.",
-    "explanationImages": []
+    "explanation": "Ruptur perineum tingkat/grade yang mengenai korpus perineal namun belum mengenai sfingter ani eksterna diklasifikasikan sebagai laserasi perineum derajat II.  ",
+    "explanationImages": [
+      "images/img-032.png",
+      "images/img-033.png"
+    ]
   },
   {
     "id": "Q32",
@@ -518,22 +562,24 @@ export const questions = [
     "question": "seorang perempuan 23 tahun datang dengan keluhan keputihan berwarna kuning serta gatal dan iriasi pada vulva. pasien mengaku sudah aktif  secara seksual 1 tahun terakhir hanya dengan pasangagnnya dan jarnag menggunakan kondom. pada pemeriksaannya didapatkan afebril. vulvavagina kemerahan, sekret vagina kekuningan  berbusa dan bau , ph vagina 6,5 tampak strawberry servix. tidak didapatkan nyeri ada servix, uterus dan adneska  , penambahan 10% KOH pada vagina tidak menimbulkan bau amino . organisme yang mungkin menjadi penyebab adalah",
     "questionImages": [],
     "options": {
-      "A": "neisseria gonorrheae",
+      "A": "neisseria gonorrhoeae",
       "B": "trichomonas vaginalis",
       "C": "gardnerella vaginalis",
       "D": "treponema pallidum",
       "E": "haemophylus ducrei"
     },
     "answer": "B",
-    "explanation": "Discharge kekuningan berbusa berbau dengan strawberry cervix dan pH vagina tinggi merupakan gambaran khas infeksi Trichomonas vaginalis.",
-    "explanationImages": []
+    "explanation": "Discharge kekuningan berbusa berbau dengan strawberry cervix dan pH vagina tinggi merupakan gambaran khas infeksi Trichomonas vaginalis. ",
+    "explanationImages": [
+      "images/img-034.png"
+    ]
   },
   {
     "id": "Q33",
     "category": "",
     "question": "kondisi dimana terjadi rotasi dai testis yang mnegakibatkan terputarnya korda spermati yang menghantarkan darah ke skrotum disebut ",
     "questionImages": [
-      "images/img-008.png"
+      "images/img-035.png"
     ],
     "options": {
       "A": "paraphimosis",
@@ -543,8 +589,10 @@ export const questions = [
       "E": "torsio testis"
     },
     "answer": "E",
-    "explanation": "Torsio testis adalah kondisi terpuntirnya korda spermatikus sehingga aliran darah ke testis melalui pembuluh dalam korda tersebut terputus, menyebabkan iskemia testis akut.",
-    "explanationImages": []
+    "explanation": "Torsio testis adalah kondisi terpuntirnya korda spermatikus sehingga aliran darah ke testis melalui pembuluh dalam korda tersebut terputus, menyebabkan iskemia testis akut. ",
+    "explanationImages": [
+      "images/img-036.png"
+    ]
   },
   {
     "id": "Q34",
@@ -559,13 +607,15 @@ export const questions = [
       "E": "jamur"
     },
     "answer": "A",
-    "explanation": "Kondiloma akuminata adalah proliferasi epitel skuamosa berbentuk papiler/verukosa pada vulva/genitalia akibat infeksi human papillomavirus (HPV), terutama tipe 6 dan 11.",
-    "explanationImages": []
+    "explanation": "Kondiloma akuminata adalah proliferasi epitel skuamosa berbentuk papiler/verukosa pada vulva/genitalia akibat infeksi human papillomavirus (HPV), terutama tipe 6 dan 11. ",
+    "explanationImages": [
+      "images/img-037.png"
+    ]
   },
   {
     "id": "Q35",
     "category": "",
-    "question": "kondiloma akuminata adalah termasuk golongan PHS . mikroskopis dari kelaiann ini yang menjadi tanda khas bahwa kelainan ini disebabkan oleh infeksi virus adalah",
+    "question": "kondiloma akuminata adalah termasuk golongan PHS . mikroskopis dari kelainan ini yang menjadi tanda khas bahwa kelainan ini disebabkan oleh infeksi virus adalah",
     "questionImages": [],
     "options": {
       "A": "koilositosis",
@@ -575,8 +625,10 @@ export const questions = [
       "E": "nekrosis"
     },
     "answer": "A",
-    "explanation": "Gambaran mikroskopis khas kondiloma akuminata adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear akibat efek sitopatik HPV.",
-    "explanationImages": []
+    "explanation": "Gambaran mikroskopis khas kondiloma akuminata adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear akibat efek sitopatik HPV. ",
+    "explanationImages": [
+      "images/img-038.png"
+    ]
   },
   {
     "id": "Q36",
@@ -709,18 +761,20 @@ export const questions = [
   {
     "id": "Q44",
     "category": "",
-    "question": "Seorang laki-laki berusia 25 tahu datang ke puskesmas dengan keluhan skrotum kiri nyeri dan bengkak sejak 2 hari yang lalu , dari anamnesis diketahui bahwa 1 minggu yang lalu pasien mengkonsumsi antibiotik tanpa resep dokter untuk mengobat nanah yang keluar dari kemaluan setelah berhubungan seksual dengan wanita pekerja seks . tiga hari yang lalu pasien kembali melakukan hubungan seksual dengan teman perempuan . pada pemeriksaan status venerologis, didapatkan skrotum kiri edema eritema, teraba hangat, epididimis dan funikulus spermatikus edema dengan nyeri tekan . apakah pengobatan yang paling tepat untuk kasus diatas?",
+    "question": "Seorang laki-laki berusia 25 tahu datang ke puskesmas dengan keluhan skrotum kiri nyeri dan bengkak sejak 2 hari yang lalu , dari anamnesis diketahui bahwa 1 minggu yang lalu pasien mengkonsumsi antibiotik tanpa resep dokter untuk mengobat nanah yang keluar dari kemaluan setelah berhubungan seksual dengan wanita pekerja seks . tiga hari yang lalu pasien kembali melakukan hubungan seksual dengan teman perempuan . pada pemeriksaan status venerologis, didapatkan skrotum kiri edema eritema, teraba hangat, epididimis dan funikulus spermatikus edema dengan nyeri tekan. apakah pengobatan yang paling tepat untuk kasus diatas?",
     "questionImages": [],
     "options": {
       "A": "Sefiksim 400 mg ,per oral dosisi tunggal ditambah azithromisin 1 g per oral dosisi tunggal",
       "B": "Sefiksim 400 mg per oral dosis tunggal ditambah dengan doksisiklin 2x 100 mg / hari , per oral selama 14 hari",
-      "C": "sefiksim 400 mg / hari / per oral selama 5 hari ditambah doksisiklin 2 x 100 mg / hari per oral selama 14 hari → kemungkinan ini pembengkakan skrotum akibat GO & klamidia, TX sesuai buku pedoman talak IMS yg di ms teams dr Arum",
+      "C": "sefiksim 400 mg / hari / per oral selama 5 hari ditambah doksisiklin 2 x 100 mg / hari per oral selama 14 hari",
       "D": "Levofloksasin 500 mg / hari per oral selama 10 ari ditambah doksisiklin 2 x 100 mg / hari  per oral selama 14 hari",
       "E": "Sefiksim 400 mg / hari  , per oral selama 5 hari ditambah seftriakson 250 mg / hari , injeksi ingramuskular , selama 3 hari"
     },
     "answer": "C",
-    "explanation": "Keluhan disuria dan discharge uretra pada laki-laki mengarah pada uretritis, yang dapat disebabkan oleh Neisseria gonorrhoeae (gonokokal) atau Chlamydia trachomatis (non-gonokokal).",
-    "explanationImages": []
+    "explanation": "Keluhan disuria dan discharge uretra pada laki-laki mengarah pada uretritis, yang dapat disebabkan oleh Neisseria gonorrhoeae (gonokokal) atau Chlamydia trachomatis (non-gonokokal). ",
+    "explanationImages": [
+      "images/img-039.png"
+    ]
   },
   {
     "id": "Q45",
@@ -784,7 +838,9 @@ export const questions = [
     },
     "answer": "A",
     "explanation": "Kista pada dinding vagina posterolateral yang berasal dari sisa duktus Gartner (mesonefrik) disebut kista duktus Gartner.",
-    "explanationImages": []
+    "explanationImages": [
+      "images/img-040.png"
+    ]
   },
   {
     "id": "Q49",
@@ -800,7 +856,9 @@ export const questions = [
     },
     "answer": "E",
     "explanation": "Derajat prolaps organ panggul diukur secara objektif menggunakan sistem Pelvic Organ Prolapse Quantification (POP-Q).",
-    "explanationImages": []
+    "explanationImages": [
+      "images/img-041.png"
+    ]
   },
   {
     "id": "Q50",
@@ -809,7 +867,7 @@ export const questions = [
     "questionImages": [],
     "options": {
       "A": "Polihdroamnion",
-      "B": "Janin besar",
+      "B": "Makrosomia",
       "C": "Multiparitas",
       "D": "Janin preterm",
       "E": "Janin aterm"
@@ -821,9 +879,9 @@ export const questions = [
   {
     "id": "Q51",
     "category": "",
-    "question": "Seorang laki-laki berusia 20 tahun datang ke puskesmas dengan keluhan daging tumbuh di sekitar anus. Pemeriksaan status venereologis didapatkan gambaran seperti di bawah ini Apakah diagnosis kasus tersebut ",
+    "question": "Seorang laki-laki berusia 20 tahun datang ke puskesmas dengan keluhan daging tumbuh di sekitar anus. Pemeriksaan status venereologis didapatkan gambaran seperti dibawah ini Apakah diagnosis kasus tersebut… ",
     "questionImages": [
-      "images/img-009.png"
+      "images/img-042.png"
     ],
     "options": {
       "A": "Kondiloma akuminata",
@@ -833,8 +891,10 @@ export const questions = [
       "E": "Hemoroid"
     },
     "answer": "A",
-    "explanation": "Discharge uretra mukopurulen dengan diplokokus gram negatif intraseluler menunjukkan uretritis gonokokal akibat Neisseria gonorrhoeae.",
-    "explanationImages": []
+    "explanation": "- ",
+    "explanationImages": [
+      "images/img-043.png"
+    ]
   },
   {
     "id": "Q52",
@@ -866,14 +926,16 @@ export const questions = [
     },
     "answer": "E",
     "explanation": "Abortus didefinisikan sebagai berakhirnya kehamilan sebelum usia 20 minggu atau berat janin kurang dari 500 gram, sebelum janin mampu hidup di luar kandungan (viable).",
-    "explanationImages": []
+    "explanationImages": [
+      "images/img-044.png"
+    ]
   },
   {
     "id": "Q54",
     "category": "",
     "question": "Gambar dibawah ini merupakan adanya genital wart, disebabkan oleh apa ? ",
     "questionImages": [
-      "images/img-010.png"
+      "images/img-045.png"
     ],
     "options": {
       "A": "Candidiasis albicana",
@@ -896,10 +958,10 @@ export const questions = [
       "B": "Ligasi arteri uterina",
       "C": "Ligasi arteri hipogastrika",
       "D": "Histerektomi",
-      "E": "Kompresi aorta abdominalis"
+      "E": "Kompresi arteri hipogastrika"
     },
     "answer": "E",
-    "explanation": "Kompresi aorta abdominalis merupakan tindakan manual/non-bedah untuk mengurangi perdarahan pascasalin sementara menunggu tindakan definitif, berbeda dengan B-lynch, ligasi arteri uterina, ligasi arteri hipogastrika, dan histerektomi yang merupakan tindakan bedah.",
+    "explanation": "-",
     "explanationImages": []
   },
   {
@@ -1013,7 +1075,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Terapi utama preeklamsia berat adalah magnesium sulfat untuk mencegah kejang (eklamsia) serta antihipertensi untuk mengontrol tekanan darah, dengan terminasi kehamilan sebagai tata laksana definitif. ",
     "explanationImages": [
-      "images/img-011.png"
+      "images/img-046.png"
     ]
   },
   {
@@ -1062,7 +1124,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Gambaran ulkus multipel, nyeri, dengan dasar kotor dan tepi eritematosa (tidak indurasi) lebih sesuai dengan ulkus mole (chancroid) akibat Haemophilus ducreyi, berbeda dari sifilis primer (ulkus durum: soliter, tidak nyeri, indurasi) atau herpes genitalis (vesikel berkelompok). Terapi lini pertama ulkus mole adalah seftriakson 250 mg injeksi intramuskular dosis tunggal. ",
     "explanationImages": [
-      "images/img-012.png"
+      "images/img-047.png"
     ]
   },
   {
@@ -1134,7 +1196,7 @@ export const questions = [
     "category": "",
     "question": "Pemeriksaan dibawah ini digunakan untuk mendeteksi adanya bakteri…disebut pemeriksaan… ",
     "questionImages": [
-      "images/img-013.png"
+      "images/img-048.png"
     ],
     "options": {
       "A": "Haemophilus ducreyi, pemeriksaan lapang pandang",
@@ -1242,7 +1304,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Kista dermoid (teratoma kistik matur) berisi jaringan berasal dari tiga lapisan germinal seperti rambut, gigi, kulit, dan kelenjar sebasea. ",
     "explanationImages": [
-      "images/img-014.png"
+      "images/img-049.png"
     ]
   },
   {
@@ -1308,7 +1370,7 @@ export const questions = [
     "answer": "C",
     "explanation": "- ",
     "explanationImages": [
-      "images/img-015.png"
+      "images/img-050.png"
     ]
   },
   {
@@ -1342,7 +1404,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Ketuban pecah dini (KPD) didefinisikan sebagai pecahnya selaput ketuban sebelum onset persalinan (belum ada tanda inpartu). ",
     "explanationImages": [
-      "images/img-016.png"
+      "images/img-051.png"
     ]
   },
   {
@@ -1414,7 +1476,7 @@ export const questions = [
     "category": "",
     "question": "Seorang perempuan akseptor KB IUD berusi 35 tahun datang dengan keluhan keputihan kental. Pada pemeriksaan discharge endoserviks dengan pewarnaan gram didapatkan gambaran seperti dibawah ini UGO Apakah pengobatan yang paling tepat untuk kasus tersebut? ",
     "questionImages": [
-      "images/img-017.png"
+      "images/img-052.png"
     ],
     "options": {
       "A": "Sefiksim 400 mg per oral, dosis tunggal dan Kanamisin 2 g injeksi intramuskular dosis tunggal",
@@ -1440,8 +1502,10 @@ export const questions = [
       "E": "Mola hidatidosa"
     },
     "answer": "E",
-    "explanation": "Mola hidatidosa merupakan tumor jinak trofoblas akibat proliferasi abnormal jaringan trofoblas plasenta tanpa disertai embrio yang berkembang normal.",
-    "explanationImages": []
+    "explanation": "Mola hidatidosa merupakan tumor jinak trofoblas akibat proliferasi abnormal jaringan trofoblas plasenta tanpa disertai embrio yang berkembang normal. ",
+    "explanationImages": [
+      "images/img-053.png"
+    ]
   },
   {
     "id": "Q89",
@@ -1600,7 +1664,7 @@ export const questions = [
       "E": "engerix"
     },
     "answer": "C",
-    "explanation": "Gardasil merupakan salah satu vaksin HPV yang beredar di Indonesia untuk pencegahan kanker serviks; Tapros, Endrolin, Mifepriston, dan Engerix bukan vaksin HPV.",
+    "explanation": "Gardasil merupakan salah satu vaksin HPV yang beredar di Indonesia untuk pencegahan kanker serviks; Tapros dan Endrolin adalah obat golongan agonis GnRH yang biasa digunakan untuk terapi endometriosis, fibroid rahim, atau kanker prostat. Mifepriston adalah obat yang bekerja sebagai antiprogesteron. , dan Engerix (Engerix-B) adalah vaksin untuk mencegah infeksi virus Hepatitis B.",
     "explanationImages": []
   },
   {
@@ -1624,7 +1688,7 @@ export const questions = [
     "category": "",
     "question": "Gambar dibawah ini menunjukkan keadaan penyakit yang disebut ",
     "questionImages": [
-      "images/img-018.png"
+      "images/img-054.png"
     ],
     "options": {
       "A": "Paraphimosis",
@@ -1699,7 +1763,9 @@ export const questions = [
     },
     "answer": "C",
     "explanation": "Retensi urin berulang merupakan salah satu indikasi bedah pada BPH, selain hematuria makroskopik, ISK berulang, batu buli, dan gagal ginjal akibat obstruksi.",
-    "explanationImages": []
+    "explanationImages": [
+      "images/img-055.png"
+    ]
   },
   {
     "id": "Q105",
@@ -1731,7 +1797,10 @@ export const questions = [
     },
     "answer": "A",
     "explanation": "Kategori A menunjukkan penelitian terkontrol pada wanita hamil tidak menunjukkan peningkatan risiko abnormalitas janin, merupakan kategori paling aman menurut FDA.",
-    "explanationImages": []
+    "explanationImages": [
+      "images/img-056.png",
+      "images/img-057.png"
+    ]
   },
   {
     "id": "Q107",
@@ -1812,7 +1881,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Kista duktus Wolffii merupakan sisa embriologis duktus mesonefros (Wolffii) yang tidak beregresi sempurna. ",
     "explanationImages": [
-      "images/img-019.png"
+      "images/img-058.png"
     ]
   },
   {
@@ -1830,7 +1899,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Perdarahan pervaginam tanpa nyeri pada trimester ketiga dengan uterus lemas merupakan gambaran khas plasenta previa, berbeda dari solusio plasenta yang disertai nyeri dan uterus tegang. ",
     "explanationImages": [
-      "images/img-020.png"
+      "images/img-059.png"
     ]
   },
   {
@@ -1848,7 +1917,7 @@ export const questions = [
     "answer": "D",
     "explanation": "Ketuban pecah dini (KPD) adalah pecahnya selaput ketuban sebelum onset persalinan (sebelum ada tanda inpartu). ",
     "explanationImages": [
-      "images/img-021.png"
+      "images/img-060.png"
     ]
   },
   {
@@ -1864,8 +1933,10 @@ export const questions = [
       "E": "Lochea alba"
     },
     "answer": "B",
-    "explanation": "Lokia berwarna kuning kemerahan pada beberapa hari pascasalin (hari ke-3 s.d. ke-7) disebut lokia sanguinolenta.",
-    "explanationImages": []
+    "explanation": "Lokia berwarna kuning kemerahan pada beberapa hari pascasalin (hari ke-3 s.d. ke-7) disebut lokia sanguinolenta. ",
+    "explanationImages": [
+      "images/img-061.png"
+    ]
   },
   {
     "id": "Q115",
@@ -1882,8 +1953,8 @@ export const questions = [
     "answer": "E",
     "explanation": "Peningkatan kadar hCG yang sangat tinggi pada mola hidatidosa menunjukkan proliferasi trofoblas yang aktif dan berkaitan dengan potensi keganasan (mola invasif/koriokarsinoma).  ",
     "explanationImages": [
-      "images/img-022.png",
-      "images/img-023.png"
+      "images/img-062.png",
+      "images/img-063.png"
     ]
   },
   {
@@ -1933,7 +2004,7 @@ export const questions = [
     "answer": "E",
     "explanation": "Avulsi hilus ginjal yang mengganggu suplai vaskular utama ginjal termasuk trauma ginjal grade V (paling berat) menurut klasifikasi AAST. ",
     "explanationImages": [
-      "images/img-024.png"
+      "images/img-064.png"
     ]
   },
   {
@@ -1951,7 +2022,7 @@ export const questions = [
     "answer": "E",
     "explanation": "CO, amoniak, asam hidrosianat, dan formaldehid terdapat pada fase gas asap rokok, sedangkan nikotin terutama terdapat pada fase partikel (tar), bukan fase gas. ",
     "explanationImages": [
-      "images/img-025.png"
+      "images/img-065.png"
     ]
   },
   {
@@ -1985,8 +2056,8 @@ export const questions = [
     "answer": "D",
     "explanation": "Kepala janin umumnya justru lebih mudah masuk panggul (engagement lebih awal) pada primigravida karena tonus dinding abdomen yang masih kuat; sebaliknya CPD, hidrosefalus, makrosomia, dan multiparitas (laksitas dinding abdomen) dapat menghambat engagement.  ",
     "explanationImages": [
-      "images/img-026.png",
-      "images/img-027.png"
+      "images/img-066.png",
+      "images/img-067.png"
     ]
   },
   {
@@ -2020,7 +2091,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Duh kuning berbusa berbau dengan strawberry cervix merupakan gambaran khas infeksi Trichomonas vaginalis. ",
     "explanationImages": [
-      "images/img-028.png"
+      "images/img-068.png"
     ]
   },
   {
@@ -2038,7 +2109,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Aspirin bersifat antiplatelet/menghambat agregasi trombosit sehingga dapat meningkatkan risiko perdarahan pada ibu hamil, terutama bila dikonsumsi mendekati persalinan. ",
     "explanationImages": [
-      "images/img-029.png"
+      "images/img-069.png"
     ]
   },
   {
@@ -2054,8 +2125,11 @@ export const questions = [
       "E": "Grade 5"
     },
     "answer": "B",
-    "explanation": "Laserasi ginjal dengan kedalaman <1 cm pada korteks tanpa ekstravasasi urin termasuk trauma ginjal grade II menurut klasifikasi AAST.",
-    "explanationImages": []
+    "explanation": "Laserasi ginjal dengan kedalaman <1 cm pada korteks tanpa ekstravasasi urin termasuk trauma ginjal grade II menurut klasifikasi AAST.  ",
+    "explanationImages": [
+      "images/img-070.png",
+      "images/img-071.png"
+    ]
   },
   {
     "id": "Q126",
@@ -2070,13 +2144,15 @@ export const questions = [
       "E": "Kista bartolini"
     },
     "answer": "A",
-    "explanation": "Kista dermoid (teratoma kistik matur) berisi jaringan dari tiga lapisan germinal seperti rambut, gigi, kulit, dan kelenjar sebasea.",
-    "explanationImages": []
+    "explanation": "Kista dermoid (teratoma kistik matur) berisi jaringan dari tiga lapisan germinal seperti rambut, gigi, kulit, dan kelenjar sebasea. ",
+    "explanationImages": [
+      "images/img-072.png"
+    ]
   },
   {
     "id": "Q127",
     "category": "",
-    "question": "Tes untuk mengetahui Creatinine clearence, kecuali...",
+    "question": "Tes untuk mengetahui Creatinine clearance, kecuali...",
     "questionImages": [],
     "options": {
       "A": "MDRD",
@@ -2092,7 +2168,7 @@ export const questions = [
   {
     "id": "Q128",
     "category": "",
-    "question": "Pria kencing nanah, nyeri BAK, ada discharge mukopurulent, dilakukan pemeriksaan didapatkan hasil leukosit pmn \\>5 dan diplokokus gram negatif. Pengobatan yang tepat?",
+    "question": "Pria kencing nanah, nyeri BAK, ada discharge mukopurulen, dilakukan pemeriksaan didapatkan hasil leukosit pmn \\>5 dan diplokokus gram negatif. Pengobatan yang tepat?",
     "questionImages": [],
     "options": {
       "A": "Sefiksim + kanamycin",
@@ -2104,8 +2180,8 @@ export const questions = [
     "answer": "B",
     "explanation": "Discharge mukopurulen dengan diplokokus gram negatif intraseluler menunjukkan uretritis gonokokal, diterapi dengan sefiksim dosis tunggal ditambah azitromisin dosis tunggal untuk mencakup kemungkinan koinfeksi klamidia.  ",
     "explanationImages": [
-      "images/img-030.png",
-      "images/img-031.png"
+      "images/img-073.png",
+      "images/img-074.png"
     ]
   },
   {
@@ -2123,7 +2199,7 @@ export const questions = [
     "answer": "E",
     "explanation": "Atonia uteri, ruptur uteri, retensio plasenta, dan inversio uteri semuanya merupakan penyebab perdarahan abnormal pascasalin, sehingga jawaban paling tepat adalah semua benar. ",
     "explanationImages": [
-      "images/img-032.png"
+      "images/img-075.png"
     ]
   },
   {
@@ -2134,7 +2210,7 @@ export const questions = [
     "options": {
       "A": "Adenocarcinoma",
       "B": "Big cell carcinoma",
-      "C": "Karsinoma sel skuamosa (Ca cell squamous)",
+      "C": "Karsinoma sel skuamosa",
       "D": "Karsinoma sel basal",
       "E": "Karsinoma sel transisional"
     },
@@ -2189,7 +2265,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Abortus imminens adalah ancaman keguguran dengan perdarahan pervaginam namun serviks tertutup, sehingga kehamilan masih berpotensi dilanjutkan. ",
     "explanationImages": [
-      "images/img-033.png"
+      "images/img-076.png"
     ]
   },
   {
@@ -2207,7 +2283,7 @@ export const questions = [
     "answer": "D",
     "explanation": "Ereksi menetap lebih dari 4 jam tanpa rangsangan seksual, terutama dengan riwayat konsumsi alkohol, sesuai dengan gambaran priapismus. ",
     "explanationImages": [
-      "images/img-034.png"
+      "images/img-077.png"
     ]
   },
   {
@@ -2225,7 +2301,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Sindrom ovarium polikistik (PCOS) merupakan penyebab tersering infertilitas akibat gangguan ovulasi kronik. ",
     "explanationImages": [
-      "images/img-035.png"
+      "images/img-078.png"
     ]
   },
   {
@@ -2236,13 +2312,16 @@ export const questions = [
     "options": {
       "A": "Ligasi A. Uterina",
       "B": "Ligasi A. Hipogastrika",
-      "C": "Kompresi A. Abdominalis",
+      "C": "Kompresi arteri hipogastrika",
       "D": "B-lynch",
       "E": "Histerektomi"
     },
     "answer": "C",
-    "explanation": "Kompresi aorta abdominalis merupakan tindakan manual/non-bedah untuk mengurangi perdarahan pascasalin sementara, berbeda dari B-lynch serta ligasi arteri uterina/hipogastrika yang merupakan tindakan bedah.",
-    "explanationImages": []
+    "explanation": "-  ",
+    "explanationImages": [
+      "images/img-079.png",
+      "images/img-080.png"
+    ]
   },
   {
     "id": "Q137",
@@ -2259,7 +2338,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Gejala LUTS obstruktif meliputi hesitansi, pancaran lemah, dan rasa tidak lampias, berbeda dengan gejala iritatif seperti urgensi, frekuensi, dan nokturia. ",
     "explanationImages": [
-      "images/img-036.png"
+      "images/img-081.png"
     ]
   },
   {
@@ -2277,7 +2356,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Alfa-blocker bekerja merelaksasi otot polos leher kandung kemih dan prostat sehingga mengurangi resistensi aliran urin pada pasien BPH dengan LUTS sedang. ",
     "explanationImages": [
-      "images/img-037.png"
+      "images/img-082.png"
     ]
   },
   {
@@ -2311,7 +2390,7 @@ export const questions = [
     "answer": "D",
     "explanation": "Polip serviks kecil dapat ditangani dengan puntiran (avulsi) tangkai polip, sedangkan kuretase ringan dilakukan bila dasar polip lebih luas, sehingga kedua tindakan tersebut (A dan B) merupakan pilihan penanganan yang tepat. ",
     "explanationImages": [
-      "images/img-038.png"
+      "images/img-083.png"
     ]
   },
   {
@@ -2327,8 +2406,10 @@ export const questions = [
       "E": "Semua benar"
     },
     "answer": "D",
-    "explanation": "Infertilitas pada wanita diklasifikasikan menjadi infertilitas primer (belum pernah hamil) dan infertilitas sekunder (pernah hamil sebelumnya namun sulit hamil kembali).",
-    "explanationImages": []
+    "explanation": "Infertilitas pada wanita diklasifikasikan menjadi infertilitas primer (belum pernah hamil) dan infertilitas sekunder (pernah hamil sebelumnya namun sulit hamil kembali). ",
+    "explanationImages": [
+      "images/img-084.png"
+    ]
   },
   {
     "id": "Q142",
@@ -2377,7 +2458,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Abortus didefinisikan sebagai terhentinya kehamilan sebelum usia 20 minggu atau berat janin kurang dari 500 gram, sebelum janin dapat hidup di luar kandungan. ",
     "explanationImages": [
-      "images/img-039.png"
+      "images/img-085.png"
     ]
   },
   {
@@ -2411,8 +2492,8 @@ export const questions = [
     "answer": "A",
     "explanation": "Fimosis derajat berat (grade 4) dengan riwayat ISK dan pancaran urin yang terganggu merupakan indikasi untuk dilakukan sirkumsisi definitif.  ",
     "explanationImages": [
-      "images/img-040.png",
-      "images/img-041.png"
+      "images/img-086.png",
+      "images/img-087.png"
     ]
   },
   {
@@ -2430,7 +2511,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Grey baby syndrome merupakan efek toksik kloramfenikol pada neonatus akibat imaturitas fungsi glukuronidasi hepar, menyebabkan akumulasi obat dan kolaps kardiovaskular. ",
     "explanationImages": [
-      "images/img-042.png"
+      "images/img-088.png"
     ]
   },
   {
@@ -2464,7 +2545,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Glomerulonefritis membranoproliferatif merupakan salah satu penyebab tersering glomerulonefritis primer pada dewasa. ",
     "explanationImages": [
-      "images/img-043.png"
+      "images/img-089.png"
     ]
   },
   {
@@ -2482,7 +2563,7 @@ export const questions = [
     "answer": "C",
     "explanation": "Pada presentasi muka, denominator (titik penunjuk) yang digunakan adalah mentum (dagu janin). ",
     "explanationImages": [
-      "images/img-044.png"
+      "images/img-090.png"
     ]
   },
   {
@@ -2516,7 +2597,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Heparin memiliki berat molekul besar sehingga tidak dapat melewati sawar plasenta. ",
     "explanationImages": [
-      "images/img-045.png"
+      "images/img-091.png"
     ]
   },
   {
@@ -2532,8 +2613,10 @@ export const questions = [
       "E": "Prostatektomi terbuka"
     },
     "answer": "A",
-    "explanation": "Skor IPSS ringan (≤7) pada BPH umumnya cukup ditatalaksana dengan watchful waiting (pemantauan berkala) tanpa intervensi bedah/medikamentosa agresif.",
-    "explanationImages": []
+    "explanation": "Skor IPSS ringan (≤7) pada BPH umumnya cukup ditatalaksana dengan watchful waiting (pemantauan berkala) tanpa intervensi bedah/medikamentosa agresif. ",
+    "explanationImages": [
+      "images/img-092.png"
+    ]
   },
   {
     "id": "Q154",
@@ -2548,8 +2631,10 @@ export const questions = [
       "E": "Lingkar kepala < persentil 10"
     },
     "answer": "B",
-    "explanation": "Dismaturitas (Small for Gestational Age) didefinisikan sebagai berat lahir kurang dari persentil ke-10 untuk usia kehamilannya.",
-    "explanationImages": []
+    "explanation": "Dismaturitas (Small for Gestational Age) didefinisikan sebagai berat lahir kurang dari persentil ke-10 untuk usia kehamilannya. ",
+    "explanationImages": [
+      "images/img-093.png"
+    ]
   },
   {
     "id": "Q155",
@@ -2564,8 +2649,10 @@ export const questions = [
       "E": "Melakukan dorsal slit"
     },
     "answer": "B",
-    "explanation": "Pada hipospadia, preputium bagian ventral sering diperlukan untuk rekonstruksi uretra (urethroplasty) sehingga sirkumsisi sebaiknya ditunda dan pasien dijelaskan mengenai kemungkinan tindakan urethroplasty oleh dokter spesialis urologi.",
-    "explanationImages": []
+    "explanation": "Pada hipospadia, preputium bagian ventral sering diperlukan untuk rekonstruksi uretra (urethroplasty) sehingga sirkumsisi sebaiknya ditunda dan pasien dijelaskan mengenai kemungkinan tindakan urethroplasty oleh dokter spesialis urologi. ",
+    "explanationImages": [
+      "images/img-094.png"
+    ]
   },
   {
     "id": "Q156",
@@ -2628,8 +2715,10 @@ export const questions = [
       "E": "Edema tungkai saja tanpa hipertensi"
     },
     "answer": "B",
-    "explanation": "Preeklamsia ditandai hipertensi (≥140/90 mmHg) disertai proteinuria bermakna (≥+2), berbeda dengan hipertensi gestasional tanpa proteinuria.",
-    "explanationImages": []
+    "explanation": "Preeklamsia ditandai hipertensi (≥140/90 mmHg) disertai proteinuria bermakna (≥+2), berbeda dengan hipertensi gestasional tanpa proteinuria. ",
+    "explanationImages": [
+      "images/img-095.png"
+    ]
   },
   {
     "id": "Q160",
@@ -2650,7 +2739,7 @@ export const questions = [
   {
     "id": "Q161",
     "category": "",
-    "question": "Gejala gagal ginjal akut, pasien abis kecelakaan, diagnosis ...",
+    "question": "Gejala gagal ginjal akut, pasien habis kecelakaan, diagnosis ...",
     "questionImages": [],
     "options": {
       "A": "Acute Kidney Injury Risk",
@@ -2660,8 +2749,10 @@ export const questions = [
       "E": "Chronic Kidney Disease"
     },
     "answer": "B",
-    "explanation": "Pasien pascatrauma dengan gejala klinis gagal ginjal akut yang telah terjadi (bukan hanya berisiko) sesuai kriteria RIFLE stadium 'Failure' (Acute Kidney Injury Failure).",
-    "explanationImages": []
+    "explanation": "Ini seharus nya menanyai tentang Kriteria RIFLE ",
+    "explanationImages": [
+      "images/img-096.png"
+    ]
   },
   {
     "id": "Q162",
@@ -2716,7 +2807,7 @@ export const questions = [
     "category": "",
     "question": "Gambar dibawah menunjukkan kondisi kegawatdaruratan skrotum akut pada laki-laki muda tanpa riwayat trauma dengan refleks kremaster negatif. Diagnosis yang paling tepat adalah ",
     "questionImages": [
-      "images/img-046.png"
+      "images/img-097.png"
     ],
     "options": {
       "A": "Hidrokel",
@@ -2758,8 +2849,10 @@ export const questions = [
       "E": "Grade V"
     },
     "answer": "D",
-    "explanation": "Trauma ginjal yang meluas hingga mengenai sistem pelvikalises (pelvis renalis/kaliks) dengan ekstravasasi urin termasuk grade IV menurut klasifikasi AAST.",
-    "explanationImages": []
+    "explanation": "Trauma ginjal yang meluas hingga mengenai sistem pelvikalises (pelvis renalis/kaliks) dengan ekstravasasi urin termasuk grade IV menurut klasifikasi AAST. ",
+    "explanationImages": [
+      "images/img-098.png"
+    ]
   },
   {
     "id": "Q168",
@@ -2790,8 +2883,10 @@ export const questions = [
       "E": "Sel Barr"
     },
     "answer": "A",
-    "explanation": "Gambaran mikroskopis khas kondiloma akuminata akibat infeksi HPV adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear.",
-    "explanationImages": []
+    "explanation": "Gambaran mikroskopis khas kondiloma akuminata akibat infeksi HPV adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear. ",
+    "explanationImages": [
+      "images/img-099.png"
+    ]
   },
   {
     "id": "Q170",
@@ -3006,7 +3101,7 @@ export const questions = [
     "category": "",
     "question": "Gambar dibawah menunjukkan preputium yang tertarik ke proksimal dan tidak dapat dikembalikan ke posisi semula sehingga glans penis terjepit dan edema. Diagnosis yang tepat adalah ",
     "questionImages": [
-      "images/img-047.jpeg"
+      "images/img-100.jpeg"
     ],
     "options": {
       "A": "Parafimosis",
@@ -3040,7 +3135,7 @@ export const questions = [
     "category": "",
     "question": "Gambar di bawah menunjukkan perbandingan skematis kondisi preputium penis. Nama kelainan yang ditunjukkan adalah ",
     "questionImages": [
-      "images/img-048.png"
+      "images/img-101.png"
     ],
     "options": {
       "A": "Fimosis (preputium redundan, tidak dapat ditarik melewati glans)",
@@ -3098,8 +3193,10 @@ export const questions = [
       "E": "Edema tungkai saja tanpa hipertensi"
     },
     "answer": "B",
-    "explanation": "Preeklamsia ditandai hipertensi (≥140/90 mmHg) disertai proteinuria bermakna (≥+2), berbeda dari hipertensi gestasional tanpa proteinuria.",
-    "explanationImages": []
+    "explanation": "Preeklamsia ditandai hipertensi (≥140/90 mmHg) disertai proteinuria bermakna (≥+2), berbeda dari hipertensi gestasional tanpa proteinuria. ",
+    "explanationImages": [
+      "images/img-102.png"
+    ]
   },
   {
     "id": "Q189",
@@ -3132,7 +3229,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Konsumsi tetrasiklin pada ibu hamil dapat menyebabkan diskolorasi (kuning-kecoklatan) pada gigi susu janin dan meningkatkan risiko karies, karena tetrasiklin berikatan dengan kalsium pada jaringan gigi dan tulang yang sedang terbentuk. ",
     "explanationImages": [
-      "images/img-049.png"
+      "images/img-103.png"
     ]
   },
   {
@@ -3410,7 +3507,7 @@ export const questions = [
   {
     "id": "Q208",
     "category": "",
-    "question": "ciri khas pada rubella kecuali : jaudince, katarak",
+    "question": "Yang bukan ciri khas/trias klasik sindrom rubella kongenital",
     "questionImages": [],
     "options": {
       "A": "Jaundice (ikterus)",
@@ -3420,8 +3517,10 @@ export const questions = [
       "E": "Mikrosefali"
     },
     "answer": "A",
-    "explanation": "Katarak kongenital merupakan salah satu trias klasik sindrom rubella kongenital (bersama kelainan jantung dan tuli sensorineural), sedangkan ikterus (jaundice) bukan merupakan ciri khas rubella kongenital.",
-    "explanationImages": []
+    "explanation": "Katarak kongenital merupakan salah satu trias klasik sindrom rubella kongenital (bersama kelainan jantung dan tuli sensorineural), jaundice dan mikrosefali dapat hadir pada sindrom rubella, namun bukan salah satu trias klasik dan bisa mengindikasikan sindrom lain. ",
+    "explanationImages": [
+      "images/img-104.png"
+    ]
   },
   {
     "id": "Q209",
@@ -3493,7 +3592,7 @@ export const questions = [
     "question": "Seorang nenek berusia 70 tahun mengeluh kemaluan kering dan nyeri saat berhubungan seksual. Tata laksana yang tepat adalah",
     "questionImages": [],
     "options": {
-      "A": "Estrogen topikal vagina atau pelumas (lubrikan)",
+      "A": "Estrogen topikal vagina atau pelumas",
       "B": "Antibiotik oral",
       "C": "Antijamur topikal",
       "D": "Kortikosteroid sistemik",
@@ -3510,7 +3609,7 @@ export const questions = [
     "questionImages": [],
     "options": {
       "A": "Aplasia",
-      "B": "Hipoplasi",
+      "B": "Hipoplasia",
       "C": "Hiperplasia",
       "D": "Obstruksi saluran kemih atas",
       "E": "Obstruksi saluran kemih bawah"
@@ -3538,7 +3637,7 @@ export const questions = [
   {
     "id": "Q216",
     "category": "",
-    "question": "Ibu datang ke IGD cemas karena darah mengalir keluar dari jalan lahir, padahal usia kehamilan baru 7 bulan. Ibu tidak merasa nyeri dan semalam melakukan hubungan seksual dengan suami. TD : 100/70, nadi 92x/menit, respirasi 18x/menit, konjuntiva agak pucat, perut membesar namun lemas, DJJ 148x/mnt. Nampaknya Ibu Mira mengalami :\\-- a. Vasa previa",
+    "question": "Ibu datang ke IGD cemas karena darah mengalir keluar dari jalan lahir, padahal usia kehamilan baru 7 bulan. Ibu tidak merasa nyeri dan semalam melakukan hubungan seksual dengan suami. TD : 100/70, nadi 92x/menit, respirasi 18x/menit, konjuntiva agak pucat, perut membesar namun lemas, DJJ 148x/mnt. Nampaknya Ibu Mira mengalami :",
     "questionImages": [],
     "options": {
       "A": "Vasa previa",
@@ -3564,8 +3663,10 @@ export const questions = [
       "E": "Lochea alba"
     },
     "answer": "B",
-    "explanation": "Lokia yang berwarna kuning kemerahan pada hari ke-3 hingga ke-7 pascasalin disebut lokia sanguinolenta.",
-    "explanationImages": []
+    "explanation": "Lokia yang berwarna kuning kemerahan pada hari ke-3 hingga ke-7 pascasalin disebut lokia sanguinolenta. ",
+    "explanationImages": [
+      "images/img-105.png"
+    ]
   },
   {
     "id": "Q218",
@@ -3612,8 +3713,10 @@ export const questions = [
       "E": "Inkontinensia urgensi"
     },
     "answer": "C",
-    "explanation": "Gejala LUTS obstruktif meliputi hesitansi, pancaran lemah, dan rasa tidak lampias, berbeda dengan gejala iritatif seperti urgensi, frekuensi, dan nokturia.",
-    "explanationImages": []
+    "explanation": "Gejala LUTS obstruktif meliputi hesitansi, pancaran lemah, dan rasa tidak lampias, berbeda dengan gejala iritatif seperti urgensi, frekuensi, dan nokturia. ",
+    "explanationImages": [
+      "images/img-106.png"
+    ]
   },
   {
     "id": "Q221",
@@ -3694,7 +3797,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Heparin memiliki berat molekul besar sehingga tidak dapat melewati sawar plasenta. ",
     "explanationImages": [
-      "images/img-050.png"
+      "images/img-107.png"
     ]
   },
   {
@@ -3710,13 +3813,13 @@ export const questions = [
       "E": "Toksoplasmosis kongenital"
     },
     "answer": "A",
-    "explanation": "Wajah datar (flat facies, saddle nose) disertai distres napas pada bayi baru lahir merupakan gambaran khas sindrom rubella kongenital akibat infeksi rubella maternal pada trimester pertama.",
+    "explanation": "Wajah datar (flat facies, saddle nose) disertai distres napas pada bayi baru lahir merupakan gambaran khas sindrom down",
     "explanationImages": []
   },
   {
     "id": "Q227",
     "category": "",
-    "question": "Preputium tidak bisa di tarik ( phimosis )",
+    "question": "Preputium tidak bisa di tarik",
     "questionImages": [],
     "options": {
       "A": "Fimosis",
@@ -3732,7 +3835,7 @@ export const questions = [
   {
     "id": "Q228",
     "category": "",
-    "question": "Pada kondiloma sel yang dijumpai adalah ... (Koilositosis)",
+    "question": "Pada kondiloma sel yang dijumpai adalah ...",
     "questionImages": [],
     "options": {
       "A": "Koilositosis",
@@ -3742,13 +3845,15 @@ export const questions = [
       "E": "Sel Barr"
     },
     "answer": "A",
-    "explanation": "Gambaran mikroskopis khas kondiloma akuminata akibat infeksi HPV adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear.",
-    "explanationImages": []
+    "explanation": "Gambaran mikroskopis khas kondiloma akuminata akibat infeksi HPV adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear. ",
+    "explanationImages": [
+      "images/img-108.png"
+    ]
   },
   {
     "id": "Q229",
     "category": "",
-    "question": "Pemeriksaan khas pada hidrokel adalah ... transluminasi (disenterin)",
+    "question": "Pemeriksaan khas pada hidrokel adalah ...",
     "questionImages": [],
     "options": {
       "A": "Transiluminasi positif",
@@ -3766,7 +3871,7 @@ export const questions = [
     "category": "",
     "question": "Gambar di bawah menunjukkan preputium yang tertarik ke proksimal dan tidak dapat dikembalikan ke posisi semula sehingga glans penis terjepit dan edema. Diagnosis yang tepat adalah ",
     "questionImages": [
-      "images/img-051.png"
+      "images/img-109.png"
     ],
     "options": {
       "A": "Parafimosis",
@@ -3794,7 +3899,7 @@ export const questions = [
     "answer": "A",
     "explanation": "- ",
     "explanationImages": [
-      "images/img-052.png"
+      "images/img-110.png"
     ]
   },
   {
@@ -4018,8 +4123,11 @@ export const questions = [
       "E": "Peningkatan hormon androgen"
     },
     "answer": "D",
-    "explanation": "Kadar hCG yang tetap tinggi atau terus meningkat setelah evakuasi mola, atau yang sangat tinggi sejak awal, menunjukkan proliferasi trofoblas yang aktif dan mengarah pada potensi keganasan (mola invasif atau koriokarsinoma), sehingga pemantauan hCG serial penting dilakukan.",
-    "explanationImages": []
+    "explanation": "Kadar hCG yang tetap tinggi atau terus meningkat setelah evakuasi mola, atau yang sangat tinggi sejak awal, menunjukkan proliferasi trofoblas yang aktif dan mengarah pada potensi keganasan (mola invasif atau koriokarsinoma), sehingga pemantauan hCG serial penting dilakukan.  ",
+    "explanationImages": [
+      "images/img-111.png",
+      "images/img-112.png"
+    ]
   },
   {
     "id": "Q246",
@@ -4050,8 +4158,10 @@ export const questions = [
       "E": "Mioma uteri"
     },
     "answer": "C",
-    "explanation": "PCOS merupakan penyebab tersering infertilitas akibat gangguan ovulasi kronik (anovulasi), berbeda dari endometriosis, salpingitis, atau PID yang lebih berkaitan dengan faktor tuba/perlengketan.",
-    "explanationImages": []
+    "explanation": "PCOS merupakan penyebab tersering infertilitas akibat gangguan ovulasi kronik (anovulasi), berbeda dari endometriosis, salpingitis, atau PID yang lebih berkaitan dengan faktor tuba/perlengketan. ",
+    "explanationImages": [
+      "images/img-113.png"
+    ]
   },
   {
     "id": "Q248",
@@ -4260,7 +4370,7 @@ export const questions = [
     "answer": "B",
     "explanation": "Preeklamsia hanya dapat ditegakkan pada usia kehamilan ≥20 minggu disertai hipertensi dan proteinuria bermakna; pada usia kehamilan 18 minggu (pilihan D), hipertensi dengan proteinuria yang muncul sebelum 20 minggu justru mengarah pada hipertensi kronik dengan superimposed preeklamsia atau kondisi lain, bukan preeklamsia murni. ",
     "explanationImages": [
-      "images/img-053.png"
+      "images/img-114.png"
     ]
   },
   {
@@ -4278,7 +4388,7 @@ export const questions = [
     "answer": "D",
     "explanation": "Kehamilan menyebabkan hemodilusi yang menurunkan kadar albumin plasma, sehingga memengaruhi ikatan obat dengan protein plasma dan farmakokinetik obat pada ibu hamil; sebaliknya, volume plasma justru meningkat, peristaltik usus melambat, dan eliminasi ginjal umumnya meningkat pada kehamilan. ",
     "explanationImages": [
-      "images/img-054.png"
+      "images/img-115.png"
     ]
   },
   {
@@ -4286,7 +4396,7 @@ export const questions = [
     "category": "",
     "question": "Gambar di bawah menunjukkan … ",
     "questionImages": [
-      "images/img-055.jpeg"
+      "images/img-116.jpeg"
     ],
     "options": {
       "A": "Torsio testis",
@@ -4314,9 +4424,9 @@ export const questions = [
     "answer": "A",
     "explanation": "Penurunan Lactobacillus, sedikit leukosit, clue cells, dan kegagalan terapi antijamur (bukan kandidiasis) sesuai dengan vaginosis bakterialis; terapi lini pertama metronidazol per oral 7 hari, dan kriteria Amsel dilengkapi dengan whiff test serta pengukuran pH vagina.   ",
     "explanationImages": [
-      "images/img-056.png",
-      "images/img-057.png",
-      "images/img-058.png"
+      "images/img-117.png",
+      "images/img-118.png",
+      "images/img-119.png"
     ]
   },
   {
@@ -4324,7 +4434,7 @@ export const questions = [
     "category": "",
     "question": "Tata laksana preeklamsia berat meliputi pemberian magnesium sulfat (MgSO4) untuk mencegah kejang. Manakah protokol pemberian MgSO4 yang tepat? ",
     "questionImages": [
-      "images/img-059.jpeg"
+      "images/img-120.jpeg"
     ],
     "options": {
       "A": "Loading dose 4 gram MgSO4 20% (20 cc) atau 40% (10 cc) dalam 100 cc NaCl habis dalam 15 menit, dilanjutkan maintenance dose MgSO4 20% 1 gram/jam (5 cc/jam) syringe pump, atau 6 gram MgSO4 40% dalam 500 cc RL selama 6 jam (28 tetes/menit), sampai 24 jam pascasalin/pasca-SC atau kejang terakhir",
@@ -4368,7 +4478,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Heparin memiliki berat molekul besar sehingga tidak dapat melewati sawar plasenta, sehingga aman digunakan sebagai antikoagulan pada kehamilan (berbeda dengan warfarin yang dapat menembus plasenta). ",
     "explanationImages": [
-      "images/img-060.png"
+      "images/img-121.png"
     ]
   },
   {
@@ -4418,8 +4528,8 @@ export const questions = [
     "answer": "C",
     "explanation": "Perdarahan pervaginam tanpa nyeri pada trimester ketiga, terutama setelah koitus, dengan uterus yang lemas (tidak tegang) merupakan gambaran khas plasenta previa, berbeda dari solusio plasenta yang disertai nyeri dan uterus tegang.  ",
     "explanationImages": [
-      "images/img-061.png",
-      "images/img-062.png"
+      "images/img-122.png",
+      "images/img-123.png"
     ]
   },
   {
@@ -4453,7 +4563,7 @@ export const questions = [
     "answer": "A",
     "explanation": "Gambaran mikroskopis khas kondiloma akuminata akibat infeksi HPV adalah koilositosis, yaitu sel epitel skuamosa dengan halo perinuklear akibat efek sitopatik HPV. ",
     "explanationImages": [
-      "images/img-063.png"
+      "images/img-124.png"
     ]
   },
   {
@@ -4469,9 +4579,9 @@ export const questions = [
       "E": "Sel Sertoli-Leydig"
     },
     "answer": "A",
-    "explanation": "Sekitar 90% kanker ovarium berasal dari sel epitel permukaan ovarium (tumor epitel), sedangkan tumor sel germinal dan tumor stroma/sex-cord (termasuk tumor sel Sertoli-Leydig) jauh lebih jarang ditemukan. SDGFS",
+    "explanation": "Sekitar 90% kanker ovarium berasal dari sel epitel permukaan ovarium (tumor epitel), sedangkan tumor sel germinal dan tumor stroma/sex-cord (termasuk tumor sel Sertoli-Leydig) jauh lebih jarang ditemukan. ",
     "explanationImages": [
-      "images/img-064.png"
+      "images/img-125.png"
     ]
   },
   {
@@ -4479,19 +4589,19 @@ export const questions = [
     "category": "",
     "question": "Gambar di bawah menunjukkan hasil pencitraan panggul (pelvimetri). Jenis panggul yang paling ideal untuk persalinan pervaginam, dengan bentuk pintu atas panggul bulat/oval melintang, adalah ",
     "questionImages": [
-      "images/img-065.jpeg"
+      "images/img-126.jpeg"
     ],
     "options": {
       "A": "Panggul ginekoid",
       "B": "Panggul android",
       "C": "Panggul antropoid",
       "D": "Panggul platipelloid",
-      "E": "Panggul campuran (mixed)"
+      "E": "Panggul campuran"
     },
     "answer": "A",
     "explanation": "Panggul ginekoid merupakan jenis panggul wanita normal dengan pintu atas panggul berbentuk bulat/oval melintang, dinding samping lurus, dan sudut sub-pubis luas, sehingga merupakan jenis panggul yang paling ideal untuk persalinan pervaginam. ",
     "explanationImages": [
-      "images/img-066.png"
+      "images/img-127.png"
     ]
   },
   {
@@ -4507,8 +4617,11 @@ export const questions = [
       "E": "Distosia serviks"
     },
     "answer": "A",
-    "explanation": "Distosia bahu adalah kondisi kegawatdaruratan obstetri ketika bahu anterior janin tersangkut di simfisis pubis ibu setelah kepala lahir, sehingga persalinan bahu memerlukan manuver tambahan seperti McRoberts, tekanan suprapubik, atau manuver Rubin/Woods.",
-    "explanationImages": []
+    "explanation": "Distosia bahu adalah kondisi kegawatdaruratan obstetri ketika bahu anterior janin tersangkut di simfisis pubis ibu setelah kepala lahir, sehingga persalinan bahu memerlukan manuver tambahan seperti McRoberts, tekanan suprapubik, atau manuver Rubin/Woods.  ",
+    "explanationImages": [
+      "images/img-128.png",
+      "images/img-129.png"
+    ]
   },
   {
     "id": "Q275",
@@ -4523,7 +4636,7 @@ export const questions = [
       "E": "Grade V"
     },
     "answer": "C",
-    "explanation": "Laserasi parenkim ginjal dengan kedalaman lebih dari 1 cm yang mencapai medula namun tanpa ekstravasasi urin/keterlibatan sistem pengumpul termasuk trauma ginjal grade III menurut klasifikasi AAST.",
+    "explanation": "Laserasi parenkim ginjal dengan kedalaman lebih dari 1 cm yang mencapai medula namun tanpa ekstravasasi urin/keterlibatan sistem pengumpul termasuk trauma ginjal grade III menurut klasifikasi",
     "explanationImages": []
   },
   {
@@ -4541,8 +4654,8 @@ export const questions = [
     "answer": "A",
     "explanation": "Terapi lini pertama trikomoniasis vaginalis (ditandai duh kuning berbusa dan strawberry cervix) adalah metronidazol 2 gram per oral dosis tunggal.  ",
     "explanationImages": [
-      "images/img-067.png",
-      "images/img-068.png"
+      "images/img-130.png",
+      "images/img-131.png"
     ]
   },
   {
@@ -4582,7 +4695,7 @@ export const questions = [
     "category": "",
     "question": "Gambar di bawah menunjukkan kondisi kegawatdaruratan skrotum akut pada laki-laki muda tanpa riwayat trauma dengan refleks kremaster negatif. Nama kelainan yang ditunjukkan adalah ",
     "questionImages": [
-      "images/img-069.png"
+      "images/img-132.png"
     ],
     "options": {
       "A": "Hidrokel",
@@ -4608,7 +4721,9 @@ export const questions = [
       "E": "Lochea alba"
     },
     "answer": "B",
-    "explanation": "Lokia yang berwarna kuning kemerahan (campuran serosa dan sedikit darah), umumnya muncul pada hari ke-3 hingga ke-7 pascasalin, disebut lokia sanguinolenta.",
-    "explanationImages": []
+    "explanation": "Lokia yang berwarna kuning kemerahan (campuran serosa dan sedikit darah), umumnya muncul pada hari ke-3 hingga ke-7 pascasalin, disebut lokia sanguinolenta. ",
+    "explanationImages": [
+      "images/img-133.png"
+    ]
   }
 ];
