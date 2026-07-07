@@ -706,7 +706,7 @@ export const questions = [
       "D": "penurunan volume plasma dan cairan",
       "E": "peningkatan kadar albumin plasma"
     },
-    "answer": "D",
+    "answer": "E",
     "explanation": "Kehamilan menyebabkan penurunan kadar albumin plasma akibat hemodilusi, sehingga fraksi obat bebas (aktif) yang terikat protein plasma dapat meningkat dan memengaruhi farmakokinetik obat.",
     "explanationImages": []
   },
