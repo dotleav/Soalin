@@ -1,139 +1,114 @@
-# Quiz App
+# Soalin
 
-Quiz app statis (HTML/JS) + script konversi otomatis soal dari file `.docx`
-(termasuk gambar soal & gambar penjelasan) ke `data/questions.js`.
+Quiz app statis buat belajar dari soal-soal ujian. Intinya: kamu punya file Word berisi bank soal/soal tahun lalu, jalankan satu perintah, langsung jadi quiz interaktif yang bisa dibuka di browser — atau di-host di GitHub Pages biar bisa diakses dari HP juga.
 
-## Struktur project
+Tidak butuh server, tidak butuh build step, tidak butuh internet waktu dipakai.
+
+## Cara kerja sekilas
+
+File `.docx` kamu dibaca oleh `scripts/convert-docx.js`, yang mengekstrak teks soal dan gambar-gambarnya lalu menyusunnya jadi `data/questions.js`. File itu yang kemudian dibaca langsung oleh `index.html` di browser.
 
 ```
-quiz-project/
-├─ index.html          <- buka file ini untuk main quiz-nya
-├─ benar.mp3            <- efek suara saat jawaban benar
-├─ salah.mp3             <- efek suara saat jawaban salah
-├─ data/
-│  └─ questions.js      <- sumber soal (bisa hasil konversi docx, bisa diedit manual)
-├─ images/               <- gambar hasil ekstrak otomatis dari docx
-├─ scripts/
-│  └─ convert-docx.js   <- script konversi docx -> questions.js
-└─ package.json
+file.docx  →  [convert-docx.js]  →  data/questions.js  +  images/
+                                                               ↓
+                                                         index.html  →  browser
 ```
 
-## Cara pakai
+## Mulai pakai
 
-### 1. Edit manual (tanpa docx)
-Buka `data/questions.js`, tambah/edit object di array `questions` sesuai contoh
-yang sudah ada. Taruh gambar di folder `images/` lalu isi path-nya
-(misal `"images/img-001.png"`) di `questionImages` / `explanationImages`.
-
-### 2. Konversi otomatis dari .docx
 ```bash
 npm install
 npm run convert -- path/ke/file-soal.docx
+# buka index.html di browser
 ```
-Script akan:
-- Mengekstrak semua gambar di docx ke folder `images/`
-- Membaca teks soal dan menyusunnya jadi `data/questions.js`
-- Otomatis menempatkan gambar yang muncul tepat di bawah teks soal sebagai
-  gambar soal, dan gambar yang muncul di blok penjelasan sebagai gambar
-  penjelasan
 
-### 3. Buka quiz
-Tinggal buka `index.html` di browser (atau host sebagai static site /
-GitHub Pages). Tidak perlu server backend.
+Kalau mau langsung edit soalnya manual tanpa docx, buka `data/questions.js` dan edit array-nya. Gambar taruh di folder `images/`, isi path-nya di field `questionImages` / `explanationImages`.
 
-## Format wajib di dalam file .docx
+## Format docx
 
-Supaya parser bisa membaca soal secara otomatis, tulis soal di Word dengan
-pola berikut (boleh selang-seling antar paragraf seperti biasa kamu ngetik):
+Parser membaca dua bagian dalam satu file docx: soal normal (Bagian 1) dan soal rusak (Bagian 2).
+
+### Bagian 1 — soal MCQ normal
+
+Tulis soal dengan pola ini di Word:
 
 ```
-1. Pertanyaan soal di sini, boleh lebih dari satu baris.
-[taruh gambar soal di sini kalau ada, langsung sebagai gambar terpisah
- di paragraf baru sebelum opsi A]
+1. Pertanyaan soal di sini.
+[gambar soal kalau ada, langsung di paragraf sebelum opsi A]
 A. Opsi A
 B. Opsi B
 C. Opsi C
 D. Opsi D
 E. Opsi E
 Kunci: C
-Penjelasan: Teks penjelasan jawaban di sini.
-[taruh gambar penjelasan di sini kalau ada]
+Penjelasan: Teks penjelasan di sini.
+[gambar penjelasan kalau ada]
 
 2. Soal berikutnya...
 ```
 
-Aturan detail:
-- **Nomor soal**: paragraf harus diawali `1.` `2.` dst (angka + titik/kurung).
-  Ini jadi penanda mulainya soal baru.
-- **ID custom (opsional)**: kalau mau ID soal bukan `Q1, Q2, ...` otomatis,
-  taruh baris `ID: nama-id-kamu` tepat sebelum nomor soal.
-- **Opsi**: paragraf diawali `A.` sampai `E.` (titik atau kurung tutup boleh).
-- **Kunci jawaban**: baris `Kunci: X` atau `Jawaban: X` (X = huruf opsi yang benar).
-- **Penjelasan**: baris `Penjelasan: ...`. Semua paragraf setelahnya (sampai
-  ketemu nomor soal berikutnya) dianggap masih bagian penjelasan.
-- **Gambar**: taruh gambar tepat di posisi yang kamu mau — kalau diletakkan
-  sebelum baris opsi A, dianggap gambar soal; kalau diletakkan setelah baris
-  "Penjelasan:", dianggap gambar penjelasan. Boleh lebih dari satu gambar
-  per soal/penjelasan.
-- **Kategori**: ada 2 cara, pilih salah satu.
-  1. Pakai *Style* "Heading 1/2/3" beneran di Word untuk judul bab (misal
-     "Endokrinologi", "Kardiovaskular"). Semua soal di bawah heading itu
-     otomatis ke-tag kategori tersebut sampai ketemu heading lain — ini cara
-     yang paling natural kalau docx kamu memang sudah dipisah per bab.
-  2. Atau tulis manual paragraf `Kategori: nama kategori` tepat sebelum
-     nomor soal (tanpa perlu Style Heading).
+Beberapa hal yang perlu diperhatikan:
 
-  Kategori ini muncul di app sebagai dropdown filter, jadi soal bisa
-  difilter per bab/kategori sebelum mulai quiz.
+- Nomor soal harus diawali angka + titik atau kurung (`1.` atau `1)`). Ini yang jadi penanda soal baru.
+- Opsi cukup `A.` sampai `E.`, titik atau kurung tutup boleh.
+- Kunci jawaban ditulis `Kunci: X` atau `Jawaban: X`.
+- Penjelasan ditulis `Penjelasan: ...` — semua paragraf setelahnya sampai ketemu nomor soal berikutnya dianggap masih bagian penjelasan.
+- Gambar diletakkan di posisi yang kamu mau: sebelum opsi A → gambar soal, sesudah baris Penjelasan → gambar penjelasan.
+- Kalau mau kasih ID custom (bukan Q1, Q2, ...), tulis `ID: nama-id` tepat sebelum nomor soal.
+- Kategori bisa pakai Heading Style di Word (Heading 1/2/3) untuk judul bab, atau tulis manual `Kategori: nama kategori` tepat sebelum nomor soal.
 
-Kalau docx kamu sudah pakai format mirip ini (seperti soal UB / OSCE kamu
-biasanya), tinggal jalankan script-nya, harusnya langsung kebaca. Kalau hasil
-konversi ada soal yang kosong/aneh, biasanya karena ada baris yang sedikit
-menyimpang dari pola di atas (misal "Soal 1." bukan "1.") — tinggal disamakan
-formatnya di docx lalu jalankan ulang scriptnya.
+### Bagian 2 — soal rusak
 
-## Mode quiz
-Ada 2 mode yang bisa dipilih dari mode bar di app:
+Kalau ada soal yang teksnya tidak lengkap/rusak dan tidak bisa dijadikan MCQ, masukkan ke Bagian 2 dalam format tabel tiga kolom:
 
-### Mode Latihan
-Begitu pilih opsi, langsung kelihatan benar/salah + penjelasan & gambar
-penjelasan (continuous scroll, semua soal dalam satu list).
-- **Progres tersimpan otomatis** ke localStorage browser — kategori, status
-  acak, dan semua jawaban tetap ada walau tab ditutup atau di-refresh. Klik
-  "↺ Reset" untuk menghapus progres dan mulai ulang dari nol.
-- **Dimuat bertahap 15 soal per batch** (biar nggak lag di kategori "Semua"
-  yang soalnya banyak) — klik "Lebih banyak" untuk memuat 15 soal berikutnya.
-  Soal yang sudah dijawab tetap kelihatan walau pindah-pindah kategori.
-- Efek suara benar/salah otomatis diputar tiap jawab (bisa dimatikan lewat
-  tombol 🔊/🔇 di mode bar; status mute juga ikut tersimpan).
+| No | Soal Asli (dari rekapan) | Gambar Penjelasan |
+|----|--------------------------|-------------------|
+| 9  | Soal tentang gagal ginjal pra renal | _(taruh gambar di sini)_ |
 
-### Mode Tentamen
-Simulasi ujian sungguhan: satu soal per layar, dibatasi waktu, baru bisa
-lanjut ke soal berikutnya setelah menjawab (atau otomatis lanjut kalau waktu
-habis). Progres tidak disimpan — kalau reload/tutup tab di tengah tentamen,
-progresnya hilang (ada peringatan konfirmasi browser saat mau keluar).
+Bagian ini ditandai dengan heading `## Bagian 2` atau `## Soal yang Gagal Diperbaiki` di atas tabelnya.
 
-Ada 4 tingkat kesulitan (mengatur durasi timer per soal):
+Di app, soal rusak tidak masuk ke quiz — melainkan muncul sebagai kartu tap-to-reveal di Mode Latihan. Tekan kartunya, gambar penjelasan dari kolom ketiga akan muncul. Tekan lagi untuk tutup. Ini biar kamu tetap bisa belajar dari soal-soal itu meskipun tidak bisa dijawab secara formal.
 
-| Tingkat | Timer/soal | Keterangan |
-|---|---|---|
-| 🐆 Cheetah | 30 detik | paling ngebut |
-| 🧍 Orang Normal | 60 detik | standar |
-| 🦥 Folivora | 300 detik (5 menit) | santai |
-| 🐌 Bekicot | tanpa timer | seperti Mode Latihan tapi satu-satu & baru reveal setelah jawab |
+## Mode di app
 
-Kalau waktu habis sebelum menjawab, soal otomatis dihitung "terlewati" dan
-lanjut ke soal berikutnya. Di akhir tentamen ada halaman hasil (skor, jumlah
-benar/salah/terlewati, distribusi jawaban) plus detail jawaban per soal untuk
-direview.
+Ada dua mode yang bisa dipilih dari mode bar.
 
-## Upload ke GitHub
+**Mode Latihan** — semua soal tampil sekaligus dalam satu scroll. Pilih opsi, langsung ketahuan benar/salah + muncul penjelasannya. Progres disimpan otomatis ke localStorage jadi tidak hilang kalau tab ditutup atau di-refresh. Soal dimuat 15 per batch supaya tidak lag kalau soalnya banyak.
+
+**Mode Tentamen** — simulasi ujian: satu soal per layar, ada timer, baru bisa lanjut setelah menjawab atau waktu habis. Progres tidak disimpan (kalau reload di tengah jalan, reset dari awal). Di akhir ada halaman hasil dengan skor dan review per soal.
+
+Tingkat kesulitan Mode Tentamen mengatur durasi timer per soal:
+
+| | Timer |
+|--|--|
+| 🐆 Cheetah | 30 detik |
+| 🧍 Orang Normal | 60 detik |
+| 🦥 Folivora | 5 menit |
+| 🐌 Bekicot | tanpa timer |
+
+Soal rusak (Bagian 2) tidak ikut masuk ke Mode Tentamen.
+
+## Deploy ke GitHub Pages
+
 ```bash
 git init
 git add .
-git commit -m "Quiz app + docx converter"
-git remote add origin <url-repo-kamu>
+git commit -m "init"
+git remote add origin <url-repo>
 git push -u origin main
 ```
-Setelah itu bisa diaktifkan GitHub Pages (Settings → Pages → branch main /
-root) supaya quiz-nya bisa diakses langsung lewat link, tanpa perlu download.
+
+Aktifkan di Settings → Pages → branch `main` / root. Setelah itu quiz bisa diakses lewat link langsung dari HP atau dibagikan ke teman.
+
+## Struktur folder
+
+```
+├── index.html
+├── benar.mp3 / salah.mp3
+├── data/
+│   └── questions.js
+├── images/
+├── scripts/
+│   └── convert-docx.js
+└── package.json
+```
