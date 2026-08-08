@@ -243,6 +243,53 @@
     margin-top: 10px;
   }
 
+  /* ── Soal Rusak — tap-to-reveal card ── */
+  .brokenCard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .brokenCard:hover { border-color: #e8a83860; background: rgba(232,168,56,0.03); }
+  .brokenCard .brokenMeta {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .brokenBadge {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 6px;
+    background: rgba(239,68,68,0.15); color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .tapHint {
+    font-size: 0.68rem; color: var(--muted3);
+  }
+  .brokenCard .brokenQ {
+    color: var(--text); font-size: 0.88rem; line-height: 1.65; margin: 0;
+  }
+  .brokenCard .brokenNum {
+    font-family: "JetBrains Mono", monospace; color: var(--accent);
+    font-weight: 700; margin-right: 6px;
+  }
+  .brokenReveal {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn 0.25s ease;
+  }
+  .brokenReveal .tag {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--blue); font-weight: 600; font-size: 0.78rem; margin-bottom: 8px;
+  }
+  .brokenReveal .noImg {
+    color: var(--muted2); font-size: 0.78rem; font-style: italic;
+  }
+
   .explanation {
     background: rgba(31,111,235,0.1);
     border: 1px solid rgba(31,111,235,0.33);
@@ -578,7 +625,9 @@ function updateTimerDOM() {
   if (timerLabelEl) timerLabelEl.classList.toggle("urgent", isUrgent);
 }
 function handleStartTentamen() {
-  const qs = tentamenShuffleOn ? shuffleArray(allQuestions) : allQuestions;
+  // Soal rusak (isBroken) tidak dimasukkan ke Mode Tentamen karena tidak punya opsi/jawaban.
+  const quizzable = allQuestions.filter(q => !q.isBroken);
+  const qs = tentamenShuffleOn ? shuffleArray(quizzable) : quizzable;
   if (!qs.length) return;
   tentamenQuestions = qs;
   tentamenAnswers = new Array(qs.length).fill(null);
@@ -647,6 +696,37 @@ window.addEventListener("beforeunload", (e) => {
   }
 });
 
+// ── State: soal rusak yang sudah di-tap (revealed) ────────────────────────
+const brokenRevealed = new Set(); // Set of q.id that have been tapped open
+
+// ── Render: kartu soal rusak (tap-to-reveal) ──────────────────────────────
+function renderBrokenCard(q, qNum) {
+  const isRevealed = brokenRevealed.has(q.id);
+  const hasImages = (q.explanationImages || []).length > 0;
+  const hasQImages = (q.questionImages || []).length > 0;
+
+  const revealHtml = isRevealed ? `
+    <div class="brokenReveal">
+      <div class="tag">🖼️ Gambar Penjelasan</div>
+      ${hasQImages ? (q.questionImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar soal">`).join("") : ""}
+      ${hasImages
+        ? (q.explanationImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")
+        : `<p class="noImg">(belum ada gambar penjelasan di dokumen ini)</p>`}
+    </div>
+  ` : "";
+
+  return `
+    <div class="brokenCard" data-broken-id="${escapeAttr(q.id)}">
+      <div class="brokenMeta">
+        <span class="brokenBadge">⚠️ Soal Rusak</span>
+        ${!isRevealed ? `<span class="tapHint">👆 Tap untuk lihat gambar</span>` : `<span class="tapHint">👆 Tap lagi untuk tutup</span>`}
+      </div>
+      <p class="brokenQ"><span class="brokenNum">${qNum}.</span>${escapeHtml(q.question)}</p>
+      ${revealHtml}
+    </div>
+  `;
+}
+
 // ── Render: kartu soal (dipakai di semua mode) ────────────────────────────
 function renderQuestionCard(q, qNum, chosen, revealAnswer) {
   const isAnswered = chosen !== undefined && chosen !== null;
@@ -709,11 +789,12 @@ function renderQuestionCard(q, qNum, chosen, revealAnswer) {
 
 // ── Render: header + mode bar + filter bar ────────────────────────────────
 function renderHeaderZone() {
-  const totalQ = allQuestions.length;
+  const quizzableAll = allQuestions.filter(q => !q.isBroken);
+  const totalQ = quizzableAll.length; // soal rusak tidak dihitung di tracker
   let trackerHtml = "";
   if (quizMode === "biasa" && biasaLoaded) {
-    const answeredCount = allQuestions.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
-    const correctCount = allQuestions.filter(q => biasaAnswersMap[q.id] === q.answer).length;
+    const answeredCount = quizzableAll.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
+    const correctCount = quizzableAll.filter(q => biasaAnswersMap[q.id] === q.answer).length;
     trackerHtml = `
       <div class="tracker">
         <div class="count mono">${answeredCount}/${totalQ}</div>
@@ -772,13 +853,15 @@ function renderHeaderZone() {
 function renderBiasaMode() {
   const allQ = computeBiasaAll();
   const visible = allQ.slice(0, biasaVisibleCount);
-  const answeredCount = allQ.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
-  const correctCount = allQ.filter(q => biasaAnswersMap[q.id] === q.answer).length;
-  const totalCount = allQ.length;
+  // Soal rusak tidak dihitung di progress tracker (tidak bisa dijawab)
+  const quizzableQ = allQ.filter(q => !q.isBroken);
+  const answeredCount = quizzableQ.filter(q => biasaAnswersMap[q.id] !== undefined && biasaAnswersMap[q.id] !== null).length;
+  const correctCount = quizzableQ.filter(q => biasaAnswersMap[q.id] === q.answer).length;
+  const totalCount = quizzableQ.length; // hanya soal yang bisa dijawab
   const pct = totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
   const allDone = answeredCount === totalCount && totalCount > 0;
-  const hasMore = biasaVisibleCount < totalCount;
-  const remaining = totalCount - visible.length;
+  const hasMore = biasaVisibleCount < allQ.length; // load more berdasarkan total semua soal
+  const remaining = allQ.length - visible.length;
 
   let html = `
     <div class="progressCard">
@@ -805,14 +888,18 @@ function renderBiasaMode() {
     `;
   }
 
-  if (totalCount === 0) {
+  if (allQ.length === 0) {
     html += `<div class="empty">Tidak ada soal pada kategori ini.</div>`;
     return html;
   }
 
   html += `<div class="qList">`;
   visible.forEach((q, idx) => {
-    html += renderQuestionCard(q, idx + 1, biasaAnswersMap[q.id], true);
+    if (q.isBroken) {
+      html += renderBrokenCard(q, idx + 1);
+    } else {
+      html += renderQuestionCard(q, idx + 1, biasaAnswersMap[q.id], true);
+    }
   });
   html += `</div>`;
 
@@ -825,7 +912,7 @@ function renderBiasaMode() {
 
 // ── Render: Tentamen — setup ──────────────────────────────────────────────
 function renderTentamenSetup() {
-  const qCount = allQuestions.length;
+  const qCount = allQuestions.filter(q => !q.isBroken).length; // soal rusak tidak masuk tentamen
   const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
   const timerSec = cfg.timerSeconds;
   const estLabel = (() => {
@@ -1006,6 +1093,19 @@ function render() {
 
 // ── Pasang semua event listener setelah tiap render ───────────────────────
 function attachHandlers() {
+  // Soal rusak — tap untuk toggle reveal
+  app.querySelectorAll(".brokenCard[data-broken-id]").forEach(card => {
+    card.addEventListener("click", () => {
+      const id = card.dataset.brokenId;
+      if (brokenRevealed.has(id)) {
+        brokenRevealed.delete(id);
+      } else {
+        brokenRevealed.add(id);
+      }
+      render();
+    });
+  });
+
   app.querySelectorAll(".option[data-letter]").forEach(btn => {
     btn.addEventListener("click", () => onOptionClick(btn.dataset.qid, btn.dataset.letter));
   });
