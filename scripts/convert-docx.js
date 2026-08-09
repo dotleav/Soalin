@@ -126,7 +126,39 @@ function extractImages(fragment) {
 }
 
 // --- 4. Parse Bagian 1 — soal MCQ normal ---
-// (logika sama persis seperti sebelumnya)
+
+// Fallback: kadang seluruh soal (pertanyaan + opsi a-e + Kunci Jawaban)
+// ada dalam SATU paragraf tanpa line break (tidak ada <br>/<p> pemisah).
+// Kalau begitu, opsi & kunci jawaban tidak akan pernah terdeteksi oleh
+// parser baris-per-baris di bawah. Fungsi ini mendeteksi pola inline
+// "... a. opsi b. opsi c. opsi d. opsi e. opsi Kunci Jawaban: X" di dalam
+// satu baris teks dan memecahnya jadi { question, options, answer }.
+function splitInlineQuestion(rawText) {
+  let text = rawText;
+  let answer = "";
+  const ansMatch = text.match(/\bKunci(?:\s*Jawaban)?\s*:?\s*([A-Ea-e])\b\s*$/i);
+  if (ansMatch) {
+    answer = ansMatch[1].toUpperCase();
+    text = text.slice(0, ansMatch.index).trim();
+  }
+  const optRe = /\s([A-Ea-e])[.)]\s+/g;
+  const matches = [...text.matchAll(optRe)];
+  // Butuh minimal 3 opsi terdeteksi dan harus mulai dari A/a supaya yakin
+  // ini memang daftar opsi, bukan kebetulan (mis. singkatan "dr." di kalimat).
+  if (matches.length < 3) return null;
+  if (matches[0][1].toUpperCase() !== "A") return null;
+
+  const first = matches[0];
+  const questionText = text.slice(0, first.index).trim();
+  const options = {};
+  for (let i = 0; i < matches.length; i++) {
+    const letter = matches[i][1].toUpperCase();
+    const start = matches[i].index + matches[i][0].length;
+    const end = i + 1 < matches.length ? matches[i + 1].index : text.length;
+    options[letter] = text.slice(start, end).trim();
+  }
+  return { question: questionText, options, answer };
+}
 
 function parsePart1(html) {
   // Pecah HTML jadi baris-baris token (teks/gambar)
@@ -179,8 +211,9 @@ function parsePart1(html) {
 
   const questionStart = /^(\d+)[.)]\s*(.*)$/;
   const idLine = /^ID\s*:\s*(.+)$/i;
-  const optionLine = /^([A-E])[.)]\s*(.*)$/;
-  const answerLine = /^(Kunci|Jawaban)\s*:?\s*([A-E])\b.*$/i;
+  const optionLine = /^([A-Ea-e])[.)]\s*(.*)$/;
+  // Terima "Kunci: X", "Jawaban: X", ATAU gabungan "Kunci Jawaban: X"
+  const answerLine = /^(?:Kunci\s*Jawaban|Jawaban\s*Kunci|Kunci|Jawaban)\s*:?\s*([A-Ea-e])\b.*$/i;
   const explanationLine = /^Penjelasan\s*:?\s*(.*)$/i;
   const categoryLine = /^Kategori\s*:\s*(.+)$/i;
 
@@ -211,18 +244,19 @@ function parsePart1(html) {
       pushCurrent();
       const autoId = pendingId || `Q${questions.length + 1}`;
       pendingId = null;
+      const inline = splitInlineQuestion(text);
       current = {
         id: autoId,
         category: currentCategory,
-        question: text,
+        question: inline ? inline.question : text,
         questionImages: [...images],
-        options: {},
-        answer: "",
+        options: inline ? inline.options : {},
+        answer: inline ? inline.answer : "",
         explanation: "",
         explanationImages: [],
         isBroken: false,
       };
-      mode = "question";
+      mode = inline ? "answer" : "question";
       continue;
     }
 
@@ -231,18 +265,20 @@ function parsePart1(html) {
       pushCurrent();
       const autoId = pendingId || `Q${questions.length + 1}`;
       pendingId = null;
+      const rawQuestionText = qStart[2].trim();
+      const inline = splitInlineQuestion(rawQuestionText);
       current = {
         id: autoId,
         category: currentCategory,
-        question: qStart[2].trim(),
+        question: inline ? inline.question : rawQuestionText,
         questionImages: [...images],
-        options: {},
-        answer: "",
+        options: inline ? inline.options : {},
+        answer: inline ? inline.answer : "",
         explanation: "",
         explanationImages: [],
         isBroken: false,
       };
-      mode = "question";
+      mode = inline ? "answer" : "question";
       continue;
     }
 
@@ -250,7 +286,7 @@ function parsePart1(html) {
 
     const optMatch = text.match(optionLine);
     if (optMatch) {
-      current.options[optMatch[1]] = optMatch[2].trim();
+      current.options[optMatch[1].toUpperCase()] = optMatch[2].trim();
       current.questionImages.push(...images);
       mode = "options";
       continue;
@@ -258,7 +294,7 @@ function parsePart1(html) {
 
     const ansMatch = text.match(answerLine);
     if (ansMatch) {
-      current.answer = ansMatch[2].toUpperCase();
+      current.answer = ansMatch[1].toUpperCase();
       mode = "answer";
       continue;
     }
