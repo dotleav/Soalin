@@ -39,5 +39,23 @@ export const packages = [
     "count": 155,
     "convertedAt": "2026-09-02T05:07:40.494Z",
     "source": "Soal_UB_1J_2022_template_soalin .docx"
+  },
+  {
+    "id": "blok-1j__minites-1",
+    "category": "BLOK 1J",
+    "title": "Minites 1",
+    "file": "./data/packages/blok-1j__minites-1/questions.js",
+    "count": 30,
+    "convertedAt": "2026-09-02T06:56:31.357Z",
+    "source": "Minitest 1 Blok 1J (Rapi - Format AB).docx"
+  },
+  {
+    "id": "blok-1j__minites-2",
+    "category": "BLOK 1J",
+    "title": "Minites 2",
+    "file": "./data/packages/blok-1j__minites-2/questions.js",
+    "count": 24,
+    "convertedAt": "2026-09-02T06:56:46.439Z",
+    "source": "Minitest 2 Blok 1J 2024-2025 (Rapi - Format AB).docx"
   }
 ];
