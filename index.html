@@ -633,6 +633,11 @@ async function selectPackage(pkg) {
 // ── Init Mode Latihan dari localStorage ──────────────────────────────────
 function initBiasa() {
   const saved = loadBiasa();
+  // Selalu reset dulu ke default sebelum load — supaya kalau paket baru
+  // belum pernah punya progres tersimpan, state paket sebelumnya (yang
+  // masih ada di memory) tidak ikut kebawa / "bocor" ke paket baru.
+  biasaShuffleOn = false;
+  biasaAnswersMap = {};
   if (saved) {
     biasaShuffleOn = !!saved.shuffleOn;
     biasaAnswersMap = saved.answersMap || {};
