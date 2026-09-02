@@ -483,7 +483,9 @@ let allQuestions = [];
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LOAD_BATCH = 15; // jumlah soal yang dimuat sekaligus, biar Mode Latihan gak lag
-const LS_KEY_PREFIX = "soalin_biasa_progress";
+// v2: dinaikkan supaya progres lama yang mungkin sudah "tercemar" (bocor dari
+// bug lintas-paket sebelumnya) tidak ikut ke-load lagi — user mulai bersih.
+const LS_KEY_PREFIX = "soalin_biasa_progress_v2";
 const ACTIVE_PKG_KEY = "soalin_active_package";
 const MUTE_KEY = "soalin_muted";
 
