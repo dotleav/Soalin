@@ -27,10 +27,10 @@ export const questions = [
     "question": "Fase plateau pada sel myocard tipe kontraktil disebabkan karena kanal cepat natrium.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Kanal cepat natrium bersifat transient (cepat inaktif) dan berperan pada fase depolarisasi cepat (fase 0). Fase plateau (fase 2) terutama disebabkan oleh kanal kalsium tipe-L yang lambat.",
     "explanationImages": [],
     "isBroken": false
@@ -55,10 +55,10 @@ export const questions = [
     "question": "Atrium dextra menerima darah dari sinus coronarius.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Sumber darah utama atrium dextra adalah vena cava superior dan vena cava inferior. Sinus coronarius memang bermuara di atrium dextra, tetapi ia hanya mengalirkan darah balik dari sirkulasi koroner dalam jumlah kecil, bukan sumber utama.",
     "explanationImages": [],
     "isBroken": false
@@ -153,10 +153,10 @@ export const questions = [
     "question": "Peregangan NSA (Nodus Sino Atrial) di dinding atrium kanan meningkatkan frekuensi denyut jantung.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Peregangan (stretch) pada nodus SA akibat peningkatan volume/tekanan atrium kanan (refleks Bainbridge) meningkatkan frekuensi denyut jantung.",
     "explanationImages": [],
     "isBroken": false
@@ -167,10 +167,10 @@ export const questions = [
     "question": "Arteri interventricularis anterior adalah cabang dari arteri coronaria dextra.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Arteri interventricularis anterior (LAD) merupakan cabang dari arteri coronaria sinistra, sedangkan arteri interventricularis posterior umumnya cabang dari arteri coronaria dextra (pada pola dominan kanan).",
     "explanationImages": [],
     "isBroken": false
@@ -195,10 +195,10 @@ export const questions = [
     "question": "Plasma darah dan serum darah memiliki beberapa perbedaan. Komponen fibrinogen dapat ditemukan pada serum darah.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Fibrinogen terdapat dalam plasma darah, tetapi tidak ditemukan lagi dalam serum karena sudah dikonsumsi habis dalam proses pembekuan darah menjadi fibrin. [[ SISIPKAN GAMBAR PENJELASAN DI SINI ]]",
     "explanationImages": [],
     "isBroken": false
@@ -279,10 +279,10 @@ export const questions = [
     "question": "Ductus arteriosus terletak di antara aorta dan arteri pulmonalis.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Ductus arteriosus (Botalli) menghubungkan arcus aortae dengan truncus pulmonalis pada sirkulasi janin. [[ SISIPKAN GAMBAR PENJELASAN DI SINI ]]",
     "explanationImages": [],
     "isBroken": false
@@ -293,10 +293,10 @@ export const questions = [
     "question": "Vena saphena parva akan bermuara di vena poplitea.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Vena saphena parva berjalan di sisi posterior tungkai bawah dan bermuara ke vena poplitea di fossa poplitea.",
     "explanationImages": [],
     "isBroken": false
@@ -321,10 +321,10 @@ export const questions = [
     "question": "Transferin merupakan protein yang berperan dalam penyimpanan besi di dalam tubuh.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Transferin berperan dalam transport besi di dalam darah, bukan penyimpanan. Protein yang berperan dalam penyimpanan besi adalah feritin dan hemosiderin.",
     "explanationImages": [],
     "isBroken": false
@@ -335,10 +335,10 @@ export const questions = [
     "question": "Plasma darah mengandung berbagai macam protein yang terlarut. Sekitar 60% protein yang terlarut dalam plasma darah adalah albumin.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Albumin merupakan protein plasma dengan proporsi terbesar, sekitar 55-60% dari total protein plasma, berfungsi menjaga tekanan onkotik dan sebagai molekul transport.",
     "explanationImages": [],
     "isBroken": false
@@ -363,10 +363,10 @@ export const questions = [
     "question": "Bunyi jantung pertama (S1) terjadi akibat penutupan katup aorta.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Bunyi jantung pertama (S1) terjadi akibat penutupan katup mitral dan trikuspid (katup atrioventrikular) di awal sistol ventrikel. Penutupan katup aorta (bersama katup pulmonal) menghasilkan bunyi jantung kedua (S2).",
     "explanationImages": [],
     "isBroken": false

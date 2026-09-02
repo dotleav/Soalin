@@ -13,10 +13,10 @@ export const questions = [
     "question": "Darah kaya oksigen mengalir ke seluruh tubuh melalui arteri pulmonalis.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Arteri pulmonalis membawa darah rendah oksigen dari ventrikel dextra menuju paru-paru. Darah kaya oksigen dialirkan ke seluruh tubuh melalui aorta beserta cabang-cabang arteri sistemiknya.",
     "explanationImages": [],
     "isBroken": false
@@ -27,10 +27,10 @@ export const questions = [
     "question": "Arteri circumflexa merupakan cabang dari arteri coronaria dextra.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Arteri circumflexa merupakan cabang dari arteri coronaria sinistra, bukan arteri coronaria dextra.",
     "explanationImages": [],
     "isBroken": false
@@ -55,10 +55,10 @@ export const questions = [
     "question": "Peningkatan aktivitas saraf parasimpatis akan menyebabkan vasokonstriksi pembuluh darah.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Tonus pembuluh darah perifer terutama dikendalikan oleh sistem saraf simpatis; peningkatan aktivitas simpatis-lah yang menyebabkan vasokonstriksi. Aktivitas parasimpatis pada pembuluh darah umumnya bersifat vasodilatasi dan terbatas pada area tertentu (mis. genitalia, kelenjar ludah).",
     "explanationImages": [],
     "isBroken": false
@@ -83,10 +83,10 @@ export const questions = [
     "question": "Nodus Sino Atrial (SA) merupakan pacemaker utama jantung yang berlokasi di atrium sinistra.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Nodus SA berlokasi di dinding atrium dextra dekat muara vena cava superior, bukan di atrium sinistra.",
     "explanationImages": [],
     "isBroken": false
@@ -111,10 +111,10 @@ export const questions = [
     "question": "Depolarisasi ventrikel secara normal terjadi secara simultan di antara ventrikel kanan dan kiri, yang diwakili oleh gelombang QRS pada EKG.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Melalui sistem konduksi (berkas His dan serabut Purkinje), impuls listrik menyebar hampir bersamaan ke kedua ventrikel sehingga depolarisasi ventrikel kanan dan kiri terjadi secara simultan, tergambar sebagai kompleks QRS pada EKG.",
     "explanationImages": [],
     "isBroken": false
@@ -125,10 +125,10 @@ export const questions = [
     "question": "Pada interpretasi EKG, deviasi aksis kiri (LAD) ditentukan oleh kombinasi lead I positif dan lead aVF negatif.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Dengan metode kuadran/2-lead, kombinasi lead I positif dan aVF negatif menunjukkan aksis jantung berada pada rentang deviasi aksis kiri (LAD).",
     "explanationImages": [],
     "isBroken": false
@@ -139,10 +139,10 @@ export const questions = [
     "question": "Katup mitral berada di antara atrium kiri dan ventrikel kiri.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Katup mitral (bikuspidalis) adalah katup atrioventrikular kiri, terletak di antara atrium sinistra dan ventrikel sinistra.",
     "explanationImages": [],
     "isBroken": false
@@ -153,10 +153,10 @@ export const questions = [
     "question": "Pada siklus jantung, pengisian cepat termasuk dalam sistole ventrikel.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Pengisian cepat (rapid filling) adalah fase awal diastol ventrikel, bukan bagian dari sistol ventrikel.",
     "explanationImages": [],
     "isBroken": false
@@ -167,10 +167,10 @@ export const questions = [
     "question": "Jantung terletak di mediastinum, antara paru-paru kiri dan kanan.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Jantung terletak di mediastinum medius, di antara kedua paru, dilindungi oleh pericardium.",
     "explanationImages": [],
     "isBroken": false
@@ -195,10 +195,10 @@ export const questions = [
     "question": "Vena intercostalis posterior dextra dan sinistra bermuara ke vena azygos.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Vena intercostalis posterior dextra bermuara langsung ke vena azygos, sedangkan vena intercostalis posterior sinistra (bagian tengah-bawah) umumnya bermuara ke vena hemiazygos, yang kemudian baru bermuara ke vena azygos.",
     "explanationImages": [],
     "isBroken": false
@@ -209,10 +209,10 @@ export const questions = [
     "question": "Di dalam alveoli, proses perfusi gas pernapasan O2 dan CO2 terjadi melalui membran alveolar-kapiler.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Pertukaran gas O2 dan CO2 melalui membran alveolar-kapiler terjadi melalui proses difusi, bukan perfusi. Perfusi merujuk pada aliran darah yang melewati kapiler paru, sedangkan difusi adalah proses perpindahan gasnya.",
     "explanationImages": [],
     "isBroken": false
@@ -237,10 +237,10 @@ export const questions = [
     "question": "Club cell dan sel alveolar tipe 2 menghasilkan surfaktan.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Yang menghasilkan surfaktan paru adalah sel alveolar (pneumosit) tipe II melalui badan lamela. Club cell (dahulu disebut sel Clara) tidak mensekresikan surfaktan; fungsinya lebih ke arah sekresi protektif dan sebagai sel progenitor epitel bronkiolus.",
     "explanationImages": [],
     "isBroken": false
@@ -279,10 +279,10 @@ export const questions = [
     "question": "Pada efusi pleura akan didapat suara egofoni dan palpasi didapatkan Damoiseau-Ellis line.",
     "questionImages": [],
     "options": {
-      "A": "Benar",
-      "B": "Salah"
+      "A": "Salah",
+      "B": "Benar"
     },
-    "answer": "B",
+    "answer": "A",
     "explanation": "Damoiseau-Ellis line adalah garis lengkung batas cairan efusi yang ditemukan melalui perkusi, bukan palpasi. Egofoni sendiri lebih khas ditemukan di area paru yang tertekan/kolaps tepat di atas batas cairan efusi, bukan pada area efusinya sendiri.",
     "explanationImages": [],
     "isBroken": false
@@ -293,10 +293,10 @@ export const questions = [
     "question": "Apabila pada perkusi didapatkan hipersonor, pasien mungkin mengalami pneumonia.",
     "questionImages": [],
     "options": {
-      "A": "Salah",
-      "B": "Benar"
+      "A": "Benar",
+      "B": "Salah"
     },
-    "answer": "A",
+    "answer": "B",
     "explanation": "Suara perkusi hipersonor menandakan udara berlebih di rongga toraks/paru, khas pada pneumotoraks, emfisema, atau asma. Pneumonia justru memberikan suara perkusi redup (dull) karena konsolidasi/cairan pada jaringan paru.",
     "explanationImages": [],
     "isBroken": false
