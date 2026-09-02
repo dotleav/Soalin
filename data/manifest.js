@@ -5,6 +5,15 @@
 
 export const packages = [
   {
+    "id": "2h-pa-1__lat-pa-sist-saraf-theory-only",
+    "category": "2H PA 1",
+    "title": "lat pa sist.saraf theory only",
+    "file": "./data/packages/2h-pa-1__lat-pa-sist-saraf-theory-only/questions.js",
+    "count": 42,
+    "convertedAt": "2026-09-02T05:41:43.301Z",
+    "source": "Bank_Soal_PA_Sistem_Saraf_Pusat.docx"
+  },
+  {
     "id": "2h-pa-1__latihan-pa-sist-saraf",
     "category": "2H PA 1",
     "title": "latihan PA sist. saraf",
