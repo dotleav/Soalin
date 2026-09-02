@@ -391,12 +391,116 @@ function parsePart2(html, startingQNumber) {
   return brokenQuestions;
 }
 
-// --- 6. Gabungkan hasil kedua bagian ---
+// --- 6. Acak opsi + kunci jawaban, tapi jaga distribusi kunci tetap rata ---
+// Kenapa perlu: kalau urutan A/B/C/D/E ditulis apa adanya oleh penulis soal,
+// kunci jawaban seringkali menumpuk di huruf tertentu (contoh: kebanyakan C
+// atau E). Fungsi ini mengacak urutan opsi tiap soal (isi opsi ikut pindah
+// bersama statusnya benar/salah), lalu membagikan "slot kunci" (A/B/C/D/E)
+// secara merata ke semua soal yang punya 5 opsi lengkap — sehingga total
+// count tiap huruf sebagai kunci jawaban selisihnya maksimal 1.
+//
+// Aman untuk penjelasan (Penjelasan: ...) karena penjelasan di format ini
+// merujuk ke ISI opsi (nama/istilah), bukan ke huruf opsi — jadi tidak perlu
+// diubah saat opsi diacak ulang.
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function letterKey(options) {
+  return Object.keys(options).sort().join(",");
+}
+
+function rebalanceAnswerDistribution(questions) {
+  // Hanya soal normal (bukan isBroken), punya kunci, dan opsi utuh yang diproses.
+  const eligible = questions.filter(
+    (q) =>
+      !q.isBroken &&
+      q.answer &&
+      q.options &&
+      Object.keys(q.options).length >= 2 &&
+      q.options[q.answer] !== undefined
+  );
+  if (eligible.length === 0) return { changed: 0, groups: {} };
+
+  // Kelompokkan berdasarkan set huruf opsi (mis. "A,B,C,D,E") — hanya
+  // kelompok dengan set huruf yang sama yang dibagi rata bersama, supaya
+  // soal dengan jumlah opsi berbeda tidak saling mengacaukan.
+  const groups = new Map();
+  for (const q of eligible) {
+    const key = letterKey(q.options);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(q);
+  }
+
+  let changed = 0;
+  const summary = {};
+
+  for (const [key, group] of groups.entries()) {
+    const letters = key.split(",");
+    const n = group.length;
+    const base = Math.floor(n / letters.length);
+    const rem = n % letters.length;
+
+    // Acak huruf mana saja yang kebagian "jatah lebih" (+1), supaya adil
+    // antar-huruf tiap kali file di-convert ulang.
+    const lettersShuffled = shuffleArray([...letters]);
+    const countPerLetter = {};
+    letters.forEach((L) => (countPerLetter[L] = base));
+    for (let i = 0; i < rem; i++) countPerLetter[lettersShuffled[i]] += 1;
+
+    // Bangun pool target kunci sesuai jatah, lalu acak urutannya.
+    let pool = [];
+    letters.forEach((L) => {
+      for (let k = 0; k < countPerLetter[L]; k++) pool.push(L);
+    });
+    shuffleArray(pool);
+
+    // Acak urutan soal supaya assignment target tidak berkorelasi dengan
+    // urutan asli soal di dokumen.
+    const groupShuffled = shuffleArray([...group]);
+
+    groupShuffled.forEach((q, idx) => {
+      const targetLetter = pool[idx];
+      const correctText = q.options[q.answer];
+      const otherEntries = letters
+        .filter((L) => L !== q.answer)
+        .map((L) => q.options[L]);
+      shuffleArray(otherEntries);
+
+      const newOptions = {};
+      let oi = 0;
+      letters.forEach((L) => {
+        if (L === targetLetter) {
+          newOptions[L] = correctText;
+        } else {
+          newOptions[L] = otherEntries[oi++];
+        }
+      });
+
+      q.options = newOptions;
+      q.answer = targetLetter;
+      changed += 1;
+    });
+
+    summary[key] = countPerLetter;
+  }
+
+  return { changed, groups: summary };
+}
+
+// --- 7. Gabungkan hasil kedua bagian ---
 const part1Questions = parsePart1(part1Html);
+const { changed: rebalancedCount, groups: rebalanceSummary } =
+  rebalanceAnswerDistribution(part1Questions);
 const part2Questions = parsePart2(part2Html, part1Questions.length);
 const allQuestions = [...part1Questions, ...part2Questions];
 
-// --- 7. Tulis hasil ke data/questions.js ---
+// --- 8. Tulis hasil ke data/questions.js ---
 const outPath = path.join(dataDir, "questions.js");
 const fileContent = `// File ini DIBUAT OTOMATIS oleh scripts/convert-docx.js dari: ${path.basename(docxPath)}
 // Jangan diedit manual kalau masih mau re-generate dari docx.
@@ -415,6 +519,12 @@ const part2Count = part2Questions.length;
 console.log(`Selesai. ${allQuestions.length} soal berhasil diparse.`);
 console.log(`  Bagian 1 (normal)  : ${part1Count} soal`);
 console.log(`  Bagian 2 (rusak)   : ${part2Count} soal`);
+if (rebalancedCount > 0) {
+  console.log(`  Opsi diacak & kunci diratakan untuk ${rebalancedCount} soal:`);
+  for (const [key, counts] of Object.entries(rebalanceSummary)) {
+    console.log(`    [${key}] ->`, counts);
+  }
+}
 console.log(`-> ${outPath}`);
 console.log(`-> ${imagesDir} (${imageCounter} gambar)`);
 if (allQuestions.length === 0) {
