@@ -31,20 +31,48 @@
 
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import mammoth from "mammoth";
 
 const docxPath = process.argv[2];
 if (!docxPath) {
-  console.error("Pakai: node scripts/convert-docx.js path/ke/file.docx");
+  console.error("Pakai: node scripts/convert-docx.js path/ke/file.docx [kategori] [judul-paket]");
   process.exit(1);
+}
+// Kategori & judul paket bersifat opsional. Kalau kategori tidak diisi,
+// konversi jalan seperti biasa (mode lama): tulis langsung ke data/questions.js
+// + images/ di root project. Kalau kategori diisi, soal disimpan sebagai
+// "paket" terpisah di data/packages/<id>/questions.js + images/packages/<id>/,
+// dan didaftarkan ke data/manifest.js supaya muncul di pemilih kategori di app.
+const kategoriArg = (process.argv[3] || "").trim();
+const paketArg = (process.argv[4] || "").trim();
+const usePackageMode = kategoriArg.length > 0;
+
+function slugify(s) {
+  return String(s)
+    .toLowerCase()
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60) || "paket";
 }
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
-const imagesDir = path.join(projectRoot, "images");
-const dataDir = path.join(projectRoot, "data");
+
+const paketTitle = usePackageMode
+  ? (paketArg || path.basename(docxPath, path.extname(docxPath)))
+  : "";
+const packageId = usePackageMode ? `${slugify(kategoriArg)}__${slugify(paketTitle)}` : "";
+
+const imagesDir = usePackageMode
+  ? path.join(projectRoot, "images", "packages", packageId)
+  : path.join(projectRoot, "images");
+const dataDir = usePackageMode
+  ? path.join(projectRoot, "data", "packages", packageId)
+  : path.join(projectRoot, "data");
+const imagesUrlPrefix = usePackageMode ? `images/packages/${packageId}` : "images";
 fs.mkdirSync(imagesDir, { recursive: true });
 fs.mkdirSync(dataDir, { recursive: true });
 
@@ -60,7 +88,7 @@ const result = await mammoth.convertToHtml(
       const filename = `img-${String(imageCounter).padStart(3, "0")}.${ext}`;
       const buffer = await image.read("base64");
       fs.writeFileSync(path.join(imagesDir, filename), Buffer.from(buffer, "base64"));
-      return { src: `images/${filename}` };
+      return { src: `${imagesUrlPrefix}/${filename}` };
     }),
   }
 );
@@ -500,7 +528,7 @@ const { changed: rebalancedCount, groups: rebalanceSummary } =
 const part2Questions = parsePart2(part2Html, part1Questions.length);
 const allQuestions = [...part1Questions, ...part2Questions];
 
-// --- 8. Tulis hasil ke data/questions.js ---
+// --- 8. Tulis hasil ke questions.js (mode lama: data/questions.js, mode paket: data/packages/<id>/questions.js) ---
 const outPath = path.join(dataDir, "questions.js");
 const fileContent = `// File ini DIBUAT OTOMATIS oleh scripts/convert-docx.js dari: ${path.basename(docxPath)}
 // Jangan diedit manual kalau masih mau re-generate dari docx.
@@ -514,6 +542,46 @@ export const questions = ${JSON.stringify(allQuestions, null, 2)};
 `;
 fs.writeFileSync(outPath, fileContent, "utf-8");
 
+// --- 9. Mode paket: daftarkan/update entry di data/manifest.js ---
+async function upsertManifest() {
+  const manifestPath = path.join(projectRoot, "data", "manifest.js");
+  let packages = [];
+  if (fs.existsSync(manifestPath)) {
+    try {
+      const mod = await import(pathToFileURL(manifestPath).href + `?t=${Date.now()}`);
+      packages = Array.isArray(mod.packages) ? mod.packages : [];
+    } catch (e) {
+      console.log("Catatan: gagal baca manifest lama, membuat manifest baru. (" + e.message + ")");
+      packages = [];
+    }
+  }
+
+  const entry = {
+    id: packageId,
+    category: kategoriArg,
+    title: paketTitle,
+    file: `./data/packages/${packageId}/questions.js`,
+    count: allQuestions.length,
+    convertedAt: new Date().toISOString(),
+    source: path.basename(docxPath),
+  };
+  const idx = packages.findIndex((p) => p.id === packageId);
+  if (idx >= 0) packages[idx] = entry;
+  else packages.push(entry);
+
+  packages.sort((a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title));
+
+  const manifestContent = `// File ini DIBUAT/DIKELOLA OTOMATIS oleh scripts/convert-docx.js.
+// Berisi daftar semua "paket soal" (hasil konversi docx per kategori).
+// Jangan diedit manual kecuali kamu tahu apa yang kamu lakukan — bisa
+// dihapus/ditimpa lagi saat konversi berikutnya jalan untuk paket yang sama.
+
+export const packages = ${JSON.stringify(packages, null, 2)};
+`;
+  fs.writeFileSync(manifestPath, manifestContent, "utf-8");
+  return packages.length;
+}
+
 const part1Count = part1Questions.length;
 const part2Count = part2Questions.length;
 console.log(`Selesai. ${allQuestions.length} soal berhasil diparse.`);
@@ -525,8 +593,16 @@ if (rebalancedCount > 0) {
     console.log(`    [${key}] ->`, counts);
   }
 }
+if (usePackageMode) {
+  console.log(`  Kategori           : ${kategoriArg}`);
+  console.log(`  Paket              : ${paketTitle} (id: ${packageId})`);
+}
 console.log(`-> ${outPath}`);
 console.log(`-> ${imagesDir} (${imageCounter} gambar)`);
+if (usePackageMode) {
+  const totalPackages = await upsertManifest();
+  console.log(`-> ${path.join(projectRoot, "data", "manifest.js")} (${totalPackages} paket terdaftar)`);
+}
 if (allQuestions.length === 0) {
   console.log("\nTIDAK ADA SOAL TERDETEKSI. Cek apakah format docx mengikuti README.md.");
 }

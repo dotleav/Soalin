@@ -422,17 +422,69 @@
   .empty { color: var(--muted2); text-align: center; margin-top: 60px; font-size: 0.88rem; }
 
   .quiz-fade-in { animation: fadeIn 0.28s ease-out both; }
+
+  /* ── Pemilih paket soal (kategori) ── */
+  .pkgSwitchBtn {
+    display: flex; align-items: center; gap: 5px;
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    font-size: 0.68rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+    cursor: pointer; transition: all 0.15s; margin-top: 2px;
+  }
+  .pkgSwitchBtn:hover { color: var(--text-secondary); border-color: var(--muted3); }
+  h1.pkgTitleActive { font-size: clamp(1rem, 3.6vw, 1.4rem); }
+  .pkgSubtitle { color: var(--muted2); font-size: 0.7rem; margin-top: 2px; }
+
+  .pickerHeader { padding: 28px 0 18px; text-align: center; }
+  .pickerHeader h1 { color: var(--accent); font-family: "DM Serif Display", Georgia, serif; font-size: clamp(1.3rem, 5vw, 1.8rem); margin: 0 0 6px; }
+  .pickerSub { color: var(--muted2); font-size: 0.82rem; margin: 0; }
+
+  .categoryList { display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
+  .categoryGroup { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .categoryHeader {
+    width: 100%; display: flex; align-items: center; gap: 10px;
+    background: none; border: none; cursor: pointer; padding: 14px 16px;
+    color: var(--text); text-align: left; transition: background 0.15s;
+  }
+  .categoryHeader:hover { background: var(--border-light); }
+  .categoryHeader.open { background: var(--accent-soft); }
+  .catName { font-weight: 700; font-size: 0.92rem; flex: 1; }
+  .catMeta { color: var(--muted2); font-size: 0.72rem; }
+  .catArrow { color: var(--muted); font-size: 0.7rem; transition: transform 0.2s; }
+
+  .categoryBody { max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1); }
+  .categoryBody.open { max-height: 2000px; }
+  .packageItem {
+    width: 100%; display: flex; flex-direction: column; gap: 2px;
+    background: none; border: none; border-top: 1px solid var(--border-light);
+    cursor: pointer; padding: 12px 16px 12px 26px; text-align: left; color: var(--text-secondary);
+    transition: background 0.15s;
+  }
+  .packageItem:hover { background: var(--border-light); }
+  .packageItem.active { background: var(--accent-soft); }
+  .packageItem .pkgTitle { font-weight: 600; font-size: 0.86rem; color: var(--text); }
+  .packageItem.active .pkgTitle::before { content: "\2713  "; color: var(--accent); }
+  .packageItem .pkgMeta { color: var(--muted2); font-size: 0.7rem; }
+
+  .pickerCloseBtn {
+    width: 100%; padding: 12px; background: none; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+    font-size: 0.82rem; margin-top: 4px; transition: all 0.15s;
+  }
+  .pickerCloseBtn:hover { color: var(--text-secondary); border-color: var(--muted3); }
 </style>
 </head>
 <body>
 <div id="app"></div>
 
 <script type="module">
-import { questions as allQuestions } from "./data/questions.js";
+// Soal dimuat secara dinamis (lihat "Paket soal" di bawah), bukan di-import
+// statis lagi — supaya bisa ganti-ganti paket/kategori tanpa reload halaman.
+let allQuestions = [];
 
 // ── Constants ──────────────────────────────────────────────────────────────
 const LOAD_BATCH = 15; // jumlah soal yang dimuat sekaligus, biar Mode Latihan gak lag
-const LS_KEY = "soalin_biasa_progress";
+const LS_KEY_PREFIX = "soalin_biasa_progress";
+const ACTIVE_PKG_KEY = "soalin_active_package";
 const MUTE_KEY = "soalin_muted";
 
 const DIFFICULTY_CONFIG = {
@@ -480,9 +532,14 @@ function toggleMute() {
 }
 
 // ── LocalStorage — Mode Latihan (persist across refresh & tab close) ──────
+// Progres disimpan per-paket (namespaced by activePackage.id) supaya jawaban
+// di satu paket soal tidak tercampur dengan paket lain.
+function currentLsKey() {
+  return activePackage ? `${LS_KEY_PREFIX}__${activePackage.id}` : LS_KEY_PREFIX;
+}
 function loadBiasa() {
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    const raw = localStorage.getItem(currentLsKey());
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object" && "answersMap" in parsed) return parsed;
@@ -491,15 +548,21 @@ function loadBiasa() {
 }
 function saveBiasa() {
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify({
+    localStorage.setItem(currentLsKey(), JSON.stringify({
       shuffleOn: biasaShuffleOn,
       answersMap: biasaAnswersMap,
     }));
   } catch { /* quota exceeded — abaikan diam-diam */ }
 }
 function clearBiasa() {
-  try { localStorage.removeItem(LS_KEY); } catch { /* noop */ }
+  try { localStorage.removeItem(currentLsKey()); } catch { /* noop */ }
 }
+
+// ── State: paket soal / kategori ──────────────────────────────────────────
+let packageManifest = []; // dari data/manifest.js, diisi scripts/convert-docx.js
+let activePackage = null; // entry manifest yang lagi dipakai, atau null = mode lama (data/questions.js)
+let pickerOpen = false; // true = layar pilih kategori/paket sedang ditampilkan
+let expandedCategories = new Set();
 
 // ── State ──────────────────────────────────────────────────────────────────
 let quizMode = "biasa"; // "biasa" | "tentamen"
@@ -523,6 +586,49 @@ let timeLeft = 0;
 let qPhase = "answering"; // "answering" | "answered_manual" | "answered_timeout"
 let tentamenTimerHandle = null;
 let tentamenAdvanceHandle = null;
+
+// ── Paket soal / kategori: manifest, load, switch ─────────────────────────
+async function loadManifest() {
+  try {
+    const mod = await import("./data/manifest.js");
+    packageManifest = Array.isArray(mod.packages) ? mod.packages : [];
+  } catch {
+    packageManifest = []; // belum pernah convert pakai kategori — tidak apa-apa
+  }
+}
+
+async function loadLegacyQuestions() {
+  try {
+    const mod = await import("./data/questions.js");
+    allQuestions = mod.questions || [];
+  } catch {
+    allQuestions = [];
+  }
+}
+
+// Reset semua state kuis (Latihan & Tentamen) saat ganti paket soal.
+function resetQuizStateForNewPackage() {
+  quizMode = "biasa";
+  tentamenState = "setup";
+  tentamenQuestions = [];
+  tentamenAnswers = [];
+  shuffleOrderCache = {};
+  brokenRevealed.clear();
+  stopTentamenTimerLoop();
+}
+
+async function selectPackage(pkg) {
+  try {
+    const mod = await import(pkg.file);
+    allQuestions = mod.questions || [];
+  } catch {
+    allQuestions = [];
+  }
+  activePackage = pkg;
+  try { localStorage.setItem(ACTIVE_PKG_KEY, pkg.id); } catch { /* noop */ }
+  resetQuizStateForNewPackage();
+  initBiasa();
+}
 
 // ── Init Mode Latihan dari localStorage ──────────────────────────────────
 function initBiasa() {
@@ -820,7 +926,11 @@ function renderHeaderZone() {
         <header>
           <div class="headerInner">
             <div class="titleRow">
-              <h1>Quiz App</h1>
+              <div>
+                <h1${activePackage ? ` class="pkgTitleActive"` : ""}>${activePackage ? escapeHtml(activePackage.title) : "Quiz App"}</h1>
+                ${activePackage ? `<div class="pkgSubtitle">${escapeHtml(activePackage.category)}</div>` : ""}
+                ${packageManifest.length > 0 ? `<button class="pkgSwitchBtn" id="pkgSwitchBtn">\uD83D\uDCC2 ${activePackage ? "Ganti paket" : "Pilih paket soal"}</button>` : ""}
+              </div>
               ${trackerHtml}
             </div>
           </div>
@@ -1068,10 +1178,98 @@ function renderTentamenResults() {
   return html;
 }
 
+// ── Render: layar pilih kategori / paket soal ─────────────────────────────
+function formatDateShort(iso) {
+  try {
+    return new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  } catch { return ""; }
+}
+
+function renderPickerScreen() {
+  const grouped = {};
+  packageManifest.forEach((p) => {
+    if (!grouped[p.category]) grouped[p.category] = [];
+    grouped[p.category].push(p);
+  });
+  const categories = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+
+  let html = `
+    <main class="wrap">
+      <div class="pickerHeader">
+        <h1>Pilih Paket Soal</h1>
+        <p class="pickerSub">Ketuk kategori untuk membuka daftar paket soal di dalamnya.</p>
+      </div>
+      <div class="categoryList">
+  `;
+
+  categories.forEach((cat) => {
+    const isOpen = expandedCategories.has(cat);
+    const pkgs = grouped[cat];
+    html += `
+      <div class="categoryGroup">
+        <button class="categoryHeader${isOpen ? " open" : ""}" data-cat="${escapeAttr(cat)}">
+          <span class="catName">${escapeHtml(cat)}</span>
+          <span class="catMeta">${pkgs.length} paket</span>
+          <span class="catArrow">${isOpen ? "\u25B2" : "\u25BC"}</span>
+        </button>
+        <div class="categoryBody${isOpen ? " open" : ""}">
+          ${pkgs.map((p) => `
+            <button class="packageItem${activePackage && activePackage.id === p.id ? " active" : ""}" data-pkg="${escapeAttr(p.id)}">
+              <span class="pkgTitle">${escapeHtml(p.title)}</span>
+              <span class="pkgMeta">${p.count} soal${p.convertedAt ? " \u00B7 " + formatDateShort(p.convertedAt) : ""}</span>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  if (activePackage) {
+    html += `<button class="pickerCloseBtn" id="pickerCloseBtn">\u2190 Kembali ke paket saat ini</button>`;
+  }
+  html += `</main>`;
+  return html;
+}
+
+function attachPickerHandlers() {
+  app.querySelectorAll(".categoryHeader[data-cat]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const cat = btn.dataset.cat;
+      if (expandedCategories.has(cat)) expandedCategories.delete(cat);
+      else expandedCategories.add(cat);
+      render();
+    });
+  });
+  app.querySelectorAll(".packageItem[data-pkg]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const pkg = packageManifest.find((p) => p.id === btn.dataset.pkg);
+      if (!pkg) return;
+      await selectPackage(pkg);
+      pickerOpen = false;
+      render();
+    });
+  });
+  const closeBtn = document.getElementById("pickerCloseBtn");
+  if (closeBtn) closeBtn.addEventListener("click", () => { pickerOpen = false; render(); });
+}
+
 // ── Render utama ───────────────────────────────────────────────────────────
 function render() {
+  if (pickerOpen && packageManifest.length > 0) {
+    app.innerHTML = renderPickerScreen();
+    attachPickerHandlers();
+    return;
+  }
+
   if (!allQuestions || allQuestions.length === 0) {
-    app.innerHTML = `<div class="empty">Belum ada soal. Tambahkan manual di data/questions.js atau jalankan: npm run convert -- file.docx</div>`;
+    if (packageManifest.length > 0) {
+      // Ada paket terdaftar tapi belum ada yang dipilih — langsung tampilkan pemilih.
+      app.innerHTML = renderPickerScreen();
+      attachPickerHandlers();
+      return;
+    }
+    app.innerHTML = `<div class="empty">Belum ada soal. Tambahkan manual di data/questions.js, atau jalankan: npm run convert -- file.docx [kategori] [judul-paket]</div>`;
     return;
   }
 
@@ -1147,11 +1345,33 @@ function attachHandlers() {
 
   const restartTentamenBtn = document.getElementById("restartTentamenBtn");
   if (restartTentamenBtn) restartTentamenBtn.addEventListener("click", handleResetTentamen);
+
+  const pkgSwitchBtn = document.getElementById("pkgSwitchBtn");
+  if (pkgSwitchBtn) pkgSwitchBtn.addEventListener("click", () => { pickerOpen = true; render(); });
 }
 
 // ── Boot ───────────────────────────────────────────────────────────────────
-initBiasa();
-render();
+async function boot() {
+  await loadManifest();
+
+  if (packageManifest.length > 0) {
+    let savedId;
+    try { savedId = localStorage.getItem(ACTIVE_PKG_KEY); } catch { savedId = null; }
+    const saved = packageManifest.find((p) => p.id === savedId);
+    if (saved) {
+      await selectPackage(saved);
+    } else {
+      pickerOpen = true; // belum pernah pilih paket — langsung tampilkan pemilih
+    }
+  } else {
+    // Tidak ada paket terdaftar sama sekali — pakai mode lama (data/questions.js).
+    await loadLegacyQuestions();
+    initBiasa();
+  }
+
+  render();
+}
+boot();
 </script>
 </body>
 </html>

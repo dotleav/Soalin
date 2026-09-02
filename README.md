@@ -24,6 +24,27 @@ npm run convert -- path/ke/file-soal.docx
 
 Kalau mau langsung edit soalnya manual tanpa docx, buka `data/questions.js` dan edit array-nya. Gambar taruh di folder `images/`, isi path-nya di field `questionImages` / `explanationImages`.
 
+## Kategori & paket soal (opsional)
+
+Kalau kamu punya banyak file docx (misalnya per blok kuliah, per topik, dsb.) dan mau bisa milih-milih paket soal mana yang mau dikerjakan langsung dari app, kasih argumen kategori & nama paket saat convert:
+
+```bash
+npm run convert -- path/ke/file-soal.docx "Blok 2E" "Neuro Batch 1"
+```
+
+- Argumen ke-3 = **kategori** (contoh: nama blok).
+- Argumen ke-4 = **nama paket** (opsional — kalau dikosongkan, dipakai nama file docx-nya).
+
+Tiap kali dijalankan dengan kategori, script akan:
+1. Menulis soal & gambar paket itu ke folder sendiri: `data/packages/<id>/questions.js` dan `images/packages/<id>/`, terpisah dari paket lain.
+2. Mendaftarkan (atau meng-update kalau sudah ada) paket itu ke `data/manifest.js` — file ini yang dibaca app untuk menampilkan daftar kategori & paket.
+
+Kalau argumen kategori **tidak** diisi, convert tetap jalan seperti biasa (mode lama): langsung ke `data/questions.js` + `images/` di root, tanpa manifest. Dua mode ini bisa dipakai bergantian; app otomatis pakai mode paket kalau `data/manifest.js` ada isinya, dan fallback ke mode lama kalau tidak ada paket terdaftar sama sekali.
+
+Di app, kalau ada lebih dari satu paket terdaftar, akan muncul tombol **"Pilih paket soal"** / **"Ganti paket"** di header. Tekan tombol itu untuk membuka daftar kategori (bisa di-expand), lalu pilih paket soal yang mau dikerjakan. Progres Mode Latihan disimpan terpisah per paket, jadi jawaban di satu paket tidak akan tercampur dengan paket lain.
+
+Pengguna Windows yang pakai `convert.bat`/`convert.ps1` (GUI) juga bisa isi kolom "Kategori" & "Nama paket" di jendela konversi — kosongkan kalau mau pakai mode lama.
+
 ## Format docx
 
 Parser membaca dua bagian dalam satu file docx: soal normal (Bagian 1) dan soal rusak (Bagian 2).
@@ -106,8 +127,14 @@ Aktifkan di Settings → Pages → branch `main` / root. Setelah itu quiz bisa d
 ├── index.html
 ├── benar.mp3 / salah.mp3
 ├── data/
-│   └── questions.js
+│   ├── questions.js       # mode lama (tanpa kategori)
+│   ├── manifest.js        # daftar paket, dibuat otomatis kalau pakai kategori
+│   └── packages/
+│       └── <id>/questions.js
 ├── images/
+│   ├── ...                # gambar mode lama
+│   └── packages/
+│       └── <id>/...
 ├── scripts/
 │   └── convert-docx.js
 └── package.json

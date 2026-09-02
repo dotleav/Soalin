@@ -1,0 +1,34 @@
+// File ini DIBUAT/DIKELOLA OTOMATIS oleh scripts/convert-docx.js.
+// Berisi daftar semua "paket soal" (hasil konversi docx per kategori).
+// Jangan diedit manual kecuali kamu tahu apa yang kamu lakukan — bisa
+// dihapus/ditimpa lagi saat konversi berikutnya jalan untuk paket yang sama.
+
+export const packages = [
+  {
+    "id": "2h-pa-1__latihan-pa-sist-saraf",
+    "category": "2H PA 1",
+    "title": "latihan PA sist. saraf",
+    "file": "./data/packages/2h-pa-1__latihan-pa-sist-saraf/questions.js",
+    "count": 52,
+    "convertedAt": "2026-09-02T05:04:15.861Z",
+    "source": "Soal_Bergambar_PA_Sistem_Saraf.docx"
+  },
+  {
+    "id": "2h-sl-pungsi-lumbal__latihan-pretes-pungsi-lumbal",
+    "category": "2H_SL_Pungsi Lumbal",
+    "title": "Latihan Pretes Pungsi Lumbal",
+    "file": "./data/packages/2h-sl-pungsi-lumbal__latihan-pretes-pungsi-lumbal/questions.js",
+    "count": 25,
+    "convertedAt": "2026-09-02T05:06:29.158Z",
+    "source": "kuis latihan_lumbal_pungsi.docx"
+  },
+  {
+    "id": "blok-1j__ub-1j",
+    "category": "Blok 1J",
+    "title": "UB 1J",
+    "file": "./data/packages/blok-1j__ub-1j/questions.js",
+    "count": 155,
+    "convertedAt": "2026-09-02T05:07:40.494Z",
+    "source": "Soal_UB_1J_2022_template_soalin .docx"
+  }
+];

@@ -34,7 +34,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 # ── Buat form utama ───────────────────────────────────────────────────────
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Soalin — Konversi Dokumen"
-$form.ClientSize = New-Object System.Drawing.Size(510, 310)
+$form.ClientSize = New-Object System.Drawing.Size(510, 400)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
 $form.MaximizeBox = $false
@@ -119,10 +119,48 @@ $btnBrowse.Add_Click({
 })
 $form.Controls.Add($btnBrowse)
 
+# ── Kategori & judul paket (opsional) ─────────────────────────────────────
+# Kosongkan kedua kotak ini kalau mau pakai mode lama (satu paket soal saja,
+# tanpa kategori). Isi Kategori untuk membuat/menambah ke paket soal yang
+# bisa dipilih dari tombol "Pilih paket soal" di app.
+$lblKategori = New-Object System.Windows.Forms.Label
+$lblKategori.Text = "Kategori (opsional, mis. 'Blok 2E')"
+$lblKategori.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
+$lblKategori.ForeColor = [System.Drawing.Color]::FromArgb(160, 160, 160)
+$lblKategori.Location = New-Object System.Drawing.Point(20, 128)
+$lblKategori.Size = New-Object System.Drawing.Size(230, 18)
+$form.Controls.Add($lblKategori)
+
+$txtKategori = New-Object System.Windows.Forms.TextBox
+$txtKategori.Location = New-Object System.Drawing.Point(20, 148)
+$txtKategori.Size = New-Object System.Drawing.Size(230, 24)
+$txtKategori.Font = New-Object System.Drawing.Font("Consolas", 9)
+$txtKategori.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$txtKategori.ForeColor = [System.Drawing.Color]::White
+$txtKategori.BorderStyle = "FixedSingle"
+$form.Controls.Add($txtKategori)
+
+$lblPaket = New-Object System.Windows.Forms.Label
+$lblPaket.Text = "Nama paket (opsional)"
+$lblPaket.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
+$lblPaket.ForeColor = [System.Drawing.Color]::FromArgb(160, 160, 160)
+$lblPaket.Location = New-Object System.Drawing.Point(260, 128)
+$lblPaket.Size = New-Object System.Drawing.Size(230, 18)
+$form.Controls.Add($lblPaket)
+
+$txtPaket = New-Object System.Windows.Forms.TextBox
+$txtPaket.Location = New-Object System.Drawing.Point(260, 148)
+$txtPaket.Size = New-Object System.Drawing.Size(230, 24)
+$txtPaket.Font = New-Object System.Drawing.Font("Consolas", 9)
+$txtPaket.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$txtPaket.ForeColor = [System.Drawing.Color]::White
+$txtPaket.BorderStyle = "FixedSingle"
+$form.Controls.Add($txtPaket)
+
 # ── Kotak log output ──────────────────────────────────────────────────────
 $txtLog = New-Object System.Windows.Forms.RichTextBox
-$txtLog.Location = New-Object System.Drawing.Point(20, 132)
-$txtLog.Size = New-Object System.Drawing.Size(470, 100)
+$txtLog.Location = New-Object System.Drawing.Point(20, 182)
+$txtLog.Size = New-Object System.Drawing.Size(470, 130)
 $txtLog.Font = New-Object System.Drawing.Font("Consolas", 8.5)
 $txtLog.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
 $txtLog.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
@@ -151,7 +189,7 @@ function Write-Log {
 # ── Tombol Konversi ───────────────────────────────────────────────────────
 $btnConvert = New-Object System.Windows.Forms.Button
 $btnConvert.Text = "▶  Konversi"
-$btnConvert.Location = New-Object System.Drawing.Point(20, 248)
+$btnConvert.Location = New-Object System.Drawing.Point(20, 338)
 $btnConvert.Size = New-Object System.Drawing.Size(150, 36)
 $btnConvert.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
 $btnConvert.BackColor = [System.Drawing.Color]::FromArgb(232, 168, 56)
@@ -203,9 +241,17 @@ $btnConvert.Add_Click({
     Write-Log "npm install selesai." "ok"
 
     # npm run convert
-    Write-Log "[ npm run convert ]" "accent"
+    $kategori = $txtKategori.Text.Trim()
+    $paket = $txtPaket.Text.Trim()
+    if ($kategori) {
+        Write-Log "[ npm run convert ] (kategori: $kategori)" "accent"
+        $convertArgs = "/c npm run convert -- `"$docxPath`" `"$kategori`" `"$paket`" 2>&1"
+    } else {
+        Write-Log "[ npm run convert ] (tanpa kategori — mode lama)" "accent"
+        $convertArgs = "/c npm run convert -- `"$docxPath`" 2>&1"
+    }
     $convertProc = Start-Process -FilePath "cmd.exe" `
-        -ArgumentList "/c npm run convert -- `"$docxPath`" 2>&1" `
+        -ArgumentList $convertArgs `
         -WorkingDirectory $projectRoot `
         -RedirectStandardOutput "$env:TEMP\soalin_convert.txt" `
         -RedirectStandardError  "$env:TEMP\soalin_convert_err.txt" `
