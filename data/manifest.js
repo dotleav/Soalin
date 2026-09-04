@@ -23,6 +23,15 @@ export const packages = [
     "source": "Soal_Bergambar_PA_Sistem_Saraf.docx"
   },
   {
+    "id": "2h-pa-1__latihan-pa-sist-saraf-gambar-v2",
+    "category": "2H PA 1",
+    "title": "latihan PA sist.saraf gambar v2",
+    "file": "./data/packages/2h-pa-1__latihan-pa-sist-saraf-gambar-v2/questions.js",
+    "count": 52,
+    "convertedAt": "2026-09-04T16:00:38.183Z",
+    "source": "Soal_Ciri_Khas_Sediaan_PA_Sistem_Saraf.docx"
+  },
+  {
     "id": "2h-sl-pungsi-lumbal__latihan-pretes-pungsi-lumbal",
     "category": "2H_SL_Pungsi Lumbal",
     "title": "Latihan Pretes Pungsi Lumbal",
