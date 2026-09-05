@@ -15,7 +15,6 @@
 //   node scripts/delete-package.js --delete <id1>,<id2>,...
 //       -> hapus paket-paket itu (folder + entry manifest)
 //
-<<<<<<< HEAD
 //   node scripts/delete-package.js --rename-category <kategori-lama> <kategori-baru>
 //       -> ganti nama kategori di SEMUA paket yang pakai kategori itu
 //          (cuma ubah field "category" di manifest, folder tidak disentuh
@@ -26,10 +25,6 @@
 //
 //   node scripts/delete-package.js --json
 //       -> output manifest dalam JSON mentah (dipakai convert.ps1 / GUI)
-=======
-//   node scripts/delete-package.js --json
-//       -> output manifest dalam JSON mentah (dipakai delete.ps1 / GUI)
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 //
 // Id paket bisa dilihat dari daftar di atas, atau dari field "id" di
 // data/manifest.js.
@@ -87,7 +82,6 @@ async function main() {
     return;
   }
 
-<<<<<<< HEAD
   // ── Mode ganti nama kategori ──────────────────────────────────────────────
   const renameCatIdx = args.indexOf("--rename-category");
   if (renameCatIdx !== -1) {
@@ -129,8 +123,6 @@ async function main() {
     return;
   }
 
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
   const deleteFlagIdx = args.indexOf("--delete");
 
   // ── Mode lihat-lihat (tanpa argumen) ──────────────────────────────────────
@@ -155,15 +147,11 @@ async function main() {
     }
     console.log("Cara hapus:");
     console.log("  node scripts/delete-package.js --delete <id1>,<id2>,...");
-<<<<<<< HEAD
     console.log("Cara ganti nama kategori:");
     console.log("  node scripts/delete-package.js --rename-category <lama> <baru>");
     console.log("Cara ganti nama paket:");
     console.log("  node scripts/delete-package.js --rename-package <id> <judul-baru>");
     console.log("Atau jalankan soalin.bat buat pilih lewat tampilan (GUI), lebih gampang.");
-=======
-    console.log("Atau jalankan delete.bat buat pilih lewat tampilan (GUI), lebih gampang.");
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     return;
   }
 

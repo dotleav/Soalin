@@ -1,14 +1,8 @@
 ﻿# convert.ps1
-<<<<<<< HEAD
 # Soalin — satu GUI buat konversi docx -> paket soal, kelola kategori/paket
 # (ganti nama), DAN hapus paket soal. Dipanggil dari soalin.bat (satu-satunya
 # launcher, buka di tab Konversi). Bisa juga dipanggil manual dan langsung
 # dibuka di tab Kelola Paket:
-=======
-# Soalin — satu GUI buat konversi docx -> paket soal, DAN hapus paket soal.
-# Dipanggil dari convert.bat (buka di tab Konversi) atau delete.bat (buka
-# langsung di tab Hapus Paket). Bisa juga dipanggil manual:
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 #   powershell -File convert.ps1 -StartTab delete
 
 param(
@@ -18,10 +12,7 @@ param(
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
-<<<<<<< HEAD
 Add-Type -AssemblyName Microsoft.VisualBasic
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 
 # ── Sembunyikan jendela console PowerShell ────────────────────────────────
 Add-Type -Name Win32 -Namespace Console -MemberDefinition '
@@ -84,11 +75,7 @@ $lblTitle.AutoSize = $true
 $form.Controls.Add($lblTitle)
 
 $lblSub = New-Object System.Windows.Forms.Label
-<<<<<<< HEAD
 $lblSub.Text = "Konversi dokumen .docx jadi paket soal, ganti nama kategori/paket, atau hapus yang sudah tidak dipakai."
-=======
-$lblSub.Text = "Konversi dokumen .docx jadi paket soal, atau hapus paket yang sudah tidak dipakai."
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $lblSub.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $lblSub.ForeColor = $colMuted
 $lblSub.Location = New-Object System.Drawing.Point(24, 50)
@@ -108,11 +95,7 @@ $btnTabConvert.Cursor = [System.Windows.Forms.Cursors]::Hand
 $form.Controls.Add($btnTabConvert)
 
 $btnTabDelete = New-Object System.Windows.Forms.Button
-<<<<<<< HEAD
 $btnTabDelete.Text = "Kelola Paket"
-=======
-$btnTabDelete.Text = "Hapus Paket"
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $btnTabDelete.Location = New-Object System.Drawing.Point((24 + $tabWidth + 8), 82)
 $btnTabDelete.Size = New-Object System.Drawing.Size($tabWidth, 34)
 $btnTabDelete.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
@@ -177,10 +160,7 @@ function Set-ActiveTab {
         $btnTabConvert.ForeColor = $colAccentTxt
         $btnTabDelete.BackColor = $colBtnIdle
         $btnTabDelete.ForeColor = [System.Drawing.Color]::White
-<<<<<<< HEAD
         Load-Categories
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     } else {
         $panelDelete.Visible = $true
         $panelConvert.Visible = $false
@@ -189,10 +169,7 @@ function Set-ActiveTab {
         $btnTabConvert.BackColor = $colBtnIdle
         $btnTabConvert.ForeColor = [System.Drawing.Color]::White
         Load-Tree
-<<<<<<< HEAD
         Load-Categories
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     }
 }
 $btnTabConvert.Add_Click({ Set-ActiveTab "convert" })
@@ -265,18 +242,13 @@ $btnBrowse.Add_Click({
 $panelConvert.Controls.Add($btnBrowse)
 
 $lblKategori = New-Object System.Windows.Forms.Label
-<<<<<<< HEAD
 $lblKategori.Text = "Kategori (opsional, pilih yang sudah ada / ketik baru)"
-=======
-$lblKategori.Text = "Kategori (opsional, mis. 'Blok 2E')"
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $lblKategori.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
 $lblKategori.ForeColor = $colMuted
 $lblKategori.Location = New-Object System.Drawing.Point(0, 60)
 $lblKategori.AutoSize = $true
 $panelConvert.Controls.Add($lblKategori)
 
-<<<<<<< HEAD
 # ComboBox biar kategori yang sudah ada bisa dipilih langsung (bukan ketik
 # ulang) — mencegah paket ke-split ke kategori baru cuma gara-gara beda
 # huruf besar/kecil atau typo. Tetap bisa ketik kategori baru kalau memang
@@ -292,16 +264,6 @@ $cmbKategori.DropDownStyle = "DropDown"
 $cmbKategori.AutoCompleteMode = "SuggestAppend"
 $cmbKategori.AutoCompleteSource = "ListItems"
 $panelConvert.Controls.Add($cmbKategori)
-=======
-$txtKategori = New-Object System.Windows.Forms.TextBox
-$txtKategori.Location = New-Object System.Drawing.Point(0, 80)
-$txtKategori.Size = New-Object System.Drawing.Size(272, 24)
-$txtKategori.Font = New-Object System.Drawing.Font("Consolas", 9)
-$txtKategori.BackColor = $colPanelBg
-$txtKategori.ForeColor = [System.Drawing.Color]::White
-$txtKategori.BorderStyle = "FixedSingle"
-$panelConvert.Controls.Add($txtKategori)
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 
 $lblPaket = New-Object System.Windows.Forms.Label
 $lblPaket.Text = "Nama paket (opsional)"
@@ -322,10 +284,7 @@ $panelConvert.Controls.Add($txtPaket)
 
 $lblHint = New-Object System.Windows.Forms.Label
 $lblHint.Text = "Kosongkan Kategori kalau cuma mau mode lama (satu paket, tanpa kategori)."
-<<<<<<< HEAD
 
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $lblHint.Font = New-Object System.Drawing.Font("Segoe UI", 8)
 $lblHint.ForeColor = $colMuted
 $lblHint.Location = New-Object System.Drawing.Point(0, 112)
@@ -377,11 +336,7 @@ $btnConvert.Add_Click({
     }
     Write-Log "npm install selesai." "ok"
 
-<<<<<<< HEAD
     $kategori = $cmbKategori.Text.Trim()
-=======
-    $kategori = $txtKategori.Text.Trim()
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     $paket = $txtPaket.Text.Trim()
     if ($kategori) {
         Write-Log "[ npm run convert ] (kategori: $kategori)" "accent"
@@ -404,10 +359,7 @@ $btnConvert.Add_Click({
 
     if ($convertProc.ExitCode -eq 0) {
         Write-Log "Konversi berhasil! Buka index.html di browser." "ok"
-<<<<<<< HEAD
         Load-Categories
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     } else {
         Write-Log "Konversi gagal (exit $($convertProc.ExitCode))." "error"
     }
@@ -421,11 +373,7 @@ $btnConvert.Add_Click({
 # ══════════════════════════════════════════════════════════════════════
 
 $lblDeleteHint = New-Object System.Windows.Forms.Label
-<<<<<<< HEAD
 $lblDeleteHint.Text = "Centang paket buat hapus. Pilih satu node lalu klik tombol ganti nama. Item kuning (folder hilang) sudah pasti aman dihapus."
-=======
-$lblDeleteHint.Text = "Centang paket yang mau dihapus. Item kuning (folder hilang) sudah pasti aman dihapus."
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $lblDeleteHint.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
 $lblDeleteHint.ForeColor = $colMuted
 $lblDeleteHint.Location = New-Object System.Drawing.Point(0, 0)
@@ -434,11 +382,7 @@ $panelDelete.Controls.Add($lblDeleteHint)
 
 $tree = New-Object System.Windows.Forms.TreeView
 $tree.Location = New-Object System.Drawing.Point(0, 22)
-<<<<<<< HEAD
 $tree.Size = New-Object System.Drawing.Size($panelWidth, 196)
-=======
-$tree.Size = New-Object System.Drawing.Size($panelWidth, 232)
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $tree.CheckBoxes = $true
 $tree.BackColor = $colPanelBg
 $tree.ForeColor = [System.Drawing.Color]::White
@@ -449,7 +393,6 @@ $tree.ItemHeight = 22
 $tree.ShowNodeToolTips = $true
 $panelDelete.Controls.Add($tree)
 
-<<<<<<< HEAD
 $btnRenameCategory = New-Object System.Windows.Forms.Button
 $btnRenameCategory.Text = "Ganti Nama Kategori"
 $btnRenameCategory.Location = New-Object System.Drawing.Point(0, 222)
@@ -474,8 +417,6 @@ $btnRenamePackage.FlatAppearance.BorderColor = $colBorder
 $btnRenamePackage.Cursor = [System.Windows.Forms.Cursors]::Hand
 $panelDelete.Controls.Add($btnRenamePackage)
 
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $btnRefresh = New-Object System.Windows.Forms.Button
 $btnRefresh.Text = "Muat Ulang"
 $btnRefresh.Location = New-Object System.Drawing.Point(0, 260)
@@ -512,7 +453,6 @@ function Get-Packages {
     } catch { return @() }
 }
 
-<<<<<<< HEAD
 function Load-Categories {
     $packages = Get-Packages
     $cats = $packages | ForEach-Object { $_.category } | Where-Object { $_ } | Sort-Object -Unique
@@ -522,8 +462,6 @@ function Load-Categories {
     $cmbKategori.Text = $current
 }
 
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 $script:suppressCheckEvent = $false
 
 function Load-Tree {
@@ -546,10 +484,7 @@ function Load-Tree {
     foreach ($cat in $byCategory.Keys) {
         $catNode = New-Object System.Windows.Forms.TreeNode
         $catNode.Text = "$cat  ($($byCategory[$cat].Count) paket)"
-<<<<<<< HEAD
         $catNode.Name = $cat
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
         $catNode.Tag = "category"
         foreach ($p in $byCategory[$cat]) {
             $dataFolder = Join-Path $projectRoot "data\packages\$($p.id)"
@@ -557,10 +492,7 @@ function Load-Tree {
             $leaf = New-Object System.Windows.Forms.TreeNode
             $ghostTag = if ($isGhost) { "   ($([char]0x26A0) folder hilang)" } else { "" }
             $leaf.Text = "$($p.title) - $($p.count) soal$ghostTag"
-<<<<<<< HEAD
             $leaf.Name = $p.title
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
             $leaf.Tag = $p.id
             $leaf.ToolTipText = "id: $($p.id)`nsumber: $($p.source)"
             if ($isGhost) { $leaf.ForeColor = $colGhost }
@@ -640,15 +572,11 @@ $btnDelete.Add_Click({
     }
 
     Load-Tree
-<<<<<<< HEAD
     Load-Categories
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
     $btnDelete.Enabled = $true
     $btnRefresh.Enabled = $true
 })
 
-<<<<<<< HEAD
 function Invoke-ManageScript {
     param([string]$argsStr)
     $proc = Start-Process -FilePath "node" `
@@ -708,8 +636,6 @@ $btnRenamePackage.Add_Click({
     Load-Tree
 })
 
-=======
->>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 # ── Buka di tab yang diminta ──────────────────────────────────────────────
 Set-ActiveTab $StartTab
 
