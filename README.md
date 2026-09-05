@@ -43,7 +43,11 @@ Kalau argumen kategori **tidak** diisi, convert tetap jalan seperti biasa (mode 
 
 Di app, kalau ada lebih dari satu paket terdaftar, akan muncul tombol **"Pilih paket soal"** / **"Ganti paket"** di header. Tekan tombol itu untuk membuka daftar kategori (bisa di-expand), lalu pilih paket soal yang mau dikerjakan. Progres Mode Latihan disimpan terpisah per paket, jadi jawaban di satu paket tidak akan tercampur dengan paket lain.
 
+<<<<<<< HEAD
 Pengguna Windows yang pakai `soalin.bat`/`convert.ps1` (GUI) juga bisa isi kolom "Kategori" & "Nama paket" di jendela konversi — kosongkan kalau mau pakai mode lama. Kolom Kategori sekarang berupa dropdown yang bisa memilih kategori yang sudah ada (biar tidak ke-split gara-gara typo/beda kapital) atau ketik nama baru. Tab "Kelola Paket" juga punya tombol ganti nama kategori dan ganti nama paket, selain hapus paket.
+=======
+Pengguna Windows yang pakai `convert.bat`/`convert.ps1` (GUI) juga bisa isi kolom "Kategori" & "Nama paket" di jendela konversi — kosongkan kalau mau pakai mode lama.
+>>>>>>> 9e4dc759205071e95dd37202977893e09b5df887
 
 ## Format docx
 
