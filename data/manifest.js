@@ -6,7 +6,7 @@
 export const packages = [
   {
     "id": "2h-pa-1__latihan-pa-sist-saraf-gambar-v2",
-    "category": "2H PA 1",
+    "category": "2H PA - Sistem Saraf",
     "title": "Latihan PA 2H - Bergambar V2",
     "file": "./data/packages/2h-pa-1__latihan-pa-sist-saraf-gambar-v2/questions.js",
     "count": 52,
@@ -15,7 +15,7 @@ export const packages = [
   },
   {
     "id": "2h-pa-1__latihan-pa-sist-saraf-gambar-v1",
-    "category": "2H PA 1",
+    "category": "2H PA - Sistem Saraf",
     "title": "Latihan PA 2H - Bergambar V2",
     "file": "./data/packages/2h-pa-1__latihan-pa-sist-saraf-gambar-v1/questions.js",
     "count": 52,
@@ -24,7 +24,7 @@ export const packages = [
   },
   {
     "id": "2h-pa-1__lat-pa-sist-saraf-theory-only",
-    "category": "2H PA 1",
+    "category": "2H PA - Sistem Saraf",
     "title": "Latihan PA 2H - Theory V1",
     "file": "./data/packages/2h-pa-1__lat-pa-sist-saraf-theory-only/questions.js",
     "count": 42,
