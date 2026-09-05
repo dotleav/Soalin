@@ -1,6 +1,13 @@
 ﻿# convert.ps1
-# GUI launcher untuk convert-docx.js
-# Buka file picker -> pilih .docx -> npm install + npm run convert otomatis
+# Soalin — satu GUI buat konversi docx -> paket soal, DAN hapus paket soal.
+# Dipanggil dari convert.bat (buka di tab Konversi) atau delete.bat (buka
+# langsung di tab Hapus Paket). Bisa juga dipanggil manual:
+#   powershell -File convert.ps1 -StartTab delete
+
+param(
+    [ValidateSet("convert", "delete")]
+    [string]$StartTab = "convert"
+)
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -19,6 +26,7 @@ if ($consoleHwnd -ne [IntPtr]::Zero) {
 
 # ── Cari root project (folder tempat script ini ada) ─────────────────────
 $projectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$deleteScriptPath = Join-Path $projectRoot "scripts\delete-package.js"
 
 # ── Cek Node.js tersedia ──────────────────────────────────────────────────
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
@@ -31,54 +39,167 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-# ── Buat form utama ───────────────────────────────────────────────────────
+# ── Warna tema ───────────────────────────────────────────────────────────
+$colBg        = [System.Drawing.Color]::FromArgb(18, 18, 18)
+$colPanelBg   = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$colLogBg     = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$colBorder    = [System.Drawing.Color]::FromArgb(70, 70, 70)
+$colAccent    = [System.Drawing.Color]::FromArgb(232, 168, 56)
+$colAccentTxt = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$colMuted     = [System.Drawing.Color]::FromArgb(160, 160, 160)
+$colGhost     = [System.Drawing.Color]::FromArgb(250, 204, 21)
+$colDanger    = [System.Drawing.Color]::FromArgb(214, 80, 70)
+$colOk        = [System.Drawing.Color]::FromArgb(134, 239, 172)
+$colErr       = [System.Drawing.Color]::FromArgb(252, 165, 165)
+$colBtnIdle   = [System.Drawing.Color]::FromArgb(45, 45, 45)
+
+# ── Form utama ─────────────────────────────────────────────────────────
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Soalin — Konversi Dokumen"
-$form.ClientSize = New-Object System.Drawing.Size(510, 400)
+$form.Text = "Soalin — Konverter & Kelola Paket"
+$form.ClientSize = New-Object System.Drawing.Size(620, 592)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedDialog"
 $form.MaximizeBox = $false
-$form.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 18)
+$form.BackColor = $colBg
 $form.ForeColor = [System.Drawing.Color]::White
+$form.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 
-# ── Label judul ───────────────────────────────────────────────────────────
 $lblTitle = New-Object System.Windows.Forms.Label
-$lblTitle.Text = "Soalin Converter"
-$lblTitle.Font = New-Object System.Drawing.Font("Segoe UI", 14, [System.Drawing.FontStyle]::Bold)
-$lblTitle.ForeColor = [System.Drawing.Color]::FromArgb(232, 168, 56)
-$lblTitle.Location = New-Object System.Drawing.Point(20, 20)
-$lblTitle.Size = New-Object System.Drawing.Size(480, 30)
+$lblTitle.Text = "Soalin"
+$lblTitle.Font = New-Object System.Drawing.Font("Segoe UI", 16, [System.Drawing.FontStyle]::Bold)
+$lblTitle.ForeColor = $colAccent
+$lblTitle.Location = New-Object System.Drawing.Point(24, 18)
+$lblTitle.AutoSize = $true
 $form.Controls.Add($lblTitle)
 
 $lblSub = New-Object System.Windows.Forms.Label
-$lblSub.Text = "Pilih file .docx untuk dikonversi jadi questions.js"
+$lblSub.Text = "Konversi dokumen .docx jadi paket soal, atau hapus paket yang sudah tidak dipakai."
 $lblSub.Font = New-Object System.Drawing.Font("Segoe UI", 9)
-$lblSub.ForeColor = [System.Drawing.Color]::FromArgb(160, 160, 160)
-$lblSub.Location = New-Object System.Drawing.Point(20, 52)
-$lblSub.Size = New-Object System.Drawing.Size(480, 20)
+$lblSub.ForeColor = $colMuted
+$lblSub.Location = New-Object System.Drawing.Point(24, 50)
+$lblSub.Size = New-Object System.Drawing.Size(572, 20)
 $form.Controls.Add($lblSub)
 
-# ── Kotak path file ───────────────────────────────────────────────────────
+# ── "Tab" pilihan (tombol segmented, biar tetap gelap semua) ─────────────
+$tabWidth = 274
+$btnTabConvert = New-Object System.Windows.Forms.Button
+$btnTabConvert.Text = "Konversi Dokumen"
+$btnTabConvert.Location = New-Object System.Drawing.Point(24, 82)
+$btnTabConvert.Size = New-Object System.Drawing.Size($tabWidth, 34)
+$btnTabConvert.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
+$btnTabConvert.FlatStyle = "Flat"
+$btnTabConvert.FlatAppearance.BorderSize = 0
+$btnTabConvert.Cursor = [System.Windows.Forms.Cursors]::Hand
+$form.Controls.Add($btnTabConvert)
+
+$btnTabDelete = New-Object System.Windows.Forms.Button
+$btnTabDelete.Text = "Hapus Paket"
+$btnTabDelete.Location = New-Object System.Drawing.Point((24 + $tabWidth + 8), 82)
+$btnTabDelete.Size = New-Object System.Drawing.Size($tabWidth, 34)
+$btnTabDelete.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Bold)
+$btnTabDelete.FlatStyle = "Flat"
+$btnTabDelete.FlatAppearance.BorderSize = 0
+$btnTabDelete.Cursor = [System.Windows.Forms.Cursors]::Hand
+$form.Controls.Add($btnTabDelete)
+
+# ── Panel isi masing-masing "tab" (posisi sama, gantian yg keliatan) ─────
+$panelY = 128
+$panelHeight = 296
+$panelWidth = 572
+
+$panelConvert = New-Object System.Windows.Forms.Panel
+$panelConvert.Location = New-Object System.Drawing.Point(24, $panelY)
+$panelConvert.Size = New-Object System.Drawing.Size($panelWidth, $panelHeight)
+$panelConvert.BackColor = $colBg
+$form.Controls.Add($panelConvert)
+
+$panelDelete = New-Object System.Windows.Forms.Panel
+$panelDelete.Location = New-Object System.Drawing.Point(24, $panelY)
+$panelDelete.Size = New-Object System.Drawing.Size($panelWidth, $panelHeight)
+$panelDelete.BackColor = $colBg
+$form.Controls.Add($panelDelete)
+
+# ── Log bersama (dipakai kedua tab) ───────────────────────────────────────
+$txtLog = New-Object System.Windows.Forms.RichTextBox
+$txtLog.Location = New-Object System.Drawing.Point(24, ($panelY + $panelHeight + 16))
+$txtLog.Size = New-Object System.Drawing.Size($panelWidth, 100)
+$txtLog.Font = New-Object System.Drawing.Font("Consolas", 8.5)
+$txtLog.BackColor = $colLogBg
+$txtLog.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+$txtLog.BorderStyle = "FixedSingle"
+$txtLog.ReadOnly = $true
+$txtLog.ScrollBars = "Vertical"
+$txtLog.Text = "Siap."
+$form.Controls.Add($txtLog)
+
+function Write-Log {
+    param([string]$msg, [string]$color = "normal")
+    $txtLog.SelectionStart = $txtLog.TextLength
+    $txtLog.SelectionLength = 0
+    switch ($color) {
+        "ok"      { $txtLog.SelectionColor = $colOk }
+        "error"   { $txtLog.SelectionColor = $colErr }
+        "accent"  { $txtLog.SelectionColor = $colAccent }
+        "ghost"   { $txtLog.SelectionColor = $colGhost }
+        default   { $txtLog.SelectionColor = [System.Drawing.Color]::FromArgb(200, 200, 200) }
+    }
+    $txtLog.AppendText("$msg`n")
+    $txtLog.ScrollToCaret()
+    $form.Refresh()
+}
+
+# ── Switch tab ─────────────────────────────────────────────────────────
+function Set-ActiveTab {
+    param([string]$tab)
+    if ($tab -eq "convert") {
+        $panelConvert.Visible = $true
+        $panelDelete.Visible = $false
+        $btnTabConvert.BackColor = $colAccent
+        $btnTabConvert.ForeColor = $colAccentTxt
+        $btnTabDelete.BackColor = $colBtnIdle
+        $btnTabDelete.ForeColor = [System.Drawing.Color]::White
+    } else {
+        $panelDelete.Visible = $true
+        $panelConvert.Visible = $false
+        $btnTabDelete.BackColor = $colAccent
+        $btnTabDelete.ForeColor = $colAccentTxt
+        $btnTabConvert.BackColor = $colBtnIdle
+        $btnTabConvert.ForeColor = [System.Drawing.Color]::White
+        Load-Tree
+    }
+}
+$btnTabConvert.Add_Click({ Set-ActiveTab "convert" })
+$btnTabDelete.Add_Click({ Set-ActiveTab "delete" })
+
+# ══════════════════════════════════════════════════════════════════════
+#  TAB 1 - KONVERSI
+# ══════════════════════════════════════════════════════════════════════
+
+$lblPath = New-Object System.Windows.Forms.Label
+$lblPath.Text = "File .docx"
+$lblPath.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
+$lblPath.ForeColor = $colMuted
+$lblPath.Location = New-Object System.Drawing.Point(0, 0)
+$lblPath.AutoSize = $true
+$panelConvert.Controls.Add($lblPath)
+
 $txtPath = New-Object System.Windows.Forms.TextBox
-$txtPath.Location = New-Object System.Drawing.Point(20, 90)
-$txtPath.Size = New-Object System.Drawing.Size(370, 24)
+$txtPath.Location = New-Object System.Drawing.Point(0, 20)
+$txtPath.Size = New-Object System.Drawing.Size(462, 24)
 $txtPath.Font = New-Object System.Drawing.Font("Consolas", 9)
-$txtPath.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$txtPath.BackColor = $colPanelBg
 $txtPath.ForeColor = [System.Drawing.Color]::White
 $txtPath.BorderStyle = "FixedSingle"
-$form.Controls.Add($txtPath)
+$panelConvert.Controls.Add($txtPath)
 
-# ── Simulasi placeholder (TextBox.PlaceholderText tidak ada di .NET Framework) ─
 $placeholderText = "Path ke file .docx..."
 $placeholderColor = [System.Drawing.Color]::FromArgb(120, 120, 120)
 $normalColor = [System.Drawing.Color]::White
-
 function Set-Placeholder {
     $txtPath.Text = $placeholderText
     $txtPath.ForeColor = $placeholderColor
 }
 Set-Placeholder
-
 $txtPath.Add_Enter({
     if ($txtPath.Text -eq $placeholderText) {
         $txtPath.Text = ""
@@ -86,21 +207,18 @@ $txtPath.Add_Enter({
     }
 })
 $txtPath.Add_Leave({
-    if ([string]::IsNullOrWhiteSpace($txtPath.Text)) {
-        Set-Placeholder
-    }
+    if ([string]::IsNullOrWhiteSpace($txtPath.Text)) { Set-Placeholder }
 })
 
-# ── Tombol Pilih File ─────────────────────────────────────────────────────
 $btnBrowse = New-Object System.Windows.Forms.Button
 $btnBrowse.Text = "Pilih File"
-$btnBrowse.Location = New-Object System.Drawing.Point(400, 88)
-$btnBrowse.Size = New-Object System.Drawing.Size(90, 28)
+$btnBrowse.Location = New-Object System.Drawing.Point(472, 19)
+$btnBrowse.Size = New-Object System.Drawing.Size(100, 26)
 $btnBrowse.Font = New-Object System.Drawing.Font("Segoe UI", 9)
-$btnBrowse.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
+$btnBrowse.BackColor = $colBtnIdle
 $btnBrowse.ForeColor = [System.Drawing.Color]::White
 $btnBrowse.FlatStyle = "Flat"
-$btnBrowse.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(80, 80, 80)
+$btnBrowse.FlatAppearance.BorderColor = $colBorder
 $btnBrowse.Cursor = [System.Windows.Forms.Cursors]::Hand
 $btnBrowse.Add_Click({
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -117,108 +235,74 @@ $btnBrowse.Add_Click({
         $txtPath.ForeColor = $normalColor
     }
 })
-$form.Controls.Add($btnBrowse)
+$panelConvert.Controls.Add($btnBrowse)
 
-# ── Kategori & judul paket (opsional) ─────────────────────────────────────
-# Kosongkan kedua kotak ini kalau mau pakai mode lama (satu paket soal saja,
-# tanpa kategori). Isi Kategori untuk membuat/menambah ke paket soal yang
-# bisa dipilih dari tombol "Pilih paket soal" di app.
 $lblKategori = New-Object System.Windows.Forms.Label
 $lblKategori.Text = "Kategori (opsional, mis. 'Blok 2E')"
 $lblKategori.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
-$lblKategori.ForeColor = [System.Drawing.Color]::FromArgb(160, 160, 160)
-$lblKategori.Location = New-Object System.Drawing.Point(20, 128)
-$lblKategori.Size = New-Object System.Drawing.Size(230, 18)
-$form.Controls.Add($lblKategori)
+$lblKategori.ForeColor = $colMuted
+$lblKategori.Location = New-Object System.Drawing.Point(0, 60)
+$lblKategori.AutoSize = $true
+$panelConvert.Controls.Add($lblKategori)
 
 $txtKategori = New-Object System.Windows.Forms.TextBox
-$txtKategori.Location = New-Object System.Drawing.Point(20, 148)
-$txtKategori.Size = New-Object System.Drawing.Size(230, 24)
+$txtKategori.Location = New-Object System.Drawing.Point(0, 80)
+$txtKategori.Size = New-Object System.Drawing.Size(272, 24)
 $txtKategori.Font = New-Object System.Drawing.Font("Consolas", 9)
-$txtKategori.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$txtKategori.BackColor = $colPanelBg
 $txtKategori.ForeColor = [System.Drawing.Color]::White
 $txtKategori.BorderStyle = "FixedSingle"
-$form.Controls.Add($txtKategori)
+$panelConvert.Controls.Add($txtKategori)
 
 $lblPaket = New-Object System.Windows.Forms.Label
 $lblPaket.Text = "Nama paket (opsional)"
 $lblPaket.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
-$lblPaket.ForeColor = [System.Drawing.Color]::FromArgb(160, 160, 160)
-$lblPaket.Location = New-Object System.Drawing.Point(260, 128)
-$lblPaket.Size = New-Object System.Drawing.Size(230, 18)
-$form.Controls.Add($lblPaket)
+$lblPaket.ForeColor = $colMuted
+$lblPaket.Location = New-Object System.Drawing.Point(300, 60)
+$lblPaket.AutoSize = $true
+$panelConvert.Controls.Add($lblPaket)
 
 $txtPaket = New-Object System.Windows.Forms.TextBox
-$txtPaket.Location = New-Object System.Drawing.Point(260, 148)
-$txtPaket.Size = New-Object System.Drawing.Size(230, 24)
+$txtPaket.Location = New-Object System.Drawing.Point(300, 80)
+$txtPaket.Size = New-Object System.Drawing.Size(272, 24)
 $txtPaket.Font = New-Object System.Drawing.Font("Consolas", 9)
-$txtPaket.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$txtPaket.BackColor = $colPanelBg
 $txtPaket.ForeColor = [System.Drawing.Color]::White
 $txtPaket.BorderStyle = "FixedSingle"
-$form.Controls.Add($txtPaket)
+$panelConvert.Controls.Add($txtPaket)
 
-# ── Kotak log output ──────────────────────────────────────────────────────
-$txtLog = New-Object System.Windows.Forms.RichTextBox
-$txtLog.Location = New-Object System.Drawing.Point(20, 182)
-$txtLog.Size = New-Object System.Drawing.Size(470, 130)
-$txtLog.Font = New-Object System.Drawing.Font("Consolas", 8.5)
-$txtLog.BackColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
-$txtLog.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-$txtLog.BorderStyle = "FixedSingle"
-$txtLog.ReadOnly = $true
-$txtLog.ScrollBars = "Vertical"
-$txtLog.Text = "Siap. Pilih file .docx lalu klik Konversi."
-$form.Controls.Add($txtLog)
+$lblHint = New-Object System.Windows.Forms.Label
+$lblHint.Text = "Kosongkan Kategori kalau cuma mau mode lama (satu paket, tanpa kategori)."
+$lblHint.Font = New-Object System.Drawing.Font("Segoe UI", 8)
+$lblHint.ForeColor = $colMuted
+$lblHint.Location = New-Object System.Drawing.Point(0, 112)
+$lblHint.Size = New-Object System.Drawing.Size(560, 18)
+$panelConvert.Controls.Add($lblHint)
 
-# ── Helper: tulis ke log ──────────────────────────────────────────────────
-function Write-Log {
-    param([string]$msg, [string]$color = "normal")
-    $txtLog.SelectionStart = $txtLog.TextLength
-    $txtLog.SelectionLength = 0
-    switch ($color) {
-        "ok"      { $txtLog.SelectionColor = [System.Drawing.Color]::FromArgb(134, 239, 172) }
-        "error"   { $txtLog.SelectionColor = [System.Drawing.Color]::FromArgb(252, 165, 165) }
-        "accent"  { $txtLog.SelectionColor = [System.Drawing.Color]::FromArgb(232, 168, 56)  }
-        default   { $txtLog.SelectionColor = [System.Drawing.Color]::FromArgb(200, 200, 200) }
-    }
-    $txtLog.AppendText("$msg`n")
-    $txtLog.ScrollToCaret()
-    $form.Refresh()
-}
-
-# ── Tombol Konversi ───────────────────────────────────────────────────────
 $btnConvert = New-Object System.Windows.Forms.Button
-$btnConvert.Text = "▶  Konversi"
-$btnConvert.Location = New-Object System.Drawing.Point(20, 338)
-$btnConvert.Size = New-Object System.Drawing.Size(150, 36)
+$btnConvert.Text = "$([char]0x25B6)  Konversi"
+$btnConvert.Location = New-Object System.Drawing.Point(0, 246)
+$btnConvert.Size = New-Object System.Drawing.Size(180, 40)
 $btnConvert.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$btnConvert.BackColor = [System.Drawing.Color]::FromArgb(232, 168, 56)
-$btnConvert.ForeColor = [System.Drawing.Color]::FromArgb(10, 10, 10)
+$btnConvert.BackColor = $colAccent
+$btnConvert.ForeColor = $colAccentTxt
 $btnConvert.FlatStyle = "Flat"
 $btnConvert.FlatAppearance.BorderSize = 0
 $btnConvert.Cursor = [System.Windows.Forms.Cursors]::Hand
+$panelConvert.Controls.Add($btnConvert)
+
 $btnConvert.Add_Click({
     $docxPath = $txtPath.Text.Trim()
     if ($docxPath -eq $placeholderText) { $docxPath = "" }
 
-    if (-not $docxPath) {
-        Write-Log "⚠  Belum ada file dipilih." "error"
-        return
-    }
-    if (-not (Test-Path $docxPath)) {
-        Write-Log "⚠  File tidak ditemukan: $docxPath" "error"
-        return
-    }
-    if ([System.IO.Path]::GetExtension($docxPath).ToLower() -ne ".docx") {
-        Write-Log "⚠  Bukan file .docx." "error"
-        return
-    }
+    if (-not $docxPath) { Write-Log "Belum ada file dipilih." "error"; return }
+    if (-not (Test-Path $docxPath)) { Write-Log "File tidak ditemukan: $docxPath" "error"; return }
+    if ([System.IO.Path]::GetExtension($docxPath).ToLower() -ne ".docx") { Write-Log "Bukan file .docx." "error"; return }
 
     $btnConvert.Enabled = $false
     $btnBrowse.Enabled = $false
     $txtLog.Clear()
 
-    # npm install
     Write-Log "[ npm install ]" "accent"
     $installProc = Start-Process -FilePath "cmd.exe" `
         -ArgumentList "/c npm install 2>&1" `
@@ -240,14 +324,13 @@ $btnConvert.Add_Click({
     }
     Write-Log "npm install selesai." "ok"
 
-    # npm run convert
     $kategori = $txtKategori.Text.Trim()
     $paket = $txtPaket.Text.Trim()
     if ($kategori) {
         Write-Log "[ npm run convert ] (kategori: $kategori)" "accent"
         $convertArgs = "/c npm run convert -- `"$docxPath`" `"$kategori`" `"$paket`" 2>&1"
     } else {
-        Write-Log "[ npm run convert ] (tanpa kategori — mode lama)" "accent"
+        Write-Log "[ npm run convert ] (tanpa kategori - mode lama)" "accent"
         $convertArgs = "/c npm run convert -- `"$docxPath`" 2>&1"
     }
     $convertProc = Start-Process -FilePath "cmd.exe" `
@@ -259,20 +342,194 @@ $btnConvert.Add_Click({
 
     $convertOut = if (Test-Path "$env:TEMP\soalin_convert.txt") { Get-Content "$env:TEMP\soalin_convert.txt" -Raw } else { "" }
     $convertErr = if (Test-Path "$env:TEMP\soalin_convert_err.txt") { Get-Content "$env:TEMP\soalin_convert_err.txt" -Raw } else { "" }
-
     if ($convertOut.Trim()) { Write-Log $convertOut.Trim() }
     if ($convertErr.Trim()) { Write-Log $convertErr.Trim() "error" }
 
     if ($convertProc.ExitCode -eq 0) {
-        Write-Log "✓  Konversi berhasil! Buka index.html di browser." "ok"
+        Write-Log "Konversi berhasil! Buka index.html di browser." "ok"
     } else {
-        Write-Log "✗  Konversi gagal (exit $($convertProc.ExitCode))." "error"
+        Write-Log "Konversi gagal (exit $($convertProc.ExitCode))." "error"
     }
 
     $btnConvert.Enabled = $true
     $btnBrowse.Enabled = $true
 })
-$form.Controls.Add($btnConvert)
+
+# ══════════════════════════════════════════════════════════════════════
+#  TAB 2 - HAPUS PAKET
+# ══════════════════════════════════════════════════════════════════════
+
+$lblDeleteHint = New-Object System.Windows.Forms.Label
+$lblDeleteHint.Text = "Centang paket yang mau dihapus. Item kuning (folder hilang) sudah pasti aman dihapus."
+$lblDeleteHint.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
+$lblDeleteHint.ForeColor = $colMuted
+$lblDeleteHint.Location = New-Object System.Drawing.Point(0, 0)
+$lblDeleteHint.Size = New-Object System.Drawing.Size($panelWidth, 18)
+$panelDelete.Controls.Add($lblDeleteHint)
+
+$tree = New-Object System.Windows.Forms.TreeView
+$tree.Location = New-Object System.Drawing.Point(0, 22)
+$tree.Size = New-Object System.Drawing.Size($panelWidth, 232)
+$tree.CheckBoxes = $true
+$tree.BackColor = $colPanelBg
+$tree.ForeColor = [System.Drawing.Color]::White
+$tree.BorderStyle = "FixedSingle"
+$tree.Font = New-Object System.Drawing.Font("Segoe UI", 9.5)
+$tree.HideSelection = $false
+$tree.ItemHeight = 22
+$tree.ShowNodeToolTips = $true
+$panelDelete.Controls.Add($tree)
+
+$btnRefresh = New-Object System.Windows.Forms.Button
+$btnRefresh.Text = "Muat Ulang"
+$btnRefresh.Location = New-Object System.Drawing.Point(0, 260)
+$btnRefresh.Size = New-Object System.Drawing.Size(130, 36)
+$btnRefresh.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$btnRefresh.BackColor = $colBtnIdle
+$btnRefresh.ForeColor = [System.Drawing.Color]::White
+$btnRefresh.FlatStyle = "Flat"
+$btnRefresh.FlatAppearance.BorderColor = $colBorder
+$btnRefresh.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnRefresh.Add_Click({ $txtLog.Clear(); Load-Tree })
+$panelDelete.Controls.Add($btnRefresh)
+
+$btnDelete = New-Object System.Windows.Forms.Button
+$btnDelete.Text = "Hapus Terpilih"
+$btnDelete.Location = New-Object System.Drawing.Point(($panelWidth - 220), 260)
+$btnDelete.Size = New-Object System.Drawing.Size(220, 36)
+$btnDelete.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$btnDelete.BackColor = $colDanger
+$btnDelete.ForeColor = [System.Drawing.Color]::White
+$btnDelete.FlatStyle = "Flat"
+$btnDelete.FlatAppearance.BorderSize = 0
+$btnDelete.Cursor = [System.Windows.Forms.Cursors]::Hand
+$panelDelete.Controls.Add($btnDelete)
+
+function Get-Packages {
+    $jsonOut = & node $deleteScriptPath --json 2>$null
+    if (-not $jsonOut) { return @() }
+    try {
+        $parsed = $jsonOut | ConvertFrom-Json
+        if ($null -eq $parsed) { return @() }
+        if ($parsed -isnot [System.Array]) { return @($parsed) }
+        return $parsed
+    } catch { return @() }
+}
+
+$script:suppressCheckEvent = $false
+
+function Load-Tree {
+    $tree.Nodes.Clear()
+    $packages = Get-Packages
+    if ($packages.Count -eq 0) {
+        $emptyNode = New-Object System.Windows.Forms.TreeNode
+        $emptyNode.Text = "Belum ada paket terdaftar di data/manifest.js."
+        $emptyNode.Tag = "info"
+        $tree.Nodes.Add($emptyNode) | Out-Null
+        return
+    }
+
+    $byCategory = [ordered]@{}
+    foreach ($p in $packages) {
+        if (-not $byCategory.Contains($p.category)) { $byCategory[$p.category] = @() }
+        $byCategory[$p.category] += $p
+    }
+
+    foreach ($cat in $byCategory.Keys) {
+        $catNode = New-Object System.Windows.Forms.TreeNode
+        $catNode.Text = "$cat  ($($byCategory[$cat].Count) paket)"
+        $catNode.Tag = "category"
+        foreach ($p in $byCategory[$cat]) {
+            $dataFolder = Join-Path $projectRoot "data\packages\$($p.id)"
+            $isGhost = -not (Test-Path $dataFolder)
+            $leaf = New-Object System.Windows.Forms.TreeNode
+            $ghostTag = if ($isGhost) { "   ($([char]0x26A0) folder hilang)" } else { "" }
+            $leaf.Text = "$($p.title) - $($p.count) soal$ghostTag"
+            $leaf.Tag = $p.id
+            $leaf.ToolTipText = "id: $($p.id)`nsumber: $($p.source)"
+            if ($isGhost) { $leaf.ForeColor = $colGhost }
+            $catNode.Nodes.Add($leaf) | Out-Null
+        }
+        $tree.Nodes.Add($catNode) | Out-Null
+    }
+    $tree.ExpandAll()
+}
+
+$tree.add_AfterCheck({
+    param($src, $e)
+    if ($script:suppressCheckEvent) { return }
+    if ($e.Node.Tag -eq "info") { $e.Node.Checked = $false; return }
+    $script:suppressCheckEvent = $true
+    if ($e.Node.Tag -eq "category") {
+        foreach ($child in $e.Node.Nodes) { $child.Checked = $e.Node.Checked }
+    } else {
+        $parent = $e.Node.Parent
+        if ($parent) {
+            $allChecked = $true
+            foreach ($child in $parent.Nodes) { if (-not $child.Checked) { $allChecked = $false } }
+            $parent.Checked = $allChecked
+        }
+    }
+    $script:suppressCheckEvent = $false
+})
+
+$btnDelete.Add_Click({
+    $idsToDelete = @()
+    $titlesToDelete = @()
+    foreach ($catNode in $tree.Nodes) {
+        foreach ($leaf in $catNode.Nodes) {
+            if ($leaf.Checked -and $leaf.Tag -ne "info") {
+                $idsToDelete += $leaf.Tag
+                $titlesToDelete += "  - $($leaf.Text)"
+            }
+        }
+    }
+
+    if ($idsToDelete.Count -eq 0) { Write-Log "Belum ada paket yang dicentang." "error"; return }
+
+    $confirmMsg = "Yakin mau hapus $($idsToDelete.Count) paket ini?`n`n" + ($titlesToDelete -join "`n") + "`n`nFolder data + gambar paket ini akan dihapus permanen."
+    $confirm = [System.Windows.Forms.MessageBox]::Show(
+        $confirmMsg, "Konfirmasi Hapus",
+        [System.Windows.Forms.MessageBoxButtons]::YesNo,
+        [System.Windows.Forms.MessageBoxIcon]::Warning
+    )
+    if ($confirm -ne "Yes") { return }
+
+    $btnDelete.Enabled = $false
+    $btnRefresh.Enabled = $false
+    $txtLog.Clear()
+    Write-Log "[ menghapus $($idsToDelete.Count) paket ]" "accent"
+
+    $idsArg = $idsToDelete -join ","
+    # Path project bisa ada spasi (mis. "MSI MODERN"), jadi tiap argumen yang
+    # mungkin mengandung spasi WAJIB dibungkus tanda kutip sendiri-sendiri di
+    # dalam satu string -ArgumentList. Array -ArgumentList TIDAK auto-quote.
+    $deleteArgsStr = "`"$deleteScriptPath`" --delete `"$idsArg`""
+    $proc = Start-Process -FilePath "node" `
+        -ArgumentList $deleteArgsStr `
+        -WorkingDirectory $projectRoot `
+        -RedirectStandardOutput "$env:TEMP\soalin_delete.txt" `
+        -RedirectStandardError  "$env:TEMP\soalin_delete_err.txt" `
+        -NoNewWindow -Wait -PassThru
+
+    $out = if (Test-Path "$env:TEMP\soalin_delete.txt") { Get-Content "$env:TEMP\soalin_delete.txt" -Raw } else { "" }
+    $err = if (Test-Path "$env:TEMP\soalin_delete_err.txt") { Get-Content "$env:TEMP\soalin_delete_err.txt" -Raw } else { "" }
+    if ($out.Trim()) { Write-Log $out.Trim() }
+    if ($err.Trim()) { Write-Log $err.Trim() "error" }
+
+    if ($proc.ExitCode -eq 0) {
+        Write-Log "Selesai. Commit + push perubahan biar ilang juga dari deploy." "ok"
+    } else {
+        Write-Log "Gagal (exit $($proc.ExitCode))." "error"
+    }
+
+    Load-Tree
+    $btnDelete.Enabled = $true
+    $btnRefresh.Enabled = $true
+})
+
+# ── Buka di tab yang diminta ──────────────────────────────────────────────
+Set-ActiveTab $StartTab
 
 # ── Run ───────────────────────────────────────────────────────────────────
 $form.Add_Shown({ $form.Activate() })
