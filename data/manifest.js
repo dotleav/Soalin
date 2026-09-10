@@ -59,6 +59,15 @@ export const packages = [
     "source": "kuis_refleks_patologis.docx"
   },
   {
+    "id": "latihan-kk7__latihan-pemeriksaan-tanda-meningeal-v2",
+    "category": "Latihan KK7",
+    "title": "Latihan Pemeriksaan Tanda Meningeal - V2",
+    "file": "./data/packages/latihan-kk7__latihan-pemeriksaan-tanda-meningeal-v2/questions.js",
+    "count": 65,
+    "convertedAt": "2026-09-10T03:29:25.678Z",
+    "source": "Kuis_Pemeriksaan_Refleks_Patologis-1.docx"
+  },
+  {
     "id": "2h-sl-pungsi-lumbal__latihan-pretes-pungsi-lumbal",
     "category": "Latihan KK7",
     "title": "Latihan Pretes Pungsi Lumbal",
