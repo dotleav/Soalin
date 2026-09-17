@@ -2947,8 +2947,6 @@ function playSound(correct) {
       chosen.play().catch(() => {});
     } catch { /* noop */ }
   }
-    ));
-  }
   // ── SxF Mode: character reaction ──
   if (theme === "sxf") {
     const sxfNotifEl = document.getElementById("sxfNotif");
@@ -4053,16 +4051,6 @@ async function boot() {
   render();
 }
 boot();
-
-
-  
-
-
-  // (DOKSLI_IMAGES defined early)
-
-  function window._dkImg() {
-    return DOKSLI_IMAGES[Math.floor(Math.random() * DOKSLI_IMAGES.length)];
-  }
 
   // Called after render() whenever in doksli mode
   // Attaches meme stickers to revealed correct/wrong options
