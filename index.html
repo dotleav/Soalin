@@ -4060,19 +4060,31 @@ boot();
     // Remove existing stickers first
     document.querySelectorAll(".doksli-sticker").forEach(el => el.remove());
 
-    const correctOpt = document.querySelector(".option.correct");
-    const wrongOpt   = document.querySelector(".option.wrong");
+    // querySelectorAll, not querySelector: list-style modes can have several
+    // revealed questions on screen at once, so there can be more than one
+    // .option.correct/.wrong in the document at a time.
+    const correctOpts = document.querySelectorAll(".option.correct");
+    const wrongOpts   = document.querySelectorAll(".option.wrong");
 
-    [correctOpt, wrongOpt].forEach((opt, i) => {
-      if (!opt) return;
+    const attach = (opt, corner) => {
       const sticker = document.createElement("img");
       sticker.className = "doksli-sticker";
       sticker.src = window._dkImg();
       sticker.setAttribute("aria-hidden", "true");
-      // Alternate corners: correct → top-right, wrong → bottom-right
-      sticker.dataset.corner = i === 0 ? "tr" : "br";
+      sticker.dataset.corner = corner;
       opt.appendChild(sticker);
-    });
+    };
+    // Adding these <img> elements is itself a mutation inside #app, which the
+    // MutationObserver below watches — without disconnecting first, that
+    // observer re-fires on our own insert and keeps re-attaching forever,
+    // cycling window._dkImg() every cycle (the rapid "changing" look).
+    if (typeof _doksliMutObs !== "undefined") _doksliMutObs.disconnect();
+    correctOpts.forEach(opt => attach(opt, "tr"));
+    wrongOpts.forEach(opt => attach(opt, "br"));
+    const _dkApp = document.getElementById("app");
+    if (typeof _doksliMutObs !== "undefined" && _dkApp) {
+      _doksliMutObs.observe(_dkApp, { childList: true, subtree: true });
+    }
 
     // Scroll fade: when sticker scrolls to within 56px of top of viewport, fade it
     doksliUpdateStickerOpacity();
