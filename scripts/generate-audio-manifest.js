@@ -1,49 +1,30 @@
-// scripts/generate-audio-manifest.js
-// Scan folder audio/benar/ dan audio/salah/, tulis daftarnya ke
-// audio/manifest.js. File di kedua folder itu BEBAS namanya — ga perlu
-// diawali "benar"/"salah" atau dinomori urut, tinggal taruh di folder
-// yang bener lalu jalankan ulang script ini:
-//     npm run audio-manifest
-// index.html baca window.AUDIO_MANIFEST dari audio/manifest.js pas app
-// dibuka, jadi ga ada tebak-tebakan nama file / nomor bolong lagi.
+// Scan audio/benar dan audio/salah, lalu tulis audio/manifest.js.
+// Jalankan: node scripts/generate-audio-manifest.js  (atau npm run audio-manifest)
+const fs = require('fs');
+const path = require('path');
 
-import { readdirSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
+const ROOT = path.join(__dirname, '..');
+const AUDIO_DIR = path.join(ROOT, 'audio');
+const OUT_FILE = path.join(AUDIO_DIR, 'manifest.js');
+const EXT = /\.(mp3|wav|ogg|m4a|aac|webm)$/i;
+const FOLDERS = ['benar', 'salah'];
 
-const AUDIO_EXTENSIONS = new Set([".mp3", ".wav", ".ogg", ".m4a", ".aac"]);
-
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(scriptDir, "..");
-const audioDir = path.join(projectRoot, "audio");
-const manifestPath = path.join(audioDir, "manifest.js");
-
-function listAudioFiles(folderName) {
-  const dir = path.join(audioDir, folderName);
-  let entries;
-  try {
-    entries = readdirSync(dir, { withFileTypes: true });
-  } catch {
-    console.warn(`[audio-manifest] Folder ga ketemu: audio/${folderName}/ (dianggap kosong)`);
-    return [];
-  }
-  return entries
-    .filter((e) => e.isFile() && AUDIO_EXTENSIONS.has(path.extname(e.name).toLowerCase()))
-    .map((e) => e.name)
-    .sort((a, b) => a.localeCompare(b, "id"));
+const manifest = {};
+for (const folder of FOLDERS) {
+  const dir = path.join(AUDIO_DIR, folder);
+  manifest[folder] = fs.existsSync(dir)
+    ? fs.readdirSync(dir).filter((f) => EXT.test(f)).sort((a, b) => a.localeCompare(b))
+    : [];
 }
 
-const benar = listAudioFiles("benar");
-const salah = listAudioFiles("salah");
-
-const output = `// File ini di-GENERATE OTOMATIS oleh scripts/generate-audio-manifest.js
+const out =
+`// File ini di-GENERATE OTOMATIS oleh scripts/generate-audio-manifest.js
 // JANGAN diedit manual — tiap kali nambah/hapus/rename file di
 // audio/benar/ atau audio/salah/, jalankan ulang: npm run audio-manifest
-window.AUDIO_MANIFEST = ${JSON.stringify({ benar, salah }, null, 2)};
+// (di GitHub, workflow .github/workflows/audio-manifest.yml menjalankannya otomatis saat push)
+
+window.AUDIO_MANIFEST = ${JSON.stringify(manifest, null, 2)};
 `;
 
-writeFileSync(manifestPath, output, "utf8");
-
-console.log(`[audio-manifest] audio/benar/: ${benar.length} file`);
-console.log(`[audio-manifest] audio/salah/: ${salah.length} file`);
-console.log(`[audio-manifest] Ditulis ke audio/manifest.js`);
+fs.writeFileSync(OUT_FILE, out);
+console.log(`manifest.js ditulis: ${FOLDERS.map((f) => `${f}=${manifest[f].length}`).join(', ')}`);

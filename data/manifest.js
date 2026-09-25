@@ -43,11 +43,38 @@ export const packages = [
   {
     "id": "2h-pk-lcs-cairan-otak__latihan-pretes-lcs-cairan",
     "category": "2H PK - LCS Cairan Otak",
-    "title": "Latihan Pretes LCS Cairan",
+    "title": "Latihan Pretes Analisis LCS",
     "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-pretes-lcs-cairan/questions.js",
     "count": 40,
     "convertedAt": "2026-09-07T03:22:06.532Z",
     "source": "Soal_Analisis_LCS_Blok2H.docx"
+  },
+  {
+    "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v1",
+    "category": "2H PK - LCS Cairan Otak",
+    "title": "Latihan Responsi Analisis LCS V1",
+    "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v1/questions.js",
+    "count": 20,
+    "convertedAt": "2026-09-25T13:50:03.480Z",
+    "source": "Soalin_Analisis_LCS_Kasus1-4.docx"
+  },
+  {
+    "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v2",
+    "category": "2H PK - LCS Cairan Otak",
+    "title": "Latihan Responsi Analisis LCS V2",
+    "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v2/questions.js",
+    "count": 23,
+    "convertedAt": "2026-09-25T13:54:50.420Z",
+    "source": "Soalin_Analisis_LCS.docx"
+  },
+  {
+    "id": "latihan-kk7__latihan-dx-kasus-cr",
+    "category": "Latihan KK7",
+    "title": "Latihan Dx Kasus CR",
+    "file": "./data/packages/latihan-kk7__latihan-dx-kasus-cr/questions.js",
+    "count": 30,
+    "convertedAt": "2026-09-25T13:51:54.957Z",
+    "source": "Soalin_CR_Neurologi_Batch1.docx"
   },
   {
     "id": "latihan-kk7__latihan-pemeriksaan-tanda-meningeal",
