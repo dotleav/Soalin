@@ -68,6 +68,15 @@ export const packages = [
     "source": "Soalin_Analisis_LCS.docx"
   },
   {
+    "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian",
+    "category": "2H PK - LCS Cairan Otak",
+    "title": "Latihan Responsi Analisis LCS V3 [isian]",
+    "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/questions.js",
+    "count": 40,
+    "convertedAt": "2026-09-26T12:33:05.050Z",
+    "source": "Soal_Isian_LCS.docx"
+  },
+  {
     "id": "latihan-kk7__latihan-dx-kasus-cr",
     "category": "Latihan KK7",
     "title": "Latihan Dx Kasus CR",
