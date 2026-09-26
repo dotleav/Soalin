@@ -2877,8 +2877,12 @@ async function convertDocx(buf) {
     if (/bagian\s*2|gagal\s+diperbaiki/i.test(t)) cut = i;
     if (/bagian\s*3|soal\s+isian/i.test(t)) cut3 = i;
   });
-  if (cut < 0) cut = blocks.findIndex((b) => b.tbl);
-  if (cut3 >= 0 && cut3 < cut) cut3 = -1; // urutan gak wajar, abaikan
+  if (cut < 0) {
+    // Tanpa heading Bagian 2: tabel pertama = Bagian 2 — tapi jangan lewati
+    // heading Bagian 3 kalau sudah ketemu, atau tabel isian ikut kesedot ke sini.
+    const searchEnd = cut3 >= 0 ? cut3 : blocks.length;
+    cut = blocks.findIndex((b, i) => b.tbl && i < searchEnd);
+  }
   const part1 = cut < 0 ? blocks : blocks.slice(0, cut);
   const part2 = cut < 0 ? [] : blocks.slice(cut, cut3 < 0 ? blocks.length : cut3);
   const part3 = cut3 < 0 ? [] : blocks.slice(cut3);

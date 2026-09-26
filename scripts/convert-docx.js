@@ -250,14 +250,22 @@ function splitParts(html) {
   if (lastPart3HeadingEnd >= 0 && lastPart3HeadingEnd < lastPart2HeadingEnd) lastPart3HeadingEnd = -1; // urutan gak wajar, abaikan
 
   if (lastPart2HeadingEnd < 0) {
-    // Tidak ada Bagian 2 — cek apakah ada <table> saja
-    const tableIdx = html.indexOf("<table");
-    if (tableIdx < 0) return { part1Html: html, part2Html: "", part3Html: "" };
+    // Tidak ada Bagian 2 — cek apakah ada <table>, tapi jangan lewati heading
+    // Bagian 3 kalau sudah ketemu, atau tabel isian ikut kesedot jadi Bagian 2.
+    const searchHtml = lastPart3HeadingEnd >= 0 ? html.slice(0, lastPart3HeadingEnd) : html;
+    const tableIdx = searchHtml.indexOf("<table");
+    if (tableIdx < 0) {
+      return {
+        part1Html: lastPart3HeadingEnd < 0 ? html : html.substring(0, lastPart3HeadingEnd),
+        part2Html: "",
+        part3Html: lastPart3HeadingEnd < 0 ? "" : html.substring(lastPart3HeadingEnd),
+      };
+    }
     // Ada tabel tapi tidak ada heading Bagian 2 — anggap semua sebelum tabel = Bagian 1
     return {
       part1Html: html.substring(0, tableIdx),
-      part2Html: html.substring(tableIdx),
-      part3Html: "",
+      part2Html: html.substring(tableIdx, lastPart3HeadingEnd < 0 ? undefined : lastPart3HeadingEnd),
+      part3Html: lastPart3HeadingEnd < 0 ? "" : html.substring(lastPart3HeadingEnd),
     };
   }
 
