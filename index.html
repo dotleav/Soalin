@@ -1279,6 +1279,7 @@
     display: flex; align-items: center; gap: 6px;
     color: var(--text-secondary); font-weight: 700; font-size: 0.78rem; margin-bottom: 8px;
   }
+  .isianCorrectLabel { color: var(--correct-strong); }
   .isianReveal .isianYourAnswer p, .isianReveal .explanation p {
     color: var(--text); font-size: 0.86rem; line-height: 1.6; margin: 0; white-space: pre-wrap;
   }
@@ -3745,14 +3746,16 @@ function handleAnswerBiasa(qId, letter) {
   playSound(!!q && letter === q.answer);
   render();
 }
-// Soal isian tidak dinilai benar/salah — jawaban cuma disimpan lalu kartu
-// mereveal kunci jawaban. Sekali terjawab, tidak bisa diedit (kecuali Reset).
+// Soal isian tidak dinilai benar/salah lewat pencocokan teks — jawaban apa pun
+// dianggap benar (audio + badge "benar"), lalu kartu mereveal kunci jawaban.
+// Sekali terjawab, tidak bisa diedit (kecuali Reset).
 function handleAnswerIsian(qId, text) {
   if (biasaAnswersMap[qId] !== undefined && biasaAnswersMap[qId] !== null) return;
   const trimmed = (text || "").trim();
   if (!trimmed) return;
   biasaAnswersMap[qId] = trimmed;
   saveBiasa();
+  playSound(true);
   render();
 }
 
@@ -3919,7 +3922,7 @@ function renderIsianCard(q, qNum, answeredText) {
   const bodyHtml = isAnswered ? `
     <div class="isianReveal">
       <div class="isianYourAnswer">
-        <div class="tag">✍️ Jawaban kamu</div>
+        <div class="tag">✍️ Jawaban kamu <span class="icon ok">✓</span> <span class="isianCorrectLabel">Benar</span></div>
         <p>${escapeHtml(answeredText)}</p>
       </div>
       <div class="explanation">
