@@ -12,453 +12,493 @@
 
 export const questions = [
   {
-    "id": "QB1",
-    "category": "Soal Rusak",
+    "id": "QI1",
+    "category": "Soal Isian",
     "question": "LCS dihasilkan terutama oleh sekresi dari struktur apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Pleksus choroideus",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB2",
-    "category": "Soal Rusak",
+    "id": "QI2",
+    "category": "Soal Isian",
     "question": "Selain pleksus choroideus, produksi minor LCS berasal dari sel apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Sel ependimal",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB3",
-    "category": "Soal Rusak",
+    "id": "QI3",
+    "category": "Soal Isian",
     "question": "LCS mengalir pada ruang antara arakhnoid mater dan pia mater yang disebut apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Ruang (spasium) subarakhnoid",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB4",
-    "category": "Soal Rusak",
+    "id": "QI4",
+    "category": "Soal Isian",
     "question": "Berapa laju pembentukan LCS per jam?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "±20 mL/jam (±500 mL/hari)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB5",
-    "category": "Soal Rusak",
+    "id": "QI5",
+    "category": "Soal Isian",
     "question": "Berapa volume normal LCS pada dewasa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "90–150 mL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB6",
-    "category": "Soal Rusak",
+    "id": "QI6",
+    "category": "Soal Isian",
     "question": "Berapa volume normal LCS pada neonatus?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "10–60 mL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB7",
-    "category": "Soal Rusak",
+    "id": "QI7",
+    "category": "Soal Isian",
     "question": "Gangguan aliran pembentukan/reabsorpsi LCS menyebabkan akumulasi cairan dan kondisi apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Hidrosefalus",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB8",
-    "category": "Soal Rusak",
+    "id": "QI8",
+    "category": "Soal Isian",
     "question": "Pada dewasa, pungsi lumbal dilakukan pada spasium berapa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "L2–L3 atau L3–L4",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB9",
-    "category": "Soal Rusak",
+    "id": "QI9",
+    "category": "Soal Isian",
     "question": "Pada anak, pungsi lumbal dilakukan pada spasium berapa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "L4–L5",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB10",
-    "category": "Soal Rusak",
+    "id": "QI10",
+    "category": "Soal Isian",
     "question": "Sampel LCS ditampung dalam berapa tabung steril?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "3 tabung",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB11",
-    "category": "Soal Rusak",
+    "id": "QI11",
+    "category": "Soal Isian",
     "question": "Tabung ke berapa yang digunakan untuk pemeriksaan mikrobiologi, dan tabung ke berapa untuk pemeriksaan mikroskopis sel?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Tabung 2 untuk mikrobiologi; tabung 3 untuk mikroskopis (hematologi/sel)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB12",
-    "category": "Soal Rusak",
+    "id": "QI12",
+    "category": "Soal Isian",
     "question": "Pada traumatic tap, gambaran darah dari tabung 1 ke tabung 3 menunjukkan pola seperti apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Semakin berkurang/semakin jernih (gradasi menurun)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB13",
-    "category": "Soal Rusak",
+    "id": "QI13",
+    "category": "Soal Isian",
     "question": "Pada perdarahan subarakhnoid (SAH), pola darah pada ketiga tabung menunjukkan apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Sama/tetap merah pada semua tabung (tidak ada gradasi)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB14",
-    "category": "Soal Rusak",
+    "id": "QI14",
+    "category": "Soal Isian",
     "question": "Berapa nilai normal protein LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "15–45 mg/dL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB15",
-    "category": "Soal Rusak",
+    "id": "QI15",
+    "category": "Soal Isian",
     "question": "Berapa nilai normal glukosa LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "50–80 mg/dL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB16",
-    "category": "Soal Rusak",
+    "id": "QI16",
+    "category": "Soal Isian",
     "question": "Berapa nilai normal laktat LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "10–22 mg/dL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB17",
-    "category": "Soal Rusak",
+    "id": "QI17",
+    "category": "Soal Isian",
     "question": "Berapa rasio albumin:globulin normal pada LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "8:1",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB18",
-    "category": "Soal Rusak",
+    "id": "QI18",
+    "category": "Soal Isian",
     "question": "Warna kuning pada LCS dapat menunjukkan kondisi apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Pembongkaran darah (xanthochromia), hiperbilirubinemia, atau peningkatan protein",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB19",
-    "category": "Soal Rusak",
+    "id": "QI19",
+    "category": "Soal Isian",
     "question": "Warna hijau pada LCS dapat menunjukkan kondisi apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Hiperbilirubinemia atau cairan purulen (infeksi)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB20",
-    "category": "Soal Rusak",
+    "id": "QI20",
+    "category": "Soal Isian",
     "question": "Perhatikan gambar berikut.Skala penilaian kekeruhan LCS dimulai dari 0 hingga berapa +?",
     "questionImages": [
       "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/img-001.png"
     ],
     "options": {},
-    "answer": "",
+    "answer": "4+ (skala 0, 1+, 2+, 3+, 4+)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB21",
-    "category": "Soal Rusak",
+    "id": "QI21",
+    "category": "Soal Isian",
     "question": "Bekuan pada LCS dapat terbentuk akibat peningkatan kadar apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Fibrinogen",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB22",
-    "category": "Soal Rusak",
+    "id": "QI22",
+    "category": "Soal Isian",
     "question": "Xanthochromia pada LCS disebabkan oleh degradasi apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Eritrosit yang lisis (pelepasan hemoglobin) atau peningkatan bilirubin",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB23",
-    "category": "Soal Rusak",
+    "id": "QI23",
+    "category": "Soal Isian",
     "question": "Reagen apa yang digunakan pada pemeriksaan Pandy?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Reagen Pandy (fenol jenuh)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB24",
-    "category": "Soal Rusak",
+    "id": "QI24",
+    "category": "Soal Isian",
     "question": "Prinsip pemeriksaan Pandy adalah mendeteksi apa dalam LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Albumin dan globulin",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB25",
-    "category": "Soal Rusak",
+    "id": "QI25",
+    "category": "Soal Isian",
     "question": "Prinsip pemeriksaan Nonne-Apelt adalah mendeteksi apa dalam LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Globulin",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB26",
-    "category": "Soal Rusak",
+    "id": "QI26",
+    "category": "Soal Isian",
     "question": "Hasil Nonne-Apelt yang menunjukkan opalesensi setelah dikocok termasuk derajat berapa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "2+",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB27",
-    "category": "Soal Rusak",
+    "id": "QI27",
+    "category": "Soal Isian",
     "question": "Berapa nilai normal jumlah sel LCS pada dewasa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "0–5 sel/µL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB28",
-    "category": "Soal Rusak",
+    "id": "QI28",
+    "category": "Soal Isian",
     "question": "Apa rumus konversi jumlah sel yang dihitung pada bilik hitung menjadi sel/µL?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Jumlah sel yang dihitung × 5/4",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB29",
-    "category": "Soal Rusak",
+    "id": "QI29",
+    "category": "Soal Isian",
     "question": "Kondisi disosiasi sitoalbumin ditandai dengan apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Peningkatan protein LCS tanpa disertai peningkatan jumlah sel",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB30",
-    "category": "Soal Rusak",
+    "id": "QI30",
+    "category": "Soal Isian",
     "question": "Pada meningitis bakterial, jenis sel apa yang dominan di LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Sel PMN (neutrofil)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB31",
-    "category": "Soal Rusak",
+    "id": "QI31",
+    "category": "Soal Isian",
     "question": "Pada meningitis viral, jenis sel apa yang dominan di LCS?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Sel MN (limfosit)",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB32",
-    "category": "Soal Rusak",
+    "id": "QI32",
+    "category": "Soal Isian",
     "question": "Pada meningitis bakterial, jumlah sel LCS biasanya berapa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "≥1000/mm³",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB33",
-    "category": "Soal Rusak",
+    "id": "QI33",
+    "category": "Soal Isian",
     "question": "Pada meningitis viral, jumlah sel LCS biasanya berapa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "<100/mm³",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB34",
-    "category": "Soal Rusak",
+    "id": "QI34",
+    "category": "Soal Isian",
     "question": "Pada meningitis bakterial, opening pressure biasanya menunjukkan apa?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "Meningkat",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB35",
-    "category": "Soal Rusak",
+    "id": "QI35",
+    "category": "Soal Isian",
     "question": "Case 1 (laki-laki 22 tahun, demam, kaku kuduk (+), Kernig (+), leukositosis neutrofilik, procalcitonin tinggi): dari 9 kotak besar bilik hitung ditemukan 1500 sel. Berapa jumlah sel per µL?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "1500 × 5/4 = 1875 sel/µL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB36",
-    "category": "Soal Rusak",
+    "id": "QI36",
+    "category": "Soal Isian",
     "question": "Case 1 (lanjutan): berdasarkan gambar sediaan sel LCS berikut, sel apakah yang mendominasi?",
     "questionImages": [
       "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/img-002.png"
     ],
     "options": {},
-    "answer": "",
+    "answer": "Sel PMN (neutrofil) — sesuai gambaran meningitis bakterial akut",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB37",
-    "category": "Soal Rusak",
+    "id": "QI37",
+    "category": "Soal Isian",
     "question": "Case 2 (anak perempuan 2 tahun, faringitis, kaku kuduk (+), Kernig (−)/Brudzinski (−), limfosit 51%, procalcitonin rendah): berdasarkan gambar sediaan sel LCS berikut, sel apakah yang mendominasi?",
     "questionImages": [
       "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/img-003.png"
     ],
     "options": {},
-    "answer": "",
+    "answer": "Sel MN (limfosit) — sesuai gambaran meningitis viral",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB38",
-    "category": "Soal Rusak",
+    "id": "QI38",
+    "category": "Soal Isian",
     "question": "Case 3 (perempuan 23 tahun HIV positif, nyeri kepala progresif, tanpa kaku kuduk): dari 9 kotak besar bilik hitung ditemukan 16 sel. Berapa jumlah sel per µL?",
     "questionImages": [],
     "options": {},
-    "answer": "",
+    "answer": "16 × 5/4 = 20 sel/µL",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB39",
-    "category": "Soal Rusak",
+    "id": "QI39",
+    "category": "Soal Isian",
     "question": "Case 3 (lanjutan): berdasarkan gambar sediaan sel LCS berikut, sel apakah yang mendominasi?",
     "questionImages": [
       "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/img-004.png"
     ],
     "options": {},
-    "answer": "",
+    "answer": "Sel MN (limfosit) — sesuai gambaran meningitis fungal/TB pada pasien HIV",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   },
   {
-    "id": "QB40",
-    "category": "Soal Rusak",
+    "id": "QI40",
+    "category": "Soal Isian",
     "question": "Case 4 (perempuan 67 tahun, Ca paru dalam terapi imunoterapi, kelemahan ekstremitas, protein LCS 197 mg/dL namun dari 9 kotak besar hanya ditemukan 4 sel): berdasarkan gambar sediaan sel LCS berikut, sel apakah yang mendominasi, dan kondisi apa yang tercermin dari kombinasi hasil ini?",
     "questionImages": [
       "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/img-005.png"
     ],
     "options": {},
-    "answer": "",
+    "answer": "Sel MN (limfosit), jumlah normal; mencerminkan disosiasi sitoalbumin (protein meningkat, sel tidak meningkat), sugestif Guillain-Barré syndrome/CIDP",
     "explanation": "",
     "explanationImages": [],
-    "isBroken": true
+    "isBroken": false,
+    "isIsian": true
   }
 ];

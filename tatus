@@ -1,0 +1,51 @@
+[1mdiff --git a/index.html b/index.html[m
+[1mindex 2627b5f..4e138a2 100644[m
+[1m--- a/index.html[m
+[1m+++ b/index.html[m
+[36m@@ -2877,8 +2877,12 @@[m [masync function convertDocx(buf) {[m
+     if (/bagian\s*2|gagal\s+diperbaiki/i.test(t)) cut = i;[m
+     if (/bagian\s*3|soal\s+isian/i.test(t)) cut3 = i;[m
+   });[m
+[31m-  if (cut < 0) cut = blocks.findIndex((b) => b.tbl);[m
+[31m-  if (cut3 >= 0 && cut3 < cut) cut3 = -1; // urutan gak wajar, abaikan[m
+[32m+[m[32m  if (cut < 0) {[m
+[32m+[m[32m    // Tanpa heading Bagian 2: tabel pertama = Bagian 2 — tapi jangan lewati[m
+[32m+[m[32m    // heading Bagian 3 kalau sudah ketemu, atau tabel isian ikut kesedot ke sini.[m
+[32m+[m[32m    const searchEnd = cut3 >= 0 ? cut3 : blocks.length;[m
+[32m+[m[32m    cut = blocks.findIndex((b, i) => b.tbl && i < searchEnd);[m
+[32m+[m[32m  }[m
+   const part1 = cut < 0 ? blocks : blocks.slice(0, cut);[m
+   const part2 = cut < 0 ? [] : blocks.slice(cut, cut3 < 0 ? blocks.length : cut3);[m
+   const part3 = cut3 < 0 ? [] : blocks.slice(cut3);[m
+[1mdiff --git a/scripts/convert-docx.js b/scripts/convert-docx.js[m
+[1mindex 87ca438..f7f7451 100644[m
+[1m--- a/scripts/convert-docx.js[m
+[1m+++ b/scripts/convert-docx.js[m
+[36m@@ -250,14 +250,22 @@[m [mfunction splitParts(html) {[m
+   if (lastPart3HeadingEnd >= 0 && lastPart3HeadingEnd < lastPart2HeadingEnd) lastPart3HeadingEnd = -1; // urutan gak wajar, abaikan[m
+ [m
+   if (lastPart2HeadingEnd < 0) {[m
+[31m-    // Tidak ada Bagian 2 — cek apakah ada <table> saja[m
+[31m-    const tableIdx = html.indexOf("<table");[m
+[31m-    if (tableIdx < 0) return { part1Html: html, part2Html: "", part3Html: "" };[m
+[32m+[m[32m    // Tidak ada Bagian 2 — cek apakah ada <table>, tapi jangan lewati heading[m
+[32m+[m[32m    // Bagian 3 kalau sudah ketemu, atau tabel isian ikut kesedot jadi Bagian 2.[m
+[32m+[m[32m    const searchHtml = lastPart3HeadingEnd >= 0 ? html.slice(0, lastPart3HeadingEnd) : html;[m
+[32m+[m[32m    const tableIdx = searchHtml.indexOf("<table");[m
+[32m+[m[32m    if (tableIdx < 0) {[m
+[32m+[m[32m      return {[m
+[32m+[m[32m        part1Html: lastPart3HeadingEnd < 0 ? html : html.substring(0, lastPart3HeadingEnd),[m
+[32m+[m[32m        part2Html: "",[m
+[32m+[m[32m        part3Html: lastPart3HeadingEnd < 0 ? "" : html.substring(lastPart3HeadingEnd),[m
+[32m+[m[32m      };[m
+[32m+[m[32m    }[m
+     // Ada tabel tapi tidak ada heading Bagian 2 — anggap semua sebelum tabel = Bagian 1[m
+     return {[m
+       part1Html: html.substring(0, tableIdx),[m
+[31m-      part2Html: html.substring(tableIdx),[m
+[31m-      part3Html: "",[m
+[32m+[m[32m      part2Html: html.substring(tableIdx, lastPart3HeadingEnd < 0 ? undefined : lastPart3HeadingEnd),[m
+[32m+[m[32m      part3Html: lastPart3HeadingEnd < 0 ? "" : html.substring(lastPart3HeadingEnd),[m
+     };[m
+   }[m
+ [m

@@ -70,11 +70,20 @@ export const packages = [
   {
     "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian",
     "category": "2H PK - LCS Cairan Otak",
-    "title": "Latihan Responsi Analisis LCS V3 [isian]",
+    "title": "Latihan Responsi Analisis LCS V3 (isian)",
     "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v3-isian/questions.js",
     "count": 40,
-    "convertedAt": "2026-09-26T12:33:05.050Z",
+    "convertedAt": "2026-09-26T15:31:22.963Z",
     "source": "Soal_Isian_LCS.docx"
+  },
+  {
+    "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian",
+    "category": "2H PK - LCS Cairan Otak",
+    "title": "Latihan Responsi Analisis LCS V4 (isian)",
+    "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/questions.js",
+    "count": 20,
+    "convertedAt": "2026-09-26T15:31:48.422Z",
+    "source": "Isian_LCS_Bagian3.docx"
   },
   {
     "id": "latihan-kk7__latihan-dx-kasus-cr",
