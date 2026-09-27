@@ -3806,8 +3806,9 @@ function updateTimerDOM() {
   if (timerLabelEl) timerLabelEl.classList.toggle("urgent", isUrgent);
 }
 function handleStartTentamen() {
-  // Soal rusak (isBroken) dan soal isian (isIsian) tidak dimasukkan ke Mode Tentamen karena tidak punya opsi pilihan ganda.
-  const quizzable = allQuestions.filter(q => !q.isBroken && !q.isIsian);
+  // Soal rusak (isBroken) tidak dimasukkan ke Mode Tentamen (tidak punya konten yang valid).
+  // Soal isian (isIsian) ikut disertakan — dinilai self-graded, lihat handleAnswerTentamenIsian().
+  const quizzable = allQuestions.filter(q => !q.isBroken);
   const qs = tentamenShuffleOn ? shuffleArray(quizzable) : quizzable;
   if (!qs.length) return;
   tentamenQuestions = qs;
@@ -3831,6 +3832,17 @@ function handleAnswerTentamen(letter) {
   const q = tentamenQuestions[currentIdx];
   tentamenAnswers[currentIdx] = letter;
   playSound(letter === q.answer);
+  qPhase = "answered_manual";
+  render();
+}
+// Soal isian di Tentamen — sama seperti Mode Latihan: dinilai self-graded,
+// jawaban apa pun yang terisi dihitung benar begitu dikirim (lihat renderTentamenResults).
+function handleAnswerTentamenIsian(text) {
+  if (tentamenAnswers[currentIdx] !== null && tentamenAnswers[currentIdx] !== undefined) return;
+  const trimmed = (text || "").trim();
+  if (!trimmed) return;
+  tentamenAnswers[currentIdx] = trimmed;
+  playSound(true);
   qPhase = "answered_manual";
   render();
 }
@@ -3876,6 +3888,15 @@ function onOptionClick(qid, letter, btnEl) {
   }
 }
 
+// ── Submit jawaban isian (delegasi, dipakai Latihan & Tentamen) ──────────
+function onIsianSubmit(qid, text) {
+  if (quizMode === "biasa") {
+    handleAnswerIsian(qid, text);
+  } else if (quizMode === "tentamen" && tentamenState === "running" && qPhase === "answering") {
+    handleAnswerTentamenIsian(text);
+  }
+}
+
 // ── beforeunload — hanya warning saat tentamen sedang berjalan ───────────
 window.addEventListener("beforeunload", (e) => {
   if (quizMode === "tentamen" && tentamenState === "running") {
@@ -3916,26 +3937,46 @@ function renderBrokenCard(q, qNum) {
 }
 
 // ── Render: kartu soal isian (textarea → submit → reveal kunci) ──────────
-function renderIsianCard(q, qNum, answeredText) {
-  const isAnswered = answeredText !== undefined && answeredText !== null && answeredText !== "";
+// Dipakai di Mode Latihan & Mode Tentamen. answeredValue:
+//   undefined/null/""  → belum dijawab, tampilkan input
+//   "skipped"          → dilewati (waktu habis di Tentamen; tidak pernah terjadi di Latihan)
+//   string lain        → jawaban yang dikirim user (self-graded, selalu dianggap benar)
+function renderIsianCard(q, qNum, answeredValue) {
+  const isSkipped = answeredValue === "skipped";
+  const isAnswered = !isSkipped && answeredValue !== undefined && answeredValue !== null && answeredValue !== "";
 
-  const bodyHtml = isAnswered ? `
-    <div class="isianReveal">
-      <div class="isianYourAnswer">
-        <div class="tag">✍️ Jawaban kamu <span class="icon ok">✓</span> <span class="isianCorrectLabel">Benar</span></div>
-        <p>${escapeHtml(answeredText)}</p>
+  let bodyHtml;
+  if (isSkipped) {
+    bodyHtml = `
+      <div class="isianReveal">
+        <div class="skipNote">⏭️ Soal ini dilewati (waktu habis)</div>
+        <div class="explanation">
+          <div class="tag">🔑 Kunci Jawaban</div>
+          <p>${escapeHtml(q.answer || "(tidak ada kunci jawaban)")}</p>
+        </div>
       </div>
-      <div class="explanation">
-        <div class="tag">🔑 Kunci Jawaban</div>
-        <p>${escapeHtml(q.answer || "(tidak ada kunci jawaban)")}</p>
+    `;
+  } else if (isAnswered) {
+    bodyHtml = `
+      <div class="isianReveal">
+        <div class="isianYourAnswer">
+          <div class="tag">✍️ Jawaban kamu <span class="icon ok">✓</span> <span class="isianCorrectLabel">Benar</span></div>
+          <p>${escapeHtml(answeredValue)}</p>
+        </div>
+        <div class="explanation">
+          <div class="tag">🔑 Kunci Jawaban</div>
+          <p>${escapeHtml(q.answer || "(tidak ada kunci jawaban)")}</p>
+        </div>
       </div>
-    </div>
-  ` : `
-    <div class="isianInputRow">
-      <textarea class="isianInput" data-qid="${escapeAttr(q.id)}" rows="2" placeholder="Ketik jawabanmu di sini…"></textarea>
-      <button class="isianSubmitBtn" data-qid="${escapeAttr(q.id)}" title="Kirim jawaban" aria-label="Kirim jawaban">▶</button>
-    </div>
-  `;
+    `;
+  } else {
+    bodyHtml = `
+      <div class="isianInputRow">
+        <textarea class="isianInput" data-qid="${escapeAttr(q.id)}" rows="2" placeholder="Ketik jawabanmu di sini…"></textarea>
+        <button class="isianSubmitBtn" data-qid="${escapeAttr(q.id)}" title="Kirim jawaban" aria-label="Kirim jawaban">▶</button>
+      </div>
+    `;
+  }
 
   return `
     <div class="qCard isianCard">
@@ -4146,7 +4187,7 @@ function renderBiasaMode() {
 
 // ── Render: Tentamen — setup ──────────────────────────────────────────────
 function renderTentamenSetup() {
-  const qCount = allQuestions.filter(q => !q.isBroken && !q.isIsian).length; // soal rusak & soal isian tidak masuk tentamen
+  const qCount = allQuestions.filter(q => !q.isBroken).length; // soal rusak tidak masuk tentamen; soal isian ikut
   const cfg = DIFFICULTY_CONFIG[tentamenDifficulty];
   const timerSec = cfg.timerSeconds;
   const estLabel = (() => {
@@ -4236,7 +4277,9 @@ function renderTentamenRunning() {
     <div class="timerTrack"><div class="timerFill" id="timerFill" style="background:${isUrgent ? "var(--wrong-strong)" : cfg.color}; width:${tentamenDifficulty === "bekicot" ? 100 : isAnswering ? timerPct : isTimeout ? 0 : 100}%;"></div></div>
   </div>`;
 
-  html += renderQuestionCard(q, qNum, tentamenAnswers[currentIdx], qPhase !== "answering");
+  html += q.isIsian
+    ? renderIsianCard(q, qNum, tentamenAnswers[currentIdx])
+    : renderQuestionCard(q, qNum, tentamenAnswers[currentIdx], qPhase !== "answering");
 
   if (isTimeout) {
     html += `<div class="timeoutNotice">\u26A0\uFE0F <span>Waktu habis! Soal ini dihitung terlewati. Melanjutkan\u2026</span></div>`;
@@ -4253,7 +4296,12 @@ function renderTentamenRunning() {
 // ── Render: Tentamen — hasil ──────────────────────────────────────────────
 function renderTentamenResults() {
   const total = tentamenQuestions.length;
-  const correct = tentamenAnswers.filter((a, i) => typeof a === "string" && a !== "skipped" && a === tentamenQuestions[i]?.answer).length;
+  const correct = tentamenAnswers.filter((a, i) => {
+    if (typeof a !== "string" || a === "skipped") return false;
+    const q = tentamenQuestions[i];
+    // Soal isian self-graded: jawaban apa pun yang terisi dihitung benar (sama seperti Mode Latihan).
+    return q?.isIsian ? true : a === q?.answer;
+  }).length;
   const skipped = tentamenAnswers.filter(a => a === "skipped").length;
   const wrong = total - correct - skipped;
   const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -4300,7 +4348,9 @@ function renderTentamenResults() {
   html += `<div class="reviewLabel">Detail jawaban:</div>`;
   html += `<div class="reviewList">`;
   tentamenQuestions.forEach((q, idx) => {
-    html += renderQuestionCard(q, idx + 1, tentamenAnswers[idx], true);
+    html += q.isIsian
+      ? renderIsianCard(q, idx + 1, tentamenAnswers[idx])
+      : renderQuestionCard(q, idx + 1, tentamenAnswers[idx], true);
   });
   html += `</div>`;
 
@@ -4560,14 +4610,14 @@ function attachHandlers() {
     btn.addEventListener("click", () => {
       const wrap = btn.closest(".isianInputRow");
       const ta = wrap ? wrap.querySelector("textarea.isianInput") : null;
-      handleAnswerIsian(btn.dataset.qid, ta ? ta.value : "");
+      onIsianSubmit(btn.dataset.qid, ta ? ta.value : "");
     });
   });
   app.querySelectorAll("textarea.isianInput[data-qid]").forEach(ta => {
     ta.addEventListener("keydown", (e) => {
       if (e.key !== "Enter" || e.shiftKey) return;
       e.preventDefault();
-      handleAnswerIsian(ta.dataset.qid, ta.value);
+      onIsianSubmit(ta.dataset.qid, ta.value);
     });
   });
 
