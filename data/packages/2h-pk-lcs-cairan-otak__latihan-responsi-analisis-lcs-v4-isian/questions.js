@@ -1,4 +1,4 @@
-// File ini DIBUAT OTOMATIS oleh scripts/convert-docx.js dari: Isian_LCS_Bagian3.docx
+// File ini DIBUAT OTOMATIS oleh scripts/convert-docx.js dari: soal_isian_lcs (1).docx
 // Jangan diedit manual kalau masih mau re-generate dari docx.
 // Untuk soal manual tambahan, edit array di bawah ini langsung (boleh kok).
 //
@@ -14,10 +14,10 @@ export const questions = [
   {
     "id": "QI1",
     "category": "Soal Isian",
-    "question": "Jelaskan proses pembentukan LCS: sumber dan persentase masing-masing.",
+    "question": "Kasus 1: Laki-laki Asia berusia 22 tahun mengeluh nyeri kepala 2 hari sebelum masuk rumah sakit, disertai demam sejak 1 hari sebelumnya. Sempat berobat ke klinik dan mendapat antibiotik ceftriaxone. Tanda vital: suhu 38,4°C. Kepala dan leher: kaku kuduk (+). Ekstremitas: Kernig sign (+). Diketahui terjadi peningkatan opening pressure. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 1500 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 51 mg/dL, Glukosa serum 144 mg/dL, Protein LCS 100 mg/dL, Laktat LCS 42,8 mg/dL.Berdasarkan rasio glukosa LCS:serum, kadar protein, dan jenis sel yang dominan di atas, apa kesimpulan interpretasi akhir gambaran LCS pasien ini?",
     "questionImages": [],
     "options": {},
-    "answer": "70% dari sekresi pleksus koroideus di ventrikel; 30% dari sel ependimal otak dan medula spinalis.",
+    "answer": "Gambaran khas meningitis bakterial (protein meningkat, jumlah sel meningkat dominan PMN, glukosa menurun tajam — konkordan)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -26,10 +26,12 @@ export const questions = [
   {
     "id": "QI2",
     "category": "Soal Isian",
-    "question": "Di ruang manakah LCS mengalir? Sebutkan nama ruangnya dan dua lapisan meninges yang mengapitnya.",
-    "questionImages": [],
+    "question": "Kasus 1: Laki-laki Asia berusia 22 tahun mengeluh nyeri kepala 2 hari sebelum masuk rumah sakit, disertai demam sejak 1 hari sebelumnya. Sempat berobat ke klinik dan mendapat antibiotik ceftriaxone. Tanda vital: suhu 38,4°C. Kepala dan leher: kaku kuduk (+). Ekstremitas: Kernig sign (+). Diketahui terjadi peningkatan opening pressure. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 1500 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 51 mg/dL, Glukosa serum 144 mg/dL, Protein LCS 100 mg/dL, Laktat LCS 42,8 mg/dL.Perhatikan gambar sediaan hitung jenis sel LCS pasien berikut. Jenis sel apa yang tampak mendominasi?",
+    "questionImages": [
+      "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/img-001.png"
+    ],
     "options": {},
-    "answer": "Spasium (ruang) subarakhnoid, terletak di antara arakhnoid mater dan pia mater.",
+    "answer": "Sel PMN (neutrofil)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -38,10 +40,10 @@ export const questions = [
   {
     "id": "QI3",
     "category": "Soal Isian",
-    "question": "Sebutkan volume normal LCS pada dewasa dan pada neonatus.",
+    "question": "Kasus 1: Laki-laki Asia berusia 22 tahun mengeluh nyeri kepala 2 hari sebelum masuk rumah sakit, disertai demam sejak 1 hari sebelumnya. Sempat berobat ke klinik dan mendapat antibiotik ceftriaxone. Tanda vital: suhu 38,4°C. Kepala dan leher: kaku kuduk (+). Ekstremitas: Kernig sign (+). Diketahui terjadi peningkatan opening pressure. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 1500 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 51 mg/dL, Glukosa serum 144 mg/dL, Protein LCS 100 mg/dL, Laktat LCS 42,8 mg/dL.Sebutkan pemeriksaan lanjutan yang diperlukan untuk mengidentifikasi bakteri penyebab meningitis pada kasus ini!",
     "questionImages": [],
     "options": {},
-    "answer": "Dewasa 85–150 mL (sumber lain 90–150 mL); neonatus 10–60 mL.",
+    "answer": "Kultur LCS dan pewarnaan Gram (dapat ditambah kultur darah/PCR)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -50,10 +52,10 @@ export const questions = [
   {
     "id": "QI4",
     "category": "Soal Isian",
-    "question": "Berapa laju pembentukan LCS?",
+    "question": "Kasus 2: Anak perempuan usia 2 tahun dibawa dengan keluhan demam 2 hari, nyeri tenggorokan, nyeri leher, muntah, dan tidak mau makan. Pasien tampak lelah dan dehidrasi. Tanda vital: suhu 39,9°C. Kepala/leher: faring eritem, pembesaran tonsil T2/T2 dengan eksudat, kaku kuduk (+). Ekstremitas: Kernig sign (neg), Brudzinski II sign (neg). Darah rutin: Hb 12,9 g/dL, Leukosit 10,1/mm³, Neutrofil 41%, Limfosit 51%, Trombosit 239 ribu, Procalcitonin 0,2 ng/mL. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 200 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 58 mg/dL, Glukosa serum 112 mg/dL, Protein LCS 35 mg/dL, Laktat LCS 20 mg/dL.Berdasarkan profil darah rutin (prokalsitonin rendah, limfosit dominan) serta hasil LCS di atas, etiologi apa yang lebih mungkin mendasari meningitis pasien ini?",
     "questionImages": [],
     "options": {},
-    "answer": "Sekitar 20 mL/jam atau 500 mL/hari.",
+    "answer": "Etiologi viral (bukan bakterial)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -62,10 +64,12 @@ export const questions = [
   {
     "id": "QI5",
     "category": "Soal Isian",
-    "question": "Sebutkan lokasi pungsi lumbal pada dewasa dan pada anak.",
-    "questionImages": [],
+    "question": "Kasus 2: Anak perempuan usia 2 tahun dibawa dengan keluhan demam 2 hari, nyeri tenggorokan, nyeri leher, muntah, dan tidak mau makan. Pasien tampak lelah dan dehidrasi. Tanda vital: suhu 39,9°C. Kepala/leher: faring eritem, pembesaran tonsil T2/T2 dengan eksudat, kaku kuduk (+). Ekstremitas: Kernig sign (neg), Brudzinski II sign (neg). Darah rutin: Hb 12,9 g/dL, Leukosit 10,1/mm³, Neutrofil 41%, Limfosit 51%, Trombosit 239 ribu, Procalcitonin 0,2 ng/mL. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 200 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 58 mg/dL, Glukosa serum 112 mg/dL, Protein LCS 35 mg/dL, Laktat LCS 20 mg/dL.Perhatikan gambar sediaan hitung jenis sel LCS berikut. Sebutkan gambaran dominasi selnya!",
+    "questionImages": [
+      "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/img-002.png"
+    ],
     "options": {},
-    "answer": "Dewasa: L3-4 atau L2-3. Anak: L4-5.",
+    "answer": "Dominasi sel mononuklear (MN), namun masih dijumpai PMN sekitar 20%",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -74,10 +78,10 @@ export const questions = [
   {
     "id": "QI6",
     "category": "Soal Isian",
-    "question": "Sebutkan 3 tabung penampung sampel LCS dan pemeriksaan yang dituju masing-masing.",
+    "question": "Kasus 2: Anak perempuan usia 2 tahun dibawa dengan keluhan demam 2 hari, nyeri tenggorokan, nyeri leher, muntah, dan tidak mau makan. Pasien tampak lelah dan dehidrasi. Tanda vital: suhu 39,9°C. Kepala/leher: faring eritem, pembesaran tonsil T2/T2 dengan eksudat, kaku kuduk (+). Ekstremitas: Kernig sign (neg), Brudzinski II sign (neg). Darah rutin: Hb 12,9 g/dL, Leukosit 10,1/mm³, Neutrofil 41%, Limfosit 51%, Trombosit 239 ribu, Procalcitonin 0,2 ng/mL. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 200 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 58 mg/dL, Glukosa serum 112 mg/dL, Protein LCS 35 mg/dL, Laktat LCS 20 mg/dL.Apa makna klinis ditemukannya PMN sekitar 20% pada kasus dengan dominasi MN dan onset akut (2 hari) ini?",
     "questionImages": [],
     "options": {},
-    "answer": "Tabung 1: kimia/serologi/imunologi. Tabung 2: mikrobiologi. Tabung 3: hematologi/mikroskopis (hitung sel).",
+    "answer": "Respons neutrofilik awal yang masih wajar pada infeksi viral fase akut/dini, sebelum respons limfositik sepenuhnya terbentuk",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -86,10 +90,12 @@ export const questions = [
   {
     "id": "QI7",
     "category": "Soal Isian",
-    "question": "Bagaimana cara membedakan traumatic tap dari perdarahan subarakhnoid (SAH) berdasarkan gambaran 3 tabung?",
-    "questionImages": [],
+    "question": "Kasus 3: Perempuan berusia 23 tahun dengan riwayat HIV positif mengeluhkan nyeri kepala progresif selama 10 hari, disertai pandangan kabur, fotofobia, nausea, vomitus, dan penurunan fungsi memori. Keadaan umum: tampak bingung, agitasi. Tanda vital: suhu 38,9°C, tensi 95/70 mmHg, HR 79x/menit, RR 18x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: tidak ada defisit neurologis. Darah rutin dalam batas normal. CT scan kepala: tidak ada perdarahan. Rontgen thoraks: normal. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 16 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 50 mg/dL, Glukosa serum 116 mg/dL, Protein LCS 66 mg/dL, Laktat LCS 24 mg/dL.Perhatikan gambar sediaan hitung jenis sel LCS berikut. Jenis sel apa yang dominan?",
+    "questionImages": [
+      "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/img-003.png"
+    ],
     "options": {},
-    "answer": "Traumatic tap: darah makin berkurang/jernih dari tabung 1 ke 3, ada bekuan. SAH/ICH: darah tetap sama di semua tabung, tidak ada bekuan.",
+    "answer": "Sel mononuklear (MN)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -98,10 +104,10 @@ export const questions = [
   {
     "id": "QI8",
     "category": "Soal Isian",
-    "question": "Apa itu xantokromia dan apa penyebabnya?",
+    "question": "Kasus 3: Perempuan berusia 23 tahun dengan riwayat HIV positif mengeluhkan nyeri kepala progresif selama 10 hari, disertai pandangan kabur, fotofobia, nausea, vomitus, dan penurunan fungsi memori. Keadaan umum: tampak bingung, agitasi. Tanda vital: suhu 38,9°C, tensi 95/70 mmHg, HR 79x/menit, RR 18x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: tidak ada defisit neurologis. Darah rutin dalam batas normal. CT scan kepala: tidak ada perdarahan. Rontgen thoraks: normal. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 16 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 50 mg/dL, Glukosa serum 116 mg/dL, Protein LCS 66 mg/dL, Laktat LCS 24 mg/dL.Apa makna klinis dari tidak ditemukannya kaku kuduk pada pasien HIV dengan gejala neurologis seperti ini?",
     "questionImages": [],
     "options": {},
-    "answer": "Supernatan LCS berwarna pink/oranye/kuning setelah sentrifugasi, akibat degradasi eritrosit (perdarahan) atau peningkatan bilirubin.",
+    "answer": "Tanda rangsang meningeal dapat tidak muncul/tidak dapat diandalkan pada pasien imunokompromais, sehingga kaku kuduk negatif tidak menyingkirkan infeksi SSP",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -110,10 +116,10 @@ export const questions = [
   {
     "id": "QI9",
     "category": "Soal Isian",
-    "question": "Sebutkan nilai normal jumlah sel LCS pada dewasa dan neonatus.",
+    "question": "Kasus 3: Perempuan berusia 23 tahun dengan riwayat HIV positif mengeluhkan nyeri kepala progresif selama 10 hari, disertai pandangan kabur, fotofobia, nausea, vomitus, dan penurunan fungsi memori. Keadaan umum: tampak bingung, agitasi. Tanda vital: suhu 38,9°C, tensi 95/70 mmHg, HR 79x/menit, RR 18x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: tidak ada defisit neurologis. Darah rutin dalam batas normal. CT scan kepala: tidak ada perdarahan. Rontgen thoraks: normal. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 16 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 50 mg/dL, Glukosa serum 116 mg/dL, Protein LCS 66 mg/dL, Laktat LCS 24 mg/dL.Dengan status HIV, pleositosis ringan dominan MN, glukosa menurun, dan protein meningkat, sebutkan diagnosis banding infeksi SSP yang paling perlu dipertimbangkan!",
     "questionImages": [],
     "options": {},
-    "answer": "Dewasa 0–5 sel/µL; neonatus 0–30 sel/µL.",
+    "answer": "Meningitis kriptokokus dan meningitis tuberkulosis (infeksi oportunistik SSP terkait HIV)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -122,10 +128,10 @@ export const questions = [
   {
     "id": "QI10",
     "category": "Soal Isian",
-    "question": "Jelaskan prinsip pemeriksaan Pandy dan Nonne-Apelt.",
+    "question": "Kasus 3: Perempuan berusia 23 tahun dengan riwayat HIV positif mengeluhkan nyeri kepala progresif selama 10 hari, disertai pandangan kabur, fotofobia, nausea, vomitus, dan penurunan fungsi memori. Keadaan umum: tampak bingung, agitasi. Tanda vital: suhu 38,9°C, tensi 95/70 mmHg, HR 79x/menit, RR 18x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: tidak ada defisit neurologis. Darah rutin dalam batas normal. CT scan kepala: tidak ada perdarahan. Rontgen thoraks: normal. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 16 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 50 mg/dL, Glukosa serum 116 mg/dL, Protein LCS 66 mg/dL, Laktat LCS 24 mg/dL.Sebutkan pemeriksaan konfirmasi yang dapat dilakukan untuk menegakkan diagnosis banding tersebut!",
     "questionImages": [],
     "options": {},
-    "answer": "Pandy: mendeteksi albumin dan globulin, dinilai dari kekeruhan setelah LCS diteteskan ke reagen fenol jenuh. Nonne-Apelt: mendeteksi globulin, dinilai dari terbentuknya cincin putih-abu di antara lapisan reagen amonium sulfat jenuh dan LCS.",
+    "answer": "Tinta India / antigen kriptokokus (CrAg) LCS, serta BTA/kultur atau GeneXpert TB pada LCS; dapat dilengkapi CD4 dan viral load HIV",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -134,10 +140,12 @@ export const questions = [
   {
     "id": "QI11",
     "category": "Soal Isian",
-    "question": "Sebutkan pola khas hasil LCS pada meningitis bakterial (sel, protein, glukosa).",
-    "questionImages": [],
+    "question": "Kasus 4: Perempuan berusia 67 tahun dengan Ca paru dalam terapi. Pasca pemberian adjuvant immunotherapy 10 minggu yang lalu, pasien mengeluhkan kebas di keempat ekstremitas diikuti kelemahan pada ekstremitas. Tanda vital: suhu 36,8°C, tensi 160/80 mmHg, HR 86x/menit, RR 20x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: fungsi Nervus kranialis dbn; gangguan sensoris dan propriosepsi di ekstremitas bawah, kekuatan motorik 3/3/2/2, penurunan refleks fisiologis di ekstremitas atas dan bawah. Darah rutin dalam batas normal. MRI: tidak ditemukan infark. Elektromiografi: axonal demyelinating sensorimotor polyneuropathy. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 4 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 82 mg/dL, Glukosa serum 105 mg/dL, Protein LCS 197 mg/dL, Albumin 131 mg/dL, IgG 19,3.Perhatikan gambar sediaan hitung jenis sel LCS berikut. Bagaimana gambaran jumlah dan jenis selnya?",
+    "questionImages": [
+      "images/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/img-004.png"
+    ],
     "options": {},
-    "answer": "Sel meningkat dominan PMN (neutrofil), protein meningkat, glukosa menurun tajam — ketiganya konkordan/saling mendukung.",
+    "answer": "Jumlah sel dalam batas normal (sedikit), tanpa dominasi sel abnormal yang mencolok",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -146,10 +154,10 @@ export const questions = [
   {
     "id": "QI12",
     "category": "Soal Isian",
-    "question": "Apa yang dimaksud disosiasi sitoalbuminik dan pada kondisi apa khas ditemukan?",
+    "question": "Kasus 4: Perempuan berusia 67 tahun dengan Ca paru dalam terapi. Pasca pemberian adjuvant immunotherapy 10 minggu yang lalu, pasien mengeluhkan kebas di keempat ekstremitas diikuti kelemahan pada ekstremitas. Tanda vital: suhu 36,8°C, tensi 160/80 mmHg, HR 86x/menit, RR 20x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: fungsi Nervus kranialis dbn; gangguan sensoris dan propriosepsi di ekstremitas bawah, kekuatan motorik 3/3/2/2, penurunan refleks fisiologis di ekstremitas atas dan bawah. Darah rutin dalam batas normal. MRI: tidak ditemukan infark. Elektromiografi: axonal demyelinating sensorimotor polyneuropathy. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 4 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 82 mg/dL, Glukosa serum 105 mg/dL, Protein LCS 197 mg/dL, Albumin 131 mg/dL, IgG 19,3.Kombinasi protein LCS yang sangat meningkat tanpa disertai peningkatan jumlah sel, dengan glukosa normal, disebut pola apa?",
     "questionImages": [],
     "options": {},
-    "answer": "Peningkatan protein LCS tanpa disertai peningkatan jumlah sel, dengan glukosa normal; khas pada sindrom Guillain-Barré akibat proses autoimun.",
+    "answer": "Disosiasi sitoalbuminik (albuminocytologic dissociation)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -158,10 +166,10 @@ export const questions = [
   {
     "id": "QI13",
     "category": "Soal Isian",
-    "question": "Sebutkan perubahan kadar glukosa dan laktat LCS yang khas pada infeksi bakterial, beserta alasannya.",
+    "question": "Kasus 4: Perempuan berusia 67 tahun dengan Ca paru dalam terapi. Pasca pemberian adjuvant immunotherapy 10 minggu yang lalu, pasien mengeluhkan kebas di keempat ekstremitas diikuti kelemahan pada ekstremitas. Tanda vital: suhu 36,8°C, tensi 160/80 mmHg, HR 86x/menit, RR 20x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: fungsi Nervus kranialis dbn; gangguan sensoris dan propriosepsi di ekstremitas bawah, kekuatan motorik 3/3/2/2, penurunan refleks fisiologis di ekstremitas atas dan bawah. Darah rutin dalam batas normal. MRI: tidak ditemukan infark. Elektromiografi: axonal demyelinating sensorimotor polyneuropathy. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 4 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 82 mg/dL, Glukosa serum 105 mg/dL, Protein LCS 197 mg/dL, Albumin 131 mg/dL, IgG 19,3.Berdasarkan pola LCS tersebut, temuan EMG (axonal demyelinating sensorimotor polyneuropathy), dan riwayat imunoterapi, apa diagnosis klinis yang paling mungkin?",
     "questionImages": [],
     "options": {},
-    "answer": "Glukosa menurun karena dikonsumsi bakteri; laktat meningkat akibat metabolisme anaerob.",
+    "answer": "Sindrom Guillain-Barré (neuropati terkait imunoterapi/irAE)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,
@@ -170,82 +178,10 @@ export const questions = [
   {
     "id": "QI14",
     "category": "Soal Isian",
-    "question": "Pada Kasus 1 (dewasa, demam dan nyeri kepala akut, kaku kuduk dan Kernig sign positif), apa diagnosis kerja dan gambaran LCS yang mendukungnya?",
+    "question": "Kasus 4: Perempuan berusia 67 tahun dengan Ca paru dalam terapi. Pasca pemberian adjuvant immunotherapy 10 minggu yang lalu, pasien mengeluhkan kebas di keempat ekstremitas diikuti kelemahan pada ekstremitas. Tanda vital: suhu 36,8°C, tensi 160/80 mmHg, HR 86x/menit, RR 20x/menit. Kepala leher: kaku kuduk tidak ditemukan. Pemeriksaan neurologi: fungsi Nervus kranialis dbn; gangguan sensoris dan propriosepsi di ekstremitas bawah, kekuatan motorik 3/3/2/2, penurunan refleks fisiologis di ekstremitas atas dan bawah. Darah rutin dalam batas normal. MRI: tidak ditemukan infark. Elektromiografi: axonal demyelinating sensorimotor polyneuropathy. Pemeriksaan bilik hitung LCS (9 kotak besar): ditemukan 4 sel. Pemeriksaan Nonne-Apelt dilakukan pada sampel LCS. Hasil kimiawi: Glukosa LCS 82 mg/dL, Glukosa serum 105 mg/dL, Protein LCS 197 mg/dL, Albumin 131 mg/dL, IgG 19,3.Sebutkan pemeriksaan lanjutan yang dapat memperjelas jenis protein/imunoglobulin yang meningkat pada kasus ini!",
     "questionImages": [],
     "options": {},
-    "answer": "Meningitis bakterial; protein meningkat, sel meningkat dominan PMN, glukosa menurun tajam, ketiganya konkordan.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI15",
-    "category": "Soal Isian",
-    "question": "Pada Kasus 4 (dewasa dengan HIV, CD4 83, VDRL/TPHA reaktif), mengapa hasil protein LCS yang positif perlu diinterpretasi hati-hati?",
-    "questionImages": [],
-    "options": {},
-    "answer": "Karena ditemukan eritrosit pada sediaan (traumatic tap); kontaminasi darah dapat membawa protein/enzim sehingga menimbulkan hasil protein positif palsu, selain kemungkinan protein memang meningkat akibat infeksi.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI16",
-    "category": "Soal Isian",
-    "question": "Pada Kasus 5 (lansia pasca terapi CAR dengan gejala mengarah GBS), sebutkan hasil LCS dan istilah pola tersebut.",
-    "questionImages": [],
-    "options": {},
-    "answer": "Protein meningkat tanpa peningkatan jumlah sel dan glukosa normal — disebut disosiasi sitoalbuminik, temuan klasik Guillain-Barré Syndrome.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI17",
-    "category": "Soal Isian",
-    "question": "Berapa cut-off CD4 yang menetapkan stage 4 (AIDS) pada pasien HIV?",
-    "questionImages": [],
-    "options": {},
-    "answer": "CD4 < 200 sel/µL.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI18",
-    "category": "Soal Isian",
-    "question": "Sebutkan ciri pemeriksaan fisik yang membedakan lesi Lower Motor Neuron (LMN) dari Upper Motor Neuron (UMN).",
-    "questionImages": [],
-    "options": {},
-    "answer": "LMN: hiporefleks, refleks patologis negatif, kekuatan motorik menurun, dapat disertai atrofi. UMN: hiperrefleks dan refleks patologis positif.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI19",
-    "category": "Soal Isian",
-    "question": "Sebutkan rumus perhitungan jumlah lekosit LCS dengan bilik hitung Improved Neubauer (9 kotak besar, pengenceran 10/9).",
-    "questionImages": [],
-    "options": {},
-    "answer": "Jumlah sel yang dihitung × 5/4.",
-    "explanation": "",
-    "explanationImages": [],
-    "isBroken": false,
-    "isIsian": true
-  },
-  {
-    "id": "QI20",
-    "category": "Soal Isian",
-    "question": "Sebutkan diagnosis banding manifestasi neurologis pada pasien HIV stage 4 yang dibahas pada Kasus 4.",
-    "questionImages": [],
-    "options": {},
-    "answer": "Neurosifilis, toksoplasmosis serebri, tuberkulosis SSP (meningitis TB), infeksi TORCH (toksoplasma, rubella, CMV), meningitis fungal (kriptokokus).",
+    "answer": "Elektroforesis protein / pemeriksaan subtipe imunoglobulin (IgG, IgM, IgA, IgD, IgE)",
     "explanation": "",
     "explanationImages": [],
     "isBroken": false,

@@ -50,15 +50,6 @@ export const packages = [
     "source": "Soal_Analisis_LCS_Blok2H.docx"
   },
   {
-    "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v1",
-    "category": "2H PK - LCS Cairan Otak",
-    "title": "Latihan Responsi Analisis LCS V1",
-    "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v1/questions.js",
-    "count": 20,
-    "convertedAt": "2026-09-25T13:50:03.480Z",
-    "source": "Soalin_Analisis_LCS_Kasus1-4.docx"
-  },
-  {
     "id": "2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v2",
     "category": "2H PK - LCS Cairan Otak",
     "title": "Latihan Responsi Analisis LCS V2",
@@ -81,9 +72,9 @@ export const packages = [
     "category": "2H PK - LCS Cairan Otak",
     "title": "Latihan Responsi Analisis LCS V4 (isian)",
     "file": "./data/packages/2h-pk-lcs-cairan-otak__latihan-responsi-analisis-lcs-v4-isian/questions.js",
-    "count": 20,
-    "convertedAt": "2026-09-26T15:31:48.422Z",
-    "source": "Isian_LCS_Bagian3.docx"
+    "count": 14,
+    "convertedAt": "2026-09-27T09:26:10.508Z",
+    "source": "soal_isian_lcs (1).docx"
   },
   {
     "id": "latihan-kk7__latihan-dx-kasus-cr",
