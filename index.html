@@ -3013,36 +3013,7 @@ async function convertDocx(buf) {
     return isian;
   }
 
-  // ── Acak opsi + ratakan distribusi kunci jawaban (sama dengan scripts/convert-docx.js) ──
-  const shuffle = (arr) => {
-    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
-    return arr;
-  };
-  function rebalanceAnswerDistribution(questions) {
-    const groups = new Map();
-    for (const q of questions) {
-      if (q.isBroken || q.isIsian || !q.answer || Object.keys(q.options).length < 2 || q.options[q.answer] === undefined) continue;
-      const key = Object.keys(q.options).sort().join(",");
-      if (!groups.has(key)) groups.set(key, []);
-      groups.get(key).push(q);
-    }
-    for (const [key, group] of groups) {
-      const letters = key.split(","), base = Math.floor(group.length / letters.length);
-      const pool = letters.flatMap((L) => Array(base).fill(L));
-      pool.push(...shuffle([...letters]).slice(0, group.length % letters.length)); // jatah lebih dibagi acak
-      shuffle(pool);
-      shuffle([...group]).forEach((q, idx) => {
-        const others = shuffle(letters.filter((L) => L !== q.answer).map((L) => q.options[L]));
-        const correct = q.options[q.answer], options = {};
-        letters.forEach((L) => { options[L] = L === pool[idx] ? correct : others.pop(); });
-        q.options = options;
-        q.answer = pool[idx];
-      });
-    }
-  }
-
   const normal = parsePart1(flat(part1).flatMap(paraLines));
-  rebalanceAnswerDistribution(normal);
   const rusak = parsePart2(part2.filter((b) => b.tbl).map((b) => b.tbl), normal.length);
   const isian = parsePart3(part3.filter((b) => b.tbl).map((b) => b.tbl), normal.length + rusak.length);
   return { questions: [...normal, ...rusak, ...isian], blobs, stats: { normal: normal.length, rusak: rusak.length, isian: isian.length, images: blobs.filter(Boolean).length, skippedExt: [...skippedExt] } };
