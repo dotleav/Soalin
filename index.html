@@ -2699,7 +2699,7 @@
 
 
   /* ── Doksli sticker attached to correct/wrong option ── */
-  body.doksli .option, body.koceng, body.capy .option { position: relative; overflow: visible; }
+  body.doksli .option, body.koceng .option, body.capy .option { position: relative; overflow: visible; }
   .doksli-sticker {
     position: absolute;
     width: 72px; height: 72px;
@@ -2715,7 +2715,7 @@
   .doksli-sticker[data-corner="br"] { bottom: -20px; }
 
   /* ── Doksli: letter replaced by meme img ── */
-  body.doksli .letter, body.koceng, body.capy .letter { 
+  body.doksli .letter, body.koceng .letter, body.capy .letter { 
     padding: 0 !important; 
     background: transparent !important;
     border: none !important;
@@ -2723,23 +2723,23 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  body.doksli .doksli-letter-img, body.koceng, body.capy .doksli-letter-img {
+  body.doksli .doksli-letter-img, body.koceng .doksli-letter-img, body.capy .doksli-letter-img {
     width: 38px; height: 38px;
     object-fit: cover;
     border-radius: 6px;
     box-shadow: 0 0 0 2px #fff, 0 2px 6px rgba(0,0,0,0.25);
     display: block;
   }
-  body.doksli .letter.correct .doksli-letter-img, body.koceng, body.capy .letter.correct .doksli-letter-img {
+  body.doksli .letter.correct .doksli-letter-img, body.koceng .letter.correct .doksli-letter-img, body.capy .letter.correct .doksli-letter-img {
     box-shadow: 0 0 0 2.5px #27ae60, 0 2px 8px rgba(39,174,96,0.4);
   }
-  body.doksli .letter.wrong .doksli-letter-img, body.koceng, body.capy .letter.wrong .doksli-letter-img {
+  body.doksli .letter.wrong .doksli-letter-img, body.koceng .letter.wrong .doksli-letter-img, body.capy .letter.wrong .doksli-letter-img {
     box-shadow: 0 0 0 2.5px #c0392b, 0 2px 8px rgba(192,57,43,0.4);
   }
 
   /* ── Ensure options don't clip sticker ── */
-  body.doksli .options, body.koceng, body.capy .options { overflow: visible; }
-  body.doksli .options .option, body.koceng, body.capy .options .option { overflow: visible; }
+  body.doksli .options, body.koceng .options, body.capy .options { overflow: visible; }
+  body.doksli .options .option, body.koceng .options .option, body.capy .options .option { overflow: visible; }
 
 </style>
 </head>
