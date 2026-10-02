@@ -105,6 +105,26 @@
       var(--bg);
   }
 
+  /* Mode Koceng — krem hangat + oranye, stiker meme kucing random (images/theme/koceng) */
+  body.koceng {
+    --bg: #fff4e0; --bg-alt: #ffe9c7;
+    --card: #fffdf8; --card-soft: #fff6e6;
+    --border: #f0d3a3; --border-light: #f6e3c0;
+    --text: #3a2412; --text-secondary: #6b4a2b;
+    --muted: #9a7650; --muted2: #b5946b; --muted3: #d9c1a0;
+    --accent: #ff8a1f; --accent-strong: #e06d00; --accent-soft: #ff8a1f20;
+    --accent2: #ff6b9a; --accent2-soft: #ff6b9a20;
+    --correct: #2fa56b; --correct-strong: #1f8a55;
+    --wrong: #e0483c; --wrong-strong: #bf362b;
+    --blue: #3d8fd6; --blue-strong: #2a72b3;
+    --tint-correct-text: #14683f; --tint-wrong-text: #9a2a21;
+    --shadow-card: 0 3px 0 rgba(120, 70, 20, 0.12);
+    background:
+      radial-gradient(600px 320px at 12% -8%, #ff8a1f22, transparent 60%),
+      radial-gradient(560px 340px at 110% 12%, #ff6b9a1c, transparent 55%),
+      var(--bg);
+  }
+
   /* ══════════════════════════════════════════════════════════════════
      Mode Persona 5  —  rework v2, menggunakan asset dari p5-ui-main
      Palet: #ff0022 merah / #1cfeff biru / #000000 hitam / #ffffff putih
@@ -2659,7 +2679,7 @@
 
 
   /* ── Doksli sticker attached to correct/wrong option ── */
-  body.doksli .option { position: relative; overflow: visible; }
+  body.doksli .option, body.koceng .option { position: relative; overflow: visible; }
   .doksli-sticker {
     position: absolute;
     width: 72px; height: 72px;
@@ -2675,7 +2695,7 @@
   .doksli-sticker[data-corner="br"] { bottom: -20px; }
 
   /* ── Doksli: letter replaced by meme img ── */
-  body.doksli .letter { 
+  body.doksli .letter, body.koceng .letter { 
     padding: 0 !important; 
     background: transparent !important;
     border: none !important;
@@ -2683,23 +2703,23 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
-  body.doksli .doksli-letter-img {
+  body.doksli .doksli-letter-img, body.koceng .doksli-letter-img {
     width: 38px; height: 38px;
     object-fit: cover;
     border-radius: 6px;
     box-shadow: 0 0 0 2px #fff, 0 2px 6px rgba(0,0,0,0.25);
     display: block;
   }
-  body.doksli .letter.correct .doksli-letter-img {
+  body.doksli .letter.correct .doksli-letter-img, body.koceng .letter.correct .doksli-letter-img {
     box-shadow: 0 0 0 2.5px #27ae60, 0 2px 8px rgba(39,174,96,0.4);
   }
-  body.doksli .letter.wrong .doksli-letter-img {
+  body.doksli .letter.wrong .doksli-letter-img, body.koceng .letter.wrong .doksli-letter-img {
     box-shadow: 0 0 0 2.5px #c0392b, 0 2px 8px rgba(192,57,43,0.4);
   }
 
   /* ── Ensure options don't clip sticker ── */
-  body.doksli .options { overflow: visible; }
-  body.doksli .options .option { overflow: visible; }
+  body.doksli .options, body.koceng .options { overflow: visible; }
+  body.doksli .options .option, body.koceng .options .option { overflow: visible; }
 
 </style>
 </head>
@@ -3069,9 +3089,16 @@ async function convertDocx(buf) {
     var _idx = Math.floor(Math.random() * _imgs.length);
     window._dkImgs = _imgs;
     window._dkImg = function() {
+      if (document.body.classList.contains("koceng")) {
+        const n = 123, prev = window._kcLast;
+        let i; do { i = 1 + Math.floor(Math.random() * n); } while (i === prev);
+        window._kcLast = i;
+        return "./images/theme/koceng/k" + String(i).padStart(3, "0") + ".webp";
+      }
       _idx = (_idx + 1) % _imgs.length;
       return _imgs[_idx];
     };
+    window._dkOn = function() { return document.body.classList.contains("doksli") || document.body.classList.contains("koceng"); };
   })();
 
 // Soal dimuat secara dinamis (lihat "Paket soal" di bawah), bukan di-import
@@ -3389,7 +3416,7 @@ function setVolume(v) {
 }
 
 // ── Tema (dark/light/p5) ──────────────────────────────────────────────────
-const THEME_VALUES = ["dark", "light", "p5", "sxf", "doksli"];
+const THEME_VALUES = ["dark", "light", "p5", "sxf", "doksli", "koceng"];
 let theme = THEME_VALUES.includes(localStorage.getItem(THEME_KEY)) ? localStorage.getItem(THEME_KEY) : "dark";
 function setTheme(t) {
   theme = THEME_VALUES.includes(t) ? t : "dark";
@@ -3400,6 +3427,7 @@ function syncThemeClass() {
   document.body.classList.toggle("p5", theme === "p5");
   document.body.classList.toggle("sxf", theme === "sxf");
   document.body.classList.toggle("doksli", theme === "doksli");
+  document.body.classList.toggle("koceng", theme === "koceng");
 }
 
 // ── P5 Mode: Ransom/cutout letter effect ──────────────────────────────────
@@ -3998,7 +4026,7 @@ function renderQuestionCard(q, qNum, chosen, revealAnswer) {
 
     return `
       <button class="${cls}${locked}" data-qid="${escapeAttr(q.id)}" data-letter="${escapeAttr(letter)}">
-        <span class="${letterCls}" data-letter="${letter}">${(document.body.classList.contains("doksli") && window._dkImg) ? `<img class="doksli-letter-img" src="${window._dkImg()}" aria-hidden="true">` : letter}</span>
+        <span class="${letterCls}" data-letter="${letter}">${(window._dkOn() && window._dkImg) ? `<img class="doksli-letter-img" src="${window._dkImg()}" aria-hidden="true">` : letter}</span>
         <span class="optText">${escapeHtml(text)}</span>
         ${icon}
       </button>
@@ -4348,6 +4376,7 @@ const THEME_OPTIONS = [
   { value: "dark", icon: "\uD83C\uDF19", label: "Gelap" },
   { value: "p5", icon: '<img src="./favicon.ico" style="width:16px;height:16px;vertical-align:middle;image-rendering:pixelated;">', label: "Persona 5" },
   { value: "doksli", icon: '🙏', label: "Dokumen Asli (Doksli)" },
+  { value: "koceng", icon: '🐱', label: "Koceng" },
   { value: "sxf", icon: '<img src="data:image/png;base64,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" style="width:18px;height:18px;vertical-align:middle;border-radius:50%;">', label: "Spy x Family" },
 ];
 function renderSettingsCard() {
@@ -4664,7 +4693,7 @@ boot();
   // Called after render() whenever in doksli mode
   // Attaches meme stickers to revealed correct/wrong options
   function doksliAttachStickers() {
-    if (!document.body.classList.contains("doksli")) return;
+    if (!window._dkOn()) return;
 
     // Remove existing stickers first
     document.querySelectorAll(".doksli-sticker").forEach(el => el.remove());
@@ -4721,7 +4750,7 @@ boot();
   const _origRender = typeof render === "function" ? render : null;
   // We patch via MutationObserver on .options instead (safer)
   const _doksliMutObs = new MutationObserver(() => {
-    if (document.body.classList.contains("doksli")) {
+    if (window._dkOn()) {
       // Debounce
       clearTimeout(_doksliMutObs._t);
       _doksliMutObs._t = setTimeout(doksliAttachStickers, 60);
@@ -4736,7 +4765,7 @@ boot();
     document.body.addEventListener("classchange", doksliAttachStickers);
   });
   new MutationObserver(() => {
-    if (document.body.classList.contains("doksli")) {
+    if (window._dkOn()) {
       clearTimeout(window._doksliThemeT);
       window._doksliThemeT = setTimeout(doksliAttachStickers, 80);
     } else {
