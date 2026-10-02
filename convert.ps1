@@ -1,6 +1,6 @@
 ﻿# convert.ps1
 # Soalin — satu GUI buat konversi docx -> paket soal, kelola kategori/paket
-# (ganti nama), DAN hapus paket soal. Dipanggil dari soalin.bat (satu-satunya
+# (ganti nama / pindah kategori), DAN hapus paket soal. Dipanggil dari soalin.bat (satu-satunya
 # launcher, buka di tab Konversi). Bisa juga dipanggil manual dan langsung
 # dibuka di tab Kelola Paket:
 #   powershell -File convert.ps1 -StartTab delete
@@ -373,7 +373,7 @@ $btnConvert.Add_Click({
 # ══════════════════════════════════════════════════════════════════════
 
 $lblDeleteHint = New-Object System.Windows.Forms.Label
-$lblDeleteHint.Text = "Centang paket buat hapus. Pilih satu node lalu klik tombol ganti nama. Item kuning (folder hilang) sudah pasti aman dihapus."
+$lblDeleteHint.Text = "Centang paket buat hapus/pindah. Pilih satu node lalu klik tombol ganti nama. Item kuning (folder hilang) sudah pasti aman dihapus."
 $lblDeleteHint.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
 $lblDeleteHint.ForeColor = $colMuted
 $lblDeleteHint.Location = New-Object System.Drawing.Point(0, 0)
@@ -416,6 +416,18 @@ $btnRenamePackage.FlatStyle = "Flat"
 $btnRenamePackage.FlatAppearance.BorderColor = $colBorder
 $btnRenamePackage.Cursor = [System.Windows.Forms.Cursors]::Hand
 $panelDelete.Controls.Add($btnRenamePackage)
+
+$btnMovePackage = New-Object System.Windows.Forms.Button
+$btnMovePackage.Text = "Pindah Paket"
+$btnMovePackage.Location = New-Object System.Drawing.Point(376, 222)
+$btnMovePackage.Size = New-Object System.Drawing.Size(196, 32)
+$btnMovePackage.Font = New-Object System.Drawing.Font("Segoe UI", 8.5)
+$btnMovePackage.BackColor = $colBtnIdle
+$btnMovePackage.ForeColor = [System.Drawing.Color]::White
+$btnMovePackage.FlatStyle = "Flat"
+$btnMovePackage.FlatAppearance.BorderColor = $colBorder
+$btnMovePackage.Cursor = [System.Windows.Forms.Cursors]::Hand
+$panelDelete.Controls.Add($btnMovePackage)
 
 $btnRefresh = New-Object System.Windows.Forms.Button
 $btnRefresh.Text = "Muat Ulang"
@@ -634,6 +646,70 @@ $btnRenamePackage.Add_Click({
     Write-Log "[ mengganti nama paket `"$oldTitle`" -> `"$newTitle`" ]" "accent"
     Invoke-ManageScript "`"$deleteScriptPath`" --rename-package `"$id`" `"$newTitle`""
     Load-Tree
+})
+
+# Dialog pilih kategori tujuan: ComboBox (bukan InputBox) biar kategori yang
+# sudah ada tinggal dipilih, anti typo/beda kapital yang bikin kategori ke-split.
+function Show-CategoryPicker {
+    param([string]$prompt, [string]$exclude)
+    $dlg = New-Object System.Windows.Forms.Form
+    $dlg.Text = "Pindah Paket"
+    $dlg.ClientSize = New-Object System.Drawing.Size(380, 130)
+    $dlg.StartPosition = "CenterParent"
+    $dlg.FormBorderStyle = "FixedDialog"
+    $dlg.MaximizeBox = $false; $dlg.MinimizeBox = $false
+    $dlg.BackColor = $colBg; $dlg.ForeColor = [System.Drawing.Color]::White
+    $lbl = New-Object System.Windows.Forms.Label
+    $lbl.Text = $prompt
+    $lbl.Location = New-Object System.Drawing.Point(16, 12)
+    $lbl.Size = New-Object System.Drawing.Size(348, 36)
+    $dlg.Controls.Add($lbl)
+    $cmb = New-Object System.Windows.Forms.ComboBox
+    $cmb.Location = New-Object System.Drawing.Point(16, 52)
+    $cmb.Size = New-Object System.Drawing.Size(348, 24)
+    $cmb.Font = New-Object System.Drawing.Font("Consolas", 9)
+    $cmb.BackColor = $colPanelBg; $cmb.ForeColor = [System.Drawing.Color]::White
+    $cmb.FlatStyle = "Flat"
+    $cmb.AutoCompleteMode = "SuggestAppend"; $cmb.AutoCompleteSource = "ListItems"
+    foreach ($c in $cmbKategori.Items) { if ($c -ne $exclude) { $cmb.Items.Add($c) | Out-Null } }
+    $dlg.Controls.Add($cmb)
+    $ok = New-Object System.Windows.Forms.Button
+    $ok.Text = "Pindahkan"
+    $ok.Location = New-Object System.Drawing.Point(264, 90)
+    $ok.Size = New-Object System.Drawing.Size(100, 28)
+    $ok.BackColor = $colAccent; $ok.ForeColor = $colAccentTxt
+    $ok.FlatStyle = "Flat"; $ok.FlatAppearance.BorderSize = 0
+    $ok.DialogResult = "OK"
+    $dlg.Controls.Add($ok)
+    $dlg.AcceptButton = $ok
+    if ($dlg.ShowDialog($form) -ne "OK") { return "" }
+    return $cmb.Text.Trim()
+}
+
+$btnMovePackage.Add_Click({
+    # Paket yang dicentang (bisa banyak); kalau tidak ada, pakai paket yang dipilih.
+    $ids = @(); $titles = @(); $fromCat = ""
+    foreach ($catNode in $tree.Nodes) {
+        foreach ($leaf in $catNode.Nodes) {
+            if ($leaf.Checked -and $leaf.Tag -ne "info") { $ids += $leaf.Tag; $titles += $leaf.Name; $fromCat = $catNode.Name }
+        }
+    }
+    if ($ids.Count -eq 0) {
+        $node = $tree.SelectedNode
+        if (-not $node -or $node.Tag -eq "category" -or $node.Tag -eq "info") {
+            Write-Log "Centang atau pilih dulu paket yang mau dipindah." "error"; return
+        }
+        $ids = @($node.Tag); $titles = @($node.Name); $fromCat = $node.Parent.Name
+    }
+
+    $newCat = Show-CategoryPicker "Pindahkan $($ids.Count) paket ke kategori (pilih / ketik baru):" $fromCat
+    if (-not $newCat) { return }
+
+    $txtLog.Clear()
+    Write-Log "[ memindahkan $($ids.Count) paket -> `"$newCat`" ]" "accent"
+    Invoke-ManageScript "`"$deleteScriptPath`" --move-package `"$($ids -join ',')`" `"$newCat`""
+    Load-Tree
+    Load-Categories
 })
 
 # ── Buka di tab yang diminta ──────────────────────────────────────────────

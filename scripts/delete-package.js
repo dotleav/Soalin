@@ -23,6 +23,10 @@
 //   node scripts/delete-package.js --rename-package <id> <judul-baru>
 //       -> ganti judul satu paket (field "title" di manifest saja)
 //
+//   node scripts/delete-package.js --move-package <id1>,<id2>,... <kategori-baru>
+//       -> pindahkan paket ke kategori lain (field "category" di manifest
+//          saja, folder tidak disentuh; kategori baru boleh belum ada)
+//
 //   node scripts/delete-package.js --json
 //       -> output manifest dalam JSON mentah (dipakai convert.ps1 / GUI)
 //
@@ -123,6 +127,28 @@ async function main() {
     return;
   }
 
+  // ── Mode pindah paket ke kategori lain ────────────────────────────────
+  const movePkgIdx = args.indexOf("--move-package");
+  if (movePkgIdx !== -1) {
+    const ids = (args[movePkgIdx + 1] || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const newCat = (args[movePkgIdx + 2] || "").trim();
+    if (ids.length === 0 || !newCat) {
+      console.error("Pakai: node scripts/delete-package.js --move-package <id1>,<id2>,... <kategori-baru>");
+      process.exit(1);
+    }
+    let moved = 0;
+    for (const id of ids) {
+      const found = packages.find((p) => p.id === id);
+      if (!found) { console.log(`- (lewat) id tidak ada di manifest: ${id}`); continue; }
+      console.log(`✓ "${found.title}": [${found.category}] -> [${newCat}]`);
+      found.category = newCat;
+      moved++;
+    }
+    if (moved) writeManifest(packages);
+    console.log(`${moved} paket dipindah ke kategori "${newCat}".`);
+    return;
+  }
+
   const deleteFlagIdx = args.indexOf("--delete");
 
   // ── Mode lihat-lihat (tanpa argumen) ──────────────────────────────────────
@@ -151,6 +177,8 @@ async function main() {
     console.log("  node scripts/delete-package.js --rename-category <lama> <baru>");
     console.log("Cara ganti nama paket:");
     console.log("  node scripts/delete-package.js --rename-package <id> <judul-baru>");
+    console.log("Cara pindah paket ke kategori lain:");
+    console.log("  node scripts/delete-package.js --move-package <id1>,<id2>,... <kategori-baru>");
     console.log("Atau jalankan soalin.bat buat pilih lewat tampilan (GUI), lebih gampang.");
     return;
   }

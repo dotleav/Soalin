@@ -6,7 +6,7 @@
 export const packages = [
   {
     "id": "2h-persiapan-minites__cedera-kepala-trauma-medulla-spinalis",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Cedera Kepala & Trauma Medulla Spinalis",
     "file": "./data/packages/2h-persiapan-minites__cedera-kepala-trauma-medulla-spinalis/questions.js",
     "count": 30,
@@ -15,7 +15,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__epilepsi-bangkitan",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Epilepsi & Bangkitan",
     "file": "./data/packages/2h-persiapan-minites__epilepsi-bangkitan/questions.js",
     "count": 38,
@@ -24,7 +24,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__fisiologi-tidur-gangguan-tidur",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Fisiologi Tidur & Gangguan Tidur",
     "file": "./data/packages/2h-persiapan-minites__fisiologi-tidur-gangguan-tidur/questions.js",
     "count": 53,
@@ -33,7 +33,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__gangguan-cemas-dan-depresi-serta-gangguan-jiwa-lainnya-yang-",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Gangguan Cemas dan Depresi serta Gangguan Jiwa Lainnya yang Sering Didapatkan pada praktek dokter umum",
     "file": "./data/packages/2h-persiapan-minites__gangguan-cemas-dan-depresi-serta-gangguan-jiwa-lainnya-yang-/questions.js",
     "count": 40,
@@ -42,7 +42,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__gangguan-gerak-koordinasi",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Gangguan Gerak & Koordinasi",
     "file": "./data/packages/2h-persiapan-minites__gangguan-gerak-koordinasi/questions.js",
     "count": 46,
@@ -51,7 +51,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__gangguan-vestibular-neuro-oftalmologi",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Gangguan Vestibular Neuro oftalmologi",
     "file": "./data/packages/2h-persiapan-minites__gangguan-vestibular-neuro-oftalmologi/questions.js",
     "count": 59,
@@ -60,7 +60,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__infeksi-sistem-saraf",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Infeksi Sistem Saraf",
     "file": "./data/packages/2h-persiapan-minites__infeksi-sistem-saraf/questions.js",
     "count": 94,
@@ -69,7 +69,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__latihan-minites-1",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Latihan Minites 1",
     "file": "./data/packages/2h-persiapan-minites__latihan-minites-1/questions.js",
     "count": 24,
@@ -77,8 +77,17 @@ export const packages = [
     "source": "Latihan MINITEST_1_Neuro_Soalin.md_cropped.docx"
   },
   {
+    "id": "2h-persiapan-minites-1__minites-1",
+    "category": "2H - Persiapan Minites 1",
+    "title": "Minites 1",
+    "file": "./data/packages/2h-persiapan-minites-1__minites-1/questions.js",
+    "count": 30,
+    "convertedAt": "2026-10-02T15:11:16.397Z",
+    "source": "Minites 1 - 2H.docx"
+  },
+  {
     "id": "2h-persiapan-minites__neurobehavior-defisit-memori",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Neurobehavior & Defisit Memori",
     "file": "./data/packages/2h-persiapan-minites__neurobehavior-defisit-memori/questions.js",
     "count": 30,
@@ -87,7 +96,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__neuromuskular-autoimun-saraf-tepi",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Neuromuskular, Autoimun & Saraf Tepi",
     "file": "./data/packages/2h-persiapan-minites__neuromuskular-autoimun-saraf-tepi/questions.js",
     "count": 30,
@@ -96,7 +105,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__nyeri-nosiseptik-dkk",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Nyeri (Nosiseptik dkk)",
     "file": "./data/packages/2h-persiapan-minites__nyeri-nosiseptik-dkk/questions.js",
     "count": 35,
@@ -105,7 +114,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__nyeri-kepala",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Nyeri Kepala",
     "file": "./data/packages/2h-persiapan-minites__nyeri-kepala/questions.js",
     "count": 63,
@@ -114,7 +123,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__nyeri-punggung",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Nyeri punggung",
     "file": "./data/packages/2h-persiapan-minites__nyeri-punggung/questions.js",
     "count": 45,
@@ -123,7 +132,7 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__penurunan-kesadaran-delirium-ensefalopati",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Penurunan Kesadaran, Delirium & Ensefalopati",
     "file": "./data/packages/2h-persiapan-minites__penurunan-kesadaran-delirium-ensefalopati/questions.js",
     "count": 30,
@@ -131,26 +140,8 @@ export const packages = [
     "source": "Soal_Penurunan_Kesadaran_Delirium_Ensefalopati dr lothar.docx"
   },
   {
-    "id": "2h-persiapan-minites__promosi-dan-pencegahan-kesehatan-jiwa-fase-prodromal-serta-p",
-    "category": "2H - Persiapan Minites",
-    "title": "Promosi dan Pencegahan Kesehatan Jiwa, Fase Prodromal, serta Penemuan Dini Gangguan Jiwa.",
-    "file": "./data/packages/2h-persiapan-minites__promosi-dan-pencegahan-kesehatan-jiwa-fase-prodromal-serta-p/questions.js",
-    "count": 32,
-    "convertedAt": "2026-09-29T09:34:14.322Z",
-    "source": "Soal_promosi_prevensi_kesehatan_jiwa dr Anang.docx"
-  },
-  {
-    "id": "2h-persiapan-minites__simtomatologi-psikiatri-faktor-gangguan-jiwa",
-    "category": "2H - Persiapan Minites",
-    "title": "Simtomatologi Psikiatri & Faktor Gangguan Jiwa",
-    "file": "./data/packages/2h-persiapan-minites__simtomatologi-psikiatri-faktor-gangguan-jiwa/questions.js",
-    "count": 42,
-    "convertedAt": "2026-09-29T09:41:58.886Z",
-    "source": "Soal_Simtomatologi_Psikiatri_dr_johan.docx"
-  },
-  {
     "id": "2h-persiapan-minites__stroke-penyakit-serebrovaskular",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Stroke & Penyakit Serebrovaskular",
     "file": "./data/packages/2h-persiapan-minites__stroke-penyakit-serebrovaskular/questions.js",
     "count": 65,
@@ -159,12 +150,48 @@ export const packages = [
   },
   {
     "id": "2h-persiapan-minites__tetanus-rabies",
-    "category": "2H - Persiapan Minites",
+    "category": "2H - Persiapan Minites 1",
     "title": "Tetanus & Rabies",
     "file": "./data/packages/2h-persiapan-minites__tetanus-rabies/questions.js",
     "count": 30,
     "convertedAt": "2026-09-29T09:39:12.264Z",
     "source": "Soal_Tetanus_Rabies dr wiwik.docx"
+  },
+  {
+    "id": "2h-persiapan-minites-2__materi-dr-johan",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Materi dr Johan",
+    "file": "./data/packages/2h-persiapan-minites-2__materi-dr-johan/questions.js",
+    "count": 30,
+    "convertedAt": "2026-10-02T15:11:53.497Z",
+    "source": "Soal_Psikiatri_dr_Johan_cropped.docx"
+  },
+  {
+    "id": "2h-persiapan-minites-2__materi-dr-venny-punggus",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Materi dr Venny Punggus",
+    "file": "./data/packages/2h-persiapan-minites-2__materi-dr-venny-punggus/questions.js",
+    "count": 30,
+    "convertedAt": "2026-10-02T15:12:16.554Z",
+    "source": "Soal_Psikiatri_dr_Venny_Pungus_cropped.docx"
+  },
+  {
+    "id": "2h-persiapan-minites__promosi-dan-pencegahan-kesehatan-jiwa-fase-prodromal-serta-p",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Promosi dan Pencegahan Kesehatan Jiwa, Fase Prodromal, serta Penemuan Dini Gangguan Jiwa.",
+    "file": "./data/packages/2h-persiapan-minites__promosi-dan-pencegahan-kesehatan-jiwa-fase-prodromal-serta-p/questions.js",
+    "count": 32,
+    "convertedAt": "2026-09-29T09:34:14.322Z",
+    "source": "Soal_promosi_prevensi_kesehatan_jiwa dr Anang.docx"
+  },
+  {
+    "id": "2h-persiapan-minites__simtomatologi-psikiatri-faktor-gangguan-jiwa",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Simtomatologi Psikiatri & Faktor Gangguan Jiwa",
+    "file": "./data/packages/2h-persiapan-minites__simtomatologi-psikiatri-faktor-gangguan-jiwa/questions.js",
+    "count": 42,
+    "convertedAt": "2026-09-29T09:41:58.886Z",
+    "source": "Soal_Simtomatologi_Psikiatri_dr_johan.docx"
   },
   {
     "id": "2h-pa-1__latihan-pa-sist-saraf-gambar-v1",
