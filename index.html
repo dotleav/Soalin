@@ -1297,6 +1297,18 @@
   .brokenReveal .noImg {
     color: var(--muted2); font-size: 0.78rem; font-style: italic;
   }
+  .brokenExp { color: var(--text-secondary); font-size: 0.86rem; line-height: 1.65; margin: 0 0 8px; white-space: pre-line; }
+  .brokenCount { font-family: "JetBrains Mono", monospace; font-size: 0.72rem; color: var(--muted2); margin-left: auto; }
+  .brokenCard { min-height: 160px; }
+  .brokenCard .brokenQ { font-size: 1rem; }
+  .brokenNav { display: flex; gap: 10px; margin-top: 12px; }
+  .brokenNav button {
+    flex: 1; padding: 11px; border-radius: var(--radius-lg); cursor: pointer;
+    background: var(--card); color: var(--text); border: 1.5px solid var(--border);
+    font: inherit; font-size: 0.85rem; font-weight: 600;
+  }
+  .brokenNav button:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+  .brokenNav button:disabled { opacity: 0.35; cursor: default; }
 
   /* ── Soal Isian — jawaban singkat, tap-to-submit ── */
   .isianBadge {
@@ -3002,7 +3014,7 @@ async function convertDocx(buf) {
     return questions;
   }
 
-  // ── Bagian 2: tabel soal rusak | No | Soal Asli | Gambar Penjelasan | ──
+  // ── Bagian 2: tabel soal rusak | No | Soal Asli | Penjelasan (teks dan/atau gambar) | ──
   function parsePart2(tables, startingQNumber) {
     const broken = [];
     for (const rows of tables) {
@@ -3013,6 +3025,7 @@ async function convertDocx(buf) {
         const text = (i) => lines[i].map((l) => l.text).filter(Boolean).join(" ");
         const images = (i) => (lines[i] || []).flatMap((l) => l.images);
         const origNo = text(0), questionText = text(1);
+        const expText = (lines[2] || []).map((l) => l.text).filter(Boolean).join("\n");
         if (isFirstRow || /soal\s+asli|gambar\s+penjelasan/i.test(questionText) || /^no\.?$/i.test(origNo)) {
           isFirstRow = false;
           if (!/^\d+$/.test(origNo)) continue; // header, bukan baris data
@@ -3020,7 +3033,7 @@ async function convertDocx(buf) {
         if (!questionText) continue;
         broken.push({
           id: `QB${origNo || startingQNumber + broken.length + 1}`, category: "Soal Rusak", question: questionText,
-          questionImages: images(1), options: {}, answer: "", explanation: "", explanationImages: images(2), isBroken: true,
+          questionImages: images(1), options: {}, answer: "", explanation: expText, explanationImages: images(2), isBroken: true,
         });
       }
     }
@@ -3599,6 +3612,7 @@ function resetQuizStateForNewPackage() {
   tentamenAnswers = [];
   shuffleOrderCache = {};
   brokenRevealed.clear();
+  brokenIdx = 0;
   stopTentamenTimerLoop();
 }
 
@@ -3935,30 +3949,40 @@ window.addEventListener("beforeunload", (e) => {
 // ── State: soal rusak yang sudah di-tap (revealed) ────────────────────────
 const brokenRevealed = new Set(); // Set of q.id that have been tapped open
 
-// ── Render: kartu soal rusak (tap-to-reveal) ──────────────────────────────
-function renderBrokenCard(q, qNum) {
-  const isRevealed = brokenRevealed.has(q.id);
-  const hasImages = (q.explanationImages || []).length > 0;
-  const hasQImages = (q.questionImages || []).length > 0;
+// ── Render: flashcard soal rusak (1 kartu per layar, tap → penjelasan terbuka) ──
+let brokenIdx = 0;
+function renderBrokenDeck(list) {
+  const n = list.length;
+  brokenIdx = Math.min(Math.max(brokenIdx, 0), n - 1);
+  const q = list[brokenIdx];
+  const open = brokenRevealed.has(q.id);
+  const qImgs = q.questionImages || [], eImgs = q.explanationImages || [];
+  const hasExp = !!q.explanation || eImgs.length > 0;
 
-  const revealHtml = isRevealed ? `
+  const revealHtml = open ? `
     <div class="brokenReveal">
-      <div class="tag">🖼️ Gambar Penjelasan</div>
-      ${hasQImages ? (q.questionImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar soal">`).join("") : ""}
-      ${hasImages
-        ? (q.explanationImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")
-        : `<p class="noImg">(belum ada gambar penjelasan di dokumen ini)</p>`}
-    </div>
-  ` : "";
+      <div class="tag">\uD83D\uDCA1 Penjelasan</div>
+      ${q.explanation ? `<p class="brokenExp">${escapeHtml(q.explanation)}</p>` : ""}
+      ${eImgs.map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")}
+      ${hasExp ? "" : `<p class="noImg">(belum ada penjelasan di dokumen ini)</p>`}
+    </div>` : "";
 
   return `
-    <div class="brokenCard" data-broken-id="${escapeAttr(q.id)}">
-      <div class="brokenMeta">
-        <span class="brokenBadge">⚠️ Soal Rusak</span>
-        ${!isRevealed ? `<span class="tapHint">👆 Tap untuk lihat gambar</span>` : `<span class="tapHint">👆 Tap lagi untuk tutup</span>`}
+    <div class="brokenDeck">
+      <div class="brokenCard" data-broken-id="${escapeAttr(q.id)}">
+        <div class="brokenMeta">
+          <span class="brokenBadge">\u26A0\uFE0F Soal Rusak</span>
+          <span class="tapHint">${open ? "\uD83D\uDC46 Tap lagi untuk tutup" : "\uD83D\uDC46 Tap untuk lihat penjelasan"}</span>
+          <span class="brokenCount">${brokenIdx + 1} / ${n}</span>
+        </div>
+        <p class="brokenQ">${escapeHtml(q.question)}</p>
+        ${qImgs.map(src => `<img class="exImg" src="${src}" alt="gambar soal">`).join("")}
+        ${revealHtml}
       </div>
-      <p class="brokenQ"><span class="brokenNum">${qNum}.</span>${escapeHtml(q.question)}</p>
-      ${revealHtml}
+      <div class="brokenNav">
+        <button data-broken-nav="-1" ${brokenIdx === 0 ? "disabled" : ""}>\u2190 Sebelumnya</button>
+        <button data-broken-nav="1" ${brokenIdx === n - 1 ? "disabled" : ""}>Berikutnya \u2192</button>
+      </div>
     </div>
   `;
 }
@@ -4194,9 +4218,10 @@ function renderBiasaMode() {
   }
 
   html += `<div class="qList">`;
+  let deckShown = false;
   visible.forEach((q, idx) => {
     if (q.isBroken) {
-      html += renderBrokenCard(q, idx + 1);
+      if (!deckShown) { html += renderBrokenDeck(allQ.filter(x => x.isBroken)); deckShown = true; }
     } else if (q.isIsian) {
       html += renderIsianCard(q, idx + 1, biasaAnswersMap[q.id]);
     } else {
@@ -4626,6 +4651,13 @@ function attachHandlers() {
       } else {
         brokenRevealed.add(id);
       }
+      render();
+    });
+  });
+
+  app.querySelectorAll("[data-broken-nav]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      brokenIdx += Number(btn.dataset.brokenNav);
       render();
     });
   });

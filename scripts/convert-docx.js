@@ -21,10 +21,11 @@
 // === BAGIAN 2 — Soal Rusak ===
 // (heading H2: "Bagian 2" atau mengandung "Gagal Diperbaiki")
 // Berupa tabel dengan 3 kolom:
-//   | No | Soal Asli (dari rekapan) | Gambar Penjelasan |
+//   | No | Soal Asli (dari rekapan) | Penjelasan |
 //
+// Kolom "Penjelasan" boleh berisi teks, gambar, atau campuran keduanya.
 // Soal rusak di-output sebagai { isBroken: true } — di app ditampilkan
-// sebagai kartu tap-to-reveal (tekan kartu → gambar penjelasan muncul).
+// sebagai flashcard (1 kartu per layar, tekan kartu → penjelasan terbuka).
 //
 // ID soal akan dibuat otomatis (Q1, Q2, ...) kecuali kamu menulis baris
 // "ID: namaID" tepat sebelum nomor soal.
@@ -492,7 +493,13 @@ function parsePart1(html) {
 
 // --- 5. Parse Bagian 2 — tabel soal rusak ---
 // Kolom: 0=No, 1=Soal Asli, 2=Gambar Penjelasan
-// Output: { id, question, explanationImages, isBroken: true }
+// Output: { id, question, explanation, explanationImages, isBroken: true }
+
+// Teks sel tabel, paragraf dipisah \n (cleanText biasa menggabung semuanya).
+function cellText(fragment) {
+  return cleanText(fragment.replace(/<\/p>|<br\s*\/?>/gi, "\n"))
+    .split("\n").map((l) => l.trim()).filter(Boolean).join("\n");
+}
 
 function parsePart2(html, startingQNumber) {
   const brokenQuestions = [];
@@ -533,10 +540,11 @@ function parsePart2(html, startingQNumber) {
 
       // col 0: number (used as original question number reference)
       // col 1: broken question text
-      // col 2: explanation image(s)
+      // col 2: explanation (teks dan/atau gambar)
       const origNo = firstCellText;
       const questionText = secondCellText;
       const explanationImages = cells[2] ? extractImages(cells[2]) : [];
+      const explanation = cells[2] ? cellText(cells[2]) : "";
       // Also grab any images from question cell itself
       const questionImages = extractImages(cells[1] || "");
 
@@ -550,7 +558,7 @@ function parsePart2(html, startingQNumber) {
         questionImages,
         options: {},
         answer: "",
-        explanation: "",
+        explanation,
         explanationImages,
         isBroken: true,
       });
@@ -633,8 +641,8 @@ const fileContent = `// File ini DIBUAT OTOMATIS oleh scripts/convert-docx.js da
 // Untuk soal manual tambahan, edit array di bawah ini langsung (boleh kok).
 //
 // Soal dengan isBroken: true = soal rusak dari Bagian 2 (tabel).
-// Di app ditampilkan sebagai kartu tap-to-reveal — tekan kartu untuk melihat
-// gambar penjelasan (explanationImages).
+// Di app ditampilkan sebagai flashcard — tekan kartu untuk melihat
+// penjelasan (teks di 'explanation' dan/atau gambar di 'explanationImages').
 //
 // Soal dengan isIsian: true = soal isian dari Bagian 3 (tabel).
 // Di app ditampilkan sebagai kartu jawaban-singkat: textarea + tombol kirim,
