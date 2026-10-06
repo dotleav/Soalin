@@ -158,6 +158,15 @@ export const packages = [
     "source": "Soal_Tetanus_Rabies dr wiwik.docx"
   },
   {
+    "id": "2h-persiapan-minites-2__latihan-mungkin-gak-keluar-materi-nya-belajar-buat-ub-aja-in",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Latihan [mungkin gak keluar materi nya, belajar buat UB aja ini]",
+    "file": "./data/packages/2h-persiapan-minites-2__latihan-mungkin-gak-keluar-materi-nya-belajar-buat-ub-aja-in/questions.js",
+    "count": 30,
+    "convertedAt": "2026-10-06T15:51:49.225Z",
+    "source": "Soal_Kasus_Blok2H_Binder2 (1).docx"
+  },
+  {
     "id": "2h-persiapan-minites-2__materi-dr-johan",
     "category": "2H - Persiapan Minites 2",
     "title": "Materi dr Johan",
