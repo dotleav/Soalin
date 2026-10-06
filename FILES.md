@@ -13,6 +13,7 @@
 | Mode Tentamen (setup/running/hasil) | `js/render-tentamen.js` |
 | Pemilih paket, pengaturan, kartu Custom Quiz | `js/render-picker.js` |
 | render() utama + event listener + boot | `js/main.js` |
+| Kontrol gamepad / controller | `js/gamepad.js` |
 | Warna/token dasar, tema terang, komponen | `css/base.css`, `css/components.css` |
 
 Urutan load di `index.html` wajib sama: semua `js/*.js` skrip klasik (bukan module), saling berbagi variabel global.

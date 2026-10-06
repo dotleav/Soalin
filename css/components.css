@@ -601,3 +601,6 @@
     border: 2px solid var(--card); box-shadow: 0 0 0 1px var(--border); cursor: pointer;
   }
   .volumeSlider::-moz-range-track { background: var(--border-light); height: 6px; border-radius: 999px; }
+
+  /* ── Gamepad: ring fokus ── */
+  #app .padFocus { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
