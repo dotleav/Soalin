@@ -176,6 +176,15 @@ export const packages = [
     "source": "Soal_Psikiatri_dr_Venny_Pungus_cropped.docx"
   },
   {
+    "id": "2h-persiapan-minites-2__minites2-2h-2021-2022-crop-fixed",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Minites2 2H 2021-2022 [Crop Fixed]",
+    "file": "./data/packages/2h-persiapan-minites-2__minites2-2h-2021-2022-crop-fixed/questions.js",
+    "count": 111,
+    "convertedAt": "2026-10-05T17:39:44.747Z",
+    "source": "Soalin_Minites2_2H_2021-2022_cropped.docx"
+  },
+  {
     "id": "2h-persiapan-minites__promosi-dan-pencegahan-kesehatan-jiwa-fase-prodromal-serta-p",
     "category": "2H - Persiapan Minites 2",
     "title": "Promosi dan Pencegahan Kesehatan Jiwa, Fase Prodromal, serta Penemuan Dini Gangguan Jiwa.",
