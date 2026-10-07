@@ -212,6 +212,15 @@ export const packages = [
     "source": "Soal_Simtomatologi_Psikiatri_dr_johan.docx"
   },
   {
+    "id": "2h-persiapan-minites-2__soal-full-materi-psikiatri-v1",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Soal full materi psikiatri v1",
+    "file": "./data/packages/2h-persiapan-minites-2__soal-full-materi-psikiatri-v1/questions.js",
+    "count": 56,
+    "convertedAt": "2026-10-07T17:13:52.397Z",
+    "source": "Soal_Kasus_Psikiatri_Binder3 (2).docx"
+  },
+  {
     "id": "2h-pa-1__latihan-pa-sist-saraf-gambar-v1",
     "category": "2H PA - Sistem Saraf",
     "title": "Latihan PA 2H - Bergambar V1",
