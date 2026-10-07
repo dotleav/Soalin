@@ -156,7 +156,7 @@ async function convertDocx(buf) {
   const flat = (bl) => bl.flatMap((b) => (b.tbl ? b.tbl.flat().flatMap(flat) : [b]));
   const paraLines = (b) => b.skip ? [] : b.segs
     .map((s, i) => ({ text: s.text.trim(), images: s.imgs.filter((k) => blobs[k]), isHeading: b.heading, isListItem: b.ordered && i === 0 }))
-    .filter((l) => l.text || l.images.length);
+    .filter((l) => (l.text || l.images.length) && !/^Sumber\s*:/i.test(l.text)); // baris "Sumber:" (rujukan hal. PPT) diabaikan
 
   // Bagian 2 = mulai dari heading "Bagian 2"/"Gagal Diperbaiki" terakhir; tanpa heading itu, mulai dari tabel pertama.
   // Bagian 3 = mulai dari heading "Bagian 3"/"Soal Isian" terakhir (kalau ada).

@@ -386,6 +386,7 @@ function parsePart1(html) {
   const answerLine = /^(?:Kunci\s*Jawaban|Jawaban\s*Kunci|Kunci|Jawaban)\s*:?\s*([A-Ea-e])\b.*$/i;
   const explanationLine = /^Penjelasan\s*:?\s*(.*)$/i;
   const categoryLine = /^Kategori\s*:\s*(.+)$/i;
+  const sumberLine = /^Sumber\s*:/i; // rujukan hal. PPT, bukan bagian soal
 
   function pushCurrent() {
     if (current) questions.push(current);
@@ -394,6 +395,8 @@ function parsePart1(html) {
 
   for (const line of lines) {
     const { text, images, isHeading, isListItem } = line;
+
+    if (sumberLine.test(text)) continue;
 
     if (isHeading) {
       currentCategory = text;
@@ -498,7 +501,7 @@ function parsePart1(html) {
 // Teks sel tabel, paragraf dipisah \n (cleanText biasa menggabung semuanya).
 function cellText(fragment) {
   return cleanText(fragment.replace(/<\/p>|<br\s*\/?>/gi, "\n"))
-    .split("\n").map((l) => l.trim()).filter(Boolean).join("\n");
+    .split("\n").map((l) => l.trim()).filter((l) => l && !/^Sumber\s*:/i.test(l)).join("\n");
 }
 
 function parsePart2(html, startingQNumber) {
