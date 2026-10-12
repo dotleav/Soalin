@@ -167,6 +167,33 @@ export const packages = [
     "source": "Soal_Kasus_Blok2H_Binder2 (1).docx"
   },
   {
+    "id": "2h-persiapan-minites-2__latihan-soal-kasus2-psikiatri-all-in-one-semua-materi-9-dokt",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Latihan soal kasus2 psikiatri all in one (semua materi 9 dokter SpKJ)",
+    "file": "./data/packages/2h-persiapan-minites-2__latihan-soal-kasus2-psikiatri-all-in-one-semua-materi-9-dokt/questions.js",
+    "count": 110,
+    "convertedAt": "2026-10-12T10:21:15.436Z",
+    "source": "Soalin_Psikiatri_MCQ.docx"
+  },
+  {
+    "id": "2h-persiapan-minites-2__latihan-soal-materi-dr-exnacius",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Latihan soal Materi dr Exnacius",
+    "file": "./data/packages/2h-persiapan-minites-2__latihan-soal-materi-dr-exnacius/questions.js",
+    "count": 35,
+    "convertedAt": "2026-10-12T10:14:29.650Z",
+    "source": "Soalin materi dr. Exnacius.docx"
+  },
+  {
+    "id": "2h-persiapan-minites-2__latihan-soal-materi-dr-heppi",
+    "category": "2H - Persiapan Minites 2",
+    "title": "Latihan soal Materi dr heppi",
+    "file": "./data/packages/2h-persiapan-minites-2__latihan-soal-materi-dr-heppi/questions.js",
+    "count": 77,
+    "convertedAt": "2026-10-12T10:14:11.952Z",
+    "source": "Soalin_Materi_Heppi_Lengkap.docx"
+  },
+  {
     "id": "2h-persiapan-minites-2__materi-dr-johan",
     "category": "2H - Persiapan Minites 2",
     "title": "Materi dr Johan",
