@@ -2,6 +2,12 @@
 function render() {
   syncThemeClass();
 
+  if (mpScreen) {
+    app.innerHTML = renderMultiplayerScreen();
+    attachMultiplayerHandlers();
+    return;
+  }
+
   if (pickerOpen || !allQuestions || allQuestions.length === 0) {
     app.innerHTML = renderPickerScreen();
     attachPickerHandlers();

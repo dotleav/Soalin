@@ -24,6 +24,16 @@ function renderSettingsCard() {
 
       <div class="settingsRow">
         <div class="settingsRowText">
+          <span class="settingsRowTitle">\uD83C\uDFAE Multiplayer</span>
+          <span class="settingsRowDesc">Main bareng: masukkan kode room dari host</span>
+        </div>
+        <button class="themeModeToggle" id="mpOpenBtn" aria-label="Buka multiplayer">
+          <span class="themeModeChevron">\u203A</span>
+        </button>
+      </div>
+
+      <div class="settingsRow">
+        <div class="settingsRowText">
           <span class="settingsRowTitle themeModeTitle">${current.icon} Mode UI: ${current.label}</span>
           <span class="settingsRowDesc">Pilih tampilan!</span>
         </div>
@@ -170,6 +180,13 @@ function attachPickerHandlers() {
   if (replaceBtn) replaceBtn.addEventListener("click", () => docxInput.click());
   const deleteBtn = document.getElementById("customDeleteBtn");
   if (deleteBtn) deleteBtn.addEventListener("click", deleteCustom);
+
+  const mpOpenBtn = document.getElementById("mpOpenBtn");
+  if (mpOpenBtn) mpOpenBtn.addEventListener("click", () => {
+    mpScreen = "join";
+    mpError = "";
+    render();
+  });
 
   const themeModeToggleBtn = document.getElementById("themeModeToggleBtn");
   if (themeModeToggleBtn) themeModeToggleBtn.addEventListener("click", () => {
