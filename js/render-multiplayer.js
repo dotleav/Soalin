@@ -3,6 +3,13 @@ function mpErrorHtml() {
   return mpError ? `<div class="mpError">${escapeHtml(mpError)}</div>` : "";
 }
 
+function mpModeLabel(meta) {
+  const c = DIFFICULTY_CONFIG[meta.difficulty] || DIFFICULTY_CONFIG.bekicot;
+  return meta.timerSeconds
+    ? `${c.label} · ${meta.timerSeconds} dtk/soal (otomatis)`
+    : `${c.label} · buka jawaban manual`;
+}
+
 function renderMultiplayerScreen() {
   if (mpScreen === "join") return renderMpJoin();
   if (mpScreen === "name") return renderMpName();
@@ -10,6 +17,11 @@ function renderMultiplayerScreen() {
 }
 
 function renderMpJoin() {
+  const chips = Object.keys(DIFFICULTY_CONFIG).map((k) => {
+    const c = DIFFICULTY_CONFIG[k];
+    const on = mpDiff === k;
+    return `<button class="mpChip${on ? " on" : ""}" data-mp-act="pickdiff" data-diff="${k}" style="${on ? `border-color:${c.color}` : ""}">${escapeHtml(c.label)} · ${c.timerSeconds ? c.timerSeconds + " dtk" : "manual"}</button>`;
+  }).join("");
   return `
     <main class="wrap">
       <div class="mpCard">
@@ -20,8 +32,9 @@ function renderMpJoin() {
         ${mpErrorHtml()}
         <button class="mpPrimary" data-mp-act="verify" ${mpBusy ? "disabled" : ""}>${mpBusy ? "Mengecek\u2026" : "Lanjut"}</button>
         <div class="mpDivider"></div>
-        <p class="mpSub">Kamu host?</p>
-        <button class="mpSecondary" data-mp-act="create" ${mpBusy ? "disabled" : ""}>Buat room baru (mode bekicot)</button>
+        <p class="mpSub">Kamu host? Pilih tingkat kesulitan:</p>
+        <div class="mpPlayers">${chips}</div>
+        <button class="mpSecondary" data-mp-act="create" ${mpBusy ? "disabled" : ""}>Buat room baru</button>
       </div>
     </main>`;
 }
@@ -70,7 +83,7 @@ function renderMpRoom() {
   else if (phase === "ended") body = renderMpEnded();
   else body = renderMpPlaying();
 
-  const hostFooter = mpIsHost
+  const footer = mpIsHost
     ? `<button class="mpDanger" data-mp-act="close">Tutup room</button>`
     : `<button class="mpLinkBtn" data-mp-act="leave">Keluar room</button>`;
 
@@ -80,7 +93,7 @@ function renderMpRoom() {
         ${header}
         ${mpErrorHtml()}
         ${body}
-        <div class="mpFooter">${hostFooter}</div>
+        <div class="mpFooter">${footer}</div>
       </div>
     </main>`;
 }
@@ -89,7 +102,8 @@ function renderMpLobby() {
   const names = Object.values(mpRoom.players || {}).map((p) => p.name);
   const chips = names.map((n) => `<span class="mpChip">${escapeHtml(n)}</span>`).join("");
   return `
-    <p class="mpSub">${escapeHtml(mpRoom.meta.title)} \u00B7 ${mpRoom.meta.count} soal \u00B7 mode bekicot</p>
+    <p class="mpSub">${escapeHtml(mpRoom.meta.title)} \u00B7 ${mpRoom.meta.count} soal</p>
+    <p class="mpSub">${escapeHtml(mpModeLabel(mpRoom.meta))}</p>
     <div class="sectionLabel">Pemain (${names.length})</div>
     <div class="mpPlayers">${chips || `<span class="mpSub">Belum ada pemain</span>`}</div>
     ${mpIsHost
@@ -113,21 +127,33 @@ function renderMpPlaying() {
   const answeredCount = Object.keys(picks).length;
   const letters = Object.keys(q.options || {}).sort();
 
+  const rem = mpRemaining();
+  const timed = rem !== null;
+  const timedOut = timed && rem === 0;
+  const timerHtml = timed ? `
+    <div class="mpTimer mono">${Math.ceil(rem / 1000)} dtk</div>
+    <div class="mpTimerTrack"><div class="mpTimerFill" style="width:${(rem / (mpTimerSec() * 1000)) * 100}%"></div></div>` : "";
+
   const options = letters.map((l) => {
-    const cls = ["option"];
+    const cls = ["option", "mpOpt"];
     if (rev) {
       if (l === rev.answer) cls.push("correct");
       else if (l === my) cls.push("wrong");
     }
     if (!mpIsHost && my === l) cls.push("picked");
-    const disabled = mpIsHost || rev || my !== undefined;
+    const disabled = mpIsHost || rev || my !== undefined || timedOut;
+    const pct = playerCount ? Math.round(((pickCount[l] || 0) / playerCount) * 100) : 0;
     return `
       <button class="${cls.join(" ")}" data-mp-act="answer" data-letter="${l}" ${disabled ? "disabled" : ""}>
+        ${mpIsHost ? `<span class="mpBar" style="width:${pct}%"></span>` : ""}
         <span class="letter">${l}</span>
         <span class="optText">${escapeHtml(q.options[l])}</span>
         ${mpIsHost ? `<span class="mpCount mono">${pickCount[l] || 0}</span>` : ""}
       </button>`;
   }).join("");
+
+  const qImgs = (q.questionImages || []).map((src) => `<img class="qImg" src="${escapeAttr(src)}" alt="gambar soal">`).join("");
+  const eImgs = (rev?.explanationImages || []).map((src) => `<img class="exImg" src="${escapeAttr(src)}" alt="gambar penjelasan">`).join("");
 
   let feedback = "";
   if (!mpIsHost) {
@@ -136,7 +162,9 @@ function renderMpPlaying() {
       else if (my === rev.answer) feedback = `<div class="mpFeedback ok">\u2705 Benar!</div>`;
       else feedback = `<div class="mpFeedback bad">\u274C Salah. Jawaban yang benar: <b>${escapeHtml(rev.answer)}</b></div>`;
     } else if (my !== undefined) {
-      feedback = `<div class="mpFeedback">Jawabanmu terkirim. Menunggu host membuka jawaban\u2026</div>`;
+      feedback = `<div class="mpFeedback">Jawabanmu terkirim. Menunggu jawaban dibuka\u2026</div>`;
+    } else if (timedOut) {
+      feedback = `<div class="mpFeedback">Waktu habis. Menunggu jawaban dibuka\u2026</div>`;
     }
   }
   const explain = rev?.explanation ? `<div class="mpExplain">${escapeHtml(rev.explanation)}</div>` : "";
@@ -149,6 +177,7 @@ function renderMpPlaying() {
     hostControls = `
       <div class="mpHostInfo mono">${answeredCount}/${playerCount} sudah menjawab</div>
       ${names ? `<div class="mpSub mpPicks">${names}</div>` : ""}
+      ${timed ? `<div class="mpSub">Otomatis: jawaban dibuka saat waktu habis.</div>` : ""}
       ${rev
         ? `<button class="mpPrimary" data-mp-act="next">${i + 1 < total ? "Soal berikutnya \u2192" : "Selesai \u00B7 lihat skor"}</button>`
         : `<button class="mpPrimary" data-mp-act="reveal">\uD83D\uDC41 Tampilkan jawaban</button>`}`;
@@ -156,9 +185,12 @@ function renderMpPlaying() {
 
   return `
     <div class="mpProgress mono">Soal ${i + 1} / ${total}</div>
+    ${timerHtml}
     <div class="mpQuestion">${escapeHtml(q.question)}</div>
+    ${qImgs}
     <div class="options">${options}</div>
     ${feedback}
+    ${eImgs}
     ${explain}
     ${hostControls}`;
 }

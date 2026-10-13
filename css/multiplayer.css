@@ -28,3 +28,19 @@
 .mpCount { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--card-soft); }
 .mpRow { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
 .mpFooter { display: flex; justify-content: center; margin-top: 4px; }
+.mpChip { background: var(--card-soft); color: var(--text); border: 1px solid var(--border); font: inherit; font-size: 0.8rem; cursor: pointer; }
+.mpChip.on { background: var(--accent-soft); color: var(--text); font-weight: 700; }
+.mpOpt { position: relative; overflow: hidden; }
+.mpBar { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent-soft); transition: width 0.4s ease; pointer-events: none; }
+.mpOpt > .letter, .mpOpt > .optText, .mpOpt > .mpCount { position: relative; }
+.mpCount { margin-left: auto; padding: 2px 8px; border-radius: 999px; background: var(--card-soft); animation: mpPop 0.35s ease; }
+.option.picked { animation: mpPop 0.35s ease; }
+.mpTimer { font-size: 1.5rem; font-weight: 700; text-align: center; color: var(--accent); }
+.mpTimerTrack { height: 8px; background: var(--card-soft); border-radius: 999px; overflow: hidden; }
+.mpTimerFill { height: 100%; background: var(--accent); transition: width 0.5s linear; }
+.qImg, .exImg { max-width: 100%; border-radius: var(--radius-sm); }
+@keyframes mpPop {
+  0% { transform: scale(0.92); opacity: 0.4; }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}

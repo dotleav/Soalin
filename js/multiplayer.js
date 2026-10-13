@@ -1,7 +1,7 @@
 // ── Multiplayer: kuis bersama (Firebase Realtime Database + Anonymous Auth) ──
-// Khusus mode bekicot: tanpa timer. Jawaban pemain disembunyikan sampai host
-// menekan "Tampilkan jawaban". Hasil tidak disimpan; room dihapus host lewat
-// "Tutup room". Kunci jawaban hanya ditulis ke database saat reveal.
+// Mode mengikuti tingkat kesulitan tentamen: bekicot = manual reveal (tanpa timer),
+// mode lain = timer per soal, jawaban dibuka otomatis saat waktu habis.
+// Hasil tidak disimpan; room dihapus host lewat "Tutup room".
 
 let mpScreen = null;      // null | "join" | "name" | "room"
 let mpBusy = false;
@@ -11,16 +11,30 @@ let mpAuthPromise = null;
 let mpRoomCode = "";
 let mpPendingCode = "";
 let mpIsHost = false;
+let mpDiff = "bekicot";   // tingkat kesulitan yang dipilih host saat buat room
+let mpServerOffset = 0;   // selisih jam server vs perangkat (ms)
 let mpRoom = { meta: null, state: null, questions: [], players: {}, reveal: {}, answers: {} };
 let mpLocalQs = [];       // host saja: soal lengkap dengan kunci
 let mpMyAnswers = {};     // pemain: index soal -> huruf (disimpan per room)
 let mpListeners = [];     // [ref, cb] untuk dilepas saat keluar room
+let mpHostTimer = null;   // host: timer auto reveal / auto next
+let mpTickHandle = null;  // render ulang tiap 500ms untuk hitung mundur
 const MP_NAME_KEY = "soalin-mp-name";
 const MP_CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
 function mpDb() { return firebase.database(); }
 function mpArr(v) { return Array.isArray(v) ? v : Object.values(v || {}); }
 function mpAnswersKey() { return `soalin-mp-answers-${mpRoomCode}`; }
+function mpNow() { return Date.now() + mpServerOffset; }
+function mpTimerSec() { return mpRoom.meta?.timerSeconds || 0; }
+
+// Sisa waktu soal aktif (ms). null = mode tanpa timer.
+function mpRemaining() {
+  const st = mpRoom.state;
+  const timer = mpTimerSec();
+  if (!st || !timer || st.phase !== "playing") return null;
+  return Math.max(0, (st.startedAt || mpNow()) + timer * 1000 - mpNow());
+}
 
 function mpInit() {
   if (mpAuthPromise) return mpAuthPromise;
@@ -30,6 +44,7 @@ function mpInit() {
       return;
     }
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    firebase.database().ref(".info/serverTimeOffset").on("value", (s) => { mpServerOffset = s.val() || 0; });
     firebase.auth().onAuthStateChanged((user) => {
       if (user) { mpUid = user.uid; resolve(user.uid); }
     });
@@ -50,6 +65,7 @@ async function mpCreateRoom() {
   if (!activePackage || activePackage.custom) throw new Error("Pilih paket soal biasa dulu (kuis custom belum didukung multiplayer)");
   const qs = allQuestions.filter((q) => !q.isBroken && !q.isIsian);
   if (!qs.length) throw new Error("Paket ini tidak punya soal pilihan ganda");
+  const cfg = DIFFICULTY_CONFIG[mpDiff] || DIFFICULTY_CONFIG.bekicot;
 
   let code = mpGenCode();
   for (let t = 0; t < 10; t++) {
@@ -58,9 +74,15 @@ async function mpCreateRoom() {
     code = mpGenCode();
   }
 
-  // Hanya teks soal + opsi yang dikirim. Kunci & penjelasan tidak ikut.
+  // Hanya teks, opsi, dan gambar soal yang dikirim. Kunci & penjelasan tidak ikut.
   const publicQs = {};
-  qs.forEach((q, i) => { publicQs[i] = { question: q.question || "", options: q.options || {} }; });
+  qs.forEach((q, i) => {
+    publicQs[i] = {
+      question: q.question || "",
+      options: q.options || {},
+      questionImages: (q.questionImages || []).filter((s) => typeof s === "string"),
+    };
+  });
 
   await mpDb().ref().update({
     [`rooms/${code}/meta`]: {
@@ -68,7 +90,8 @@ async function mpCreateRoom() {
       packageId: activePackage.id,
       title: activePackage.title,
       count: qs.length,
-      mode: "bekicot",
+      difficulty: mpDiff,
+      timerSeconds: cfg.timerSeconds,
       createdAt: firebase.database.ServerValue.TIMESTAMP,
     },
     [`rooms/${code}/state`]: { phase: "lobby", currentIdx: 0, revealed: false },
@@ -119,6 +142,9 @@ async function mpEnterRoom(code, asHost) {
   mpIsHost = asHost;
   try { mpMyAnswers = JSON.parse(localStorage.getItem(mpAnswersKey()) || "{}"); } catch { mpMyAnswers = {}; }
   mpAttachListeners();
+  mpTickHandle = setInterval(() => {
+    if (mpScreen === "room" && mpRemaining() !== null) render();
+  }, 500);
   mpScreen = "room";
   mpBusy = false;
   render();
@@ -141,9 +167,13 @@ function mpAttachListeners() {
       render();
     } else {
       mpRoom.meta = v;
+      if (mpIsHost) mpHostSchedule();
     }
   });
-  mpOn("state", (v) => { mpRoom.state = v || { phase: "lobby", currentIdx: 0 }; });
+  mpOn("state", (v) => {
+    mpRoom.state = v || { phase: "lobby", currentIdx: 0 };
+    if (mpIsHost) mpHostSchedule();
+  });
   mpOn("questions", (v) => { mpRoom.questions = mpArr(v); });
   mpOn("players", (v) => { mpRoom.players = v || {}; });
   mpOn("reveal", (v) => { mpRoom.reveal = v || {}; });
@@ -153,6 +183,10 @@ function mpAttachListeners() {
 function mpDetachListeners() {
   mpListeners.forEach(([ref, cb]) => ref.off("value", cb));
   mpListeners = [];
+  clearTimeout(mpHostTimer);
+  mpHostTimer = null;
+  clearInterval(mpTickHandle);
+  mpTickHandle = null;
 }
 
 function mpLeave() {
@@ -176,6 +210,7 @@ function mpLeave() {
 function mpAnswer(letter) {
   const i = mpRoom.state.currentIdx;
   if (mpIsHost || mpRoom.reveal?.[i] || mpMyAnswers[i] !== undefined) return;
+  if (mpRemaining() === 0) return; // waktu habis
   mpMyAnswers[i] = letter;
   try { localStorage.setItem(mpAnswersKey(), JSON.stringify(mpMyAnswers)); } catch { /* noop */ }
   mpDb().ref(`rooms/${mpRoomCode}/answers/${i}/${mpUid}`).set(letter).catch((err) => {
@@ -198,23 +233,53 @@ function mpMyScore() {
 
 // ── Aksi host ─────────────────────────────────────────────────────────────
 function mpHostStart() {
-  return mpDb().ref(`rooms/${mpRoomCode}/state`).update({ phase: "playing", currentIdx: 0, revealed: false });
+  return mpDb().ref(`rooms/${mpRoomCode}/state`).update({
+    phase: "playing", currentIdx: 0, revealed: false, startedAt: mpNow(),
+  });
 }
 
-function mpHostReveal() {
-  const i = mpRoom.state.currentIdx;
+// fromIdx: hanya buka jawaban kalau soal yang sedang tampil masih soal ini
+async function mpHostReveal(fromIdx) {
+  const st = mpRoom.state;
+  const i = st.currentIdx;
+  if (fromIdx !== undefined && fromIdx !== i) return;
+  if (st.revealed) return;
   const q = mpLocalQs[i];
-  return mpDb().ref().update({
-    [`rooms/${mpRoomCode}/reveal/${i}`]: { answer: q.answer || "", explanation: q.explanation || "" },
+  await mpDb().ref().update({
+    [`rooms/${mpRoomCode}/reveal/${i}`]: {
+      answer: q.answer || "",
+      explanation: q.explanation || "",
+      explanationImages: (q.explanationImages || []).filter((s) => typeof s === "string"),
+    },
     [`rooms/${mpRoomCode}/state/revealed`]: true,
   });
 }
 
-function mpHostNext() {
-  const i = mpRoom.state.currentIdx;
-  const ref = mpDb().ref(`rooms/${mpRoomCode}/state`);
-  if (i + 1 >= mpLocalQs.length) return ref.update({ phase: "ended", revealed: true });
-  return ref.update({ currentIdx: i + 1, revealed: false });
+// Transaction supaya tidak loncat dua soal kalau auto-next dan tombol manual bersamaan
+function mpHostNext(fromIdx) {
+  const count = mpRoom.meta.count;
+  return mpDb().ref(`rooms/${mpRoomCode}/state`).transaction((st) => {
+    if (!st || st.phase !== "playing") return;
+    if (fromIdx !== undefined && st.currentIdx !== fromIdx) return;
+    if (st.currentIdx + 1 >= count) return { ...st, phase: "ended", revealed: true };
+    return { ...st, currentIdx: st.currentIdx + 1, revealed: false, startedAt: mpNow() };
+  });
+}
+
+// Mode timer: host otomatis buka jawaban saat waktu habis, lalu lanjut 2 detik kemudian
+function mpHostSchedule() {
+  clearTimeout(mpHostTimer);
+  mpHostTimer = null;
+  const st = mpRoom.state;
+  const timer = mpTimerSec();
+  if (!mpIsHost || !st || !timer || st.phase !== "playing") return;
+  const i = st.currentIdx;
+  if (!st.revealed) {
+    const wait = (st.startedAt || mpNow()) + timer * 1000 - mpNow();
+    mpHostTimer = setTimeout(() => mpHostReveal(i).catch(console.error), Math.max(0, wait));
+  } else {
+    mpHostTimer = setTimeout(() => mpHostNext(i).catch(console.error), 2000);
+  }
 }
 
 function mpHostClose() {
@@ -245,6 +310,9 @@ async function mpAct(act, el) {
         mpScreen = null;
         pickerOpen = true;
         break;
+      case "pickdiff":
+        mpDiff = el.dataset.diff;
+        break;
       case "create":
         mpBusy = true; render();
         await mpCreateRoom();
@@ -265,7 +333,7 @@ async function mpAct(act, el) {
       }
       case "start": await mpHostStart(); break;
       case "reveal": await mpHostReveal(); break;
-      case "next": await mpHostNext(); break;
+      case "next": await mpHostNext(mpRoom.state.currentIdx); break;
       case "close":
         if (confirm("Tutup room? Semua pemain akan keluar.")) await mpHostClose();
         break;
