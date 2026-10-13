@@ -275,6 +275,33 @@ export const packages = [
     "source": "Soal_Tumor_SSP.docx"
   },
   {
+    "id": "2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v4",
+    "category": "2H PA - Sistem Saraf",
+    "title": "Latihan PA 2H - Bergambar V4",
+    "file": "./data/packages/2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v4/questions.js",
+    "count": 25,
+    "convertedAt": "2026-10-13T10:32:04.742Z",
+    "source": "soal_gambar_2_IN_ONE.docx"
+  },
+  {
+    "id": "2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v5",
+    "category": "2H PA - Sistem Saraf",
+    "title": "Latihan PA 2H - Bergambar V5",
+    "file": "./data/packages/2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v5/questions.js",
+    "count": 25,
+    "convertedAt": "2026-10-13T10:32:23.968Z",
+    "source": "soal_gambar_2_IN_ONE.docx"
+  },
+  {
+    "id": "2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v6",
+    "category": "2H PA - Sistem Saraf",
+    "title": "Latihan PA 2H - Bergambar V6",
+    "file": "./data/packages/2h-pa-sistem-saraf__latihan-pa-2h-bergambar-v6/questions.js",
+    "count": 27,
+    "convertedAt": "2026-10-13T10:32:36.071Z",
+    "source": "soal_campuran_2H.docx"
+  },
+  {
     "id": "2h-pa-1__lat-pa-sist-saraf-theory-only",
     "category": "2H PA - Sistem Saraf",
     "title": "Latihan PA 2H - Theory V1",
