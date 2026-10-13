@@ -1,0 +1,13 @@
+diff --git a/js/render-multiplayer.js b/js/render-multiplayer.js
+index d6ac431..4de3db9 100644
+--- a/js/render-multiplayer.js
++++ b/js/render-multiplayer.js
+@@ -140,7 +140,7 @@ function renderMpPlaying() {
+       if (l === rev.answer) cls.push("correct");
+       else if (l === my) cls.push("wrong");
+     }
+-    if (!mpIsHost && my === l) cls.push("picked");
++    if (!mpIsHost && my === l) cls.push("selected");
+     const disabled = mpIsHost || rev || my !== undefined || timedOut;
+     const pct = playerCount ? Math.round(((pickCount[l] || 0) / playerCount) * 100) : 0;
+     return `
