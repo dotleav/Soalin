@@ -256,9 +256,11 @@ async function mpAct(act, el) {
         await mpVerifyCode(code);
         break;
       }
-      case "enter":
+      case "enter": {
+        // Baca input DULU, sebelum render() membangun ulang layar.
+        const name = document.getElementById("mpNameInput")?.value || "";
         mpBusy = true; render();
-        await mpJoinWithName(document.getElementById("mpNameInput")?.value || "");
+        await mpJoinWithName(name);
         break;
       case "start": await mpHostStart(); break;
       case "reveal": await mpHostReveal(); break;
