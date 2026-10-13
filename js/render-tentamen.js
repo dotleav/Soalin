@@ -21,7 +21,7 @@ function renderTentamenSetup() {
     html += `
       <button class="diffCard${active ? " active" : ""}" data-diff="${d}" style="${active ? `border-color:${dcfg.color}; background:${dcfg.color}18;` : ""}">
         <div class="diffTop">
-          <span class="diffEmoji">${dcfg.emoji}</span>
+          <span class="diffEmoji">${diffIconHtml(dcfg, "diffIcon")}</span>
           <span class="diffLabel" style="color:${active ? dcfg.color : "var(--text)"};">${dcfg.label}</span>
         </div>
         <div class="diffDesc">${escapeHtml(dcfg.desc)}</div>
@@ -38,7 +38,7 @@ function renderTentamenSetup() {
   </div>`;
 
   html += `<button class="startTentamenBtn" id="startTentamenBtn" style="background:${cfg.color};" ${qCount === 0 ? "disabled" : ""}>
-    \u25B6 Mulai Tentamen \u2014 ${cfg.emoji} ${cfg.label}
+    \u25B6 Mulai Tentamen \u2014 ${diffIconHtml(cfg, "startIcon")} ${cfg.label}
   </button>`;
   html += `</div>`;
   return html;

@@ -17,7 +17,15 @@ const DIFFICULTY_CONFIG = {
   normal:   { label: "Orang Normal", emoji: "🧍", timerSeconds: 60,  desc: "dasar normies",                        color: "#58a6ff" },
   folivora: { label: "Folivora",     emoji: "🦥", timerSeconds: 300, desc: "pasti pas ditanya jawabannya \u201Chah?\u201D", color: "#86efac" },
   bekicot:  { label: "Bekicot",      emoji: "🐌", timerSeconds: 0,   desc: "mode biasa aja kalau gitu",            color: "#c084fc" },
+  minites:  { label: "minites dr Erda", emoji: "", icon: "./images/difficulty/squidward.png", timerSeconds: 15, desc: "Makan noh 15 detik", color: "#2dd4bf" },
 };
+
+// Ikon tingkat kesulitan: pakai gambar kalau ada `icon`, selain itu emoji.
+function diffIconHtml(cfg, cls) {
+  return cfg.icon
+    ? `<img class="${cls}" src="${cfg.icon}" alt="" aria-hidden="true">`
+    : cfg.emoji;
+}
 
 const app = document.getElementById("app");
 
