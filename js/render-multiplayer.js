@@ -5,9 +5,10 @@ function mpErrorHtml() {
 
 function mpModeLabel(meta) {
   const c = DIFFICULTY_CONFIG[meta.difficulty] || DIFFICULTY_CONFIG.bekicot;
-  return meta.timerSeconds
+  const base = meta.timerSeconds
     ? `${c.label} · ${meta.timerSeconds} dtk/soal (otomatis)`
     : `${c.label} · buka jawaban manual`;
+  return meta.shuffled ? `${base} · soal diacak` : base;
 }
 
 function renderMultiplayerScreen() {
@@ -34,6 +35,9 @@ function renderMpJoin() {
         <div class="mpDivider"></div>
         <p class="mpSub">Kamu host? Pilih tingkat kesulitan:</p>
         <div class="mpPlayers">${chips}</div>
+        <div class="mpPlayers">
+          <button class="mpChip${mpShuffle ? " on" : ""}" data-mp-act="toggleshuffle">\uD83D\uDD00 Acak urutan soal: ${mpShuffle ? "ya" : "tidak"}</button>
+        </div>
         <button class="mpSecondary" data-mp-act="create" ${mpBusy ? "disabled" : ""}>Buat room baru</button>
       </div>
     </main>`;

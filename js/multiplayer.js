@@ -12,6 +12,7 @@ let mpRoomCode = "";
 let mpPendingCode = "";
 let mpIsHost = false;
 let mpDiff = "bekicot";   // tingkat kesulitan yang dipilih host saat buat room
+let mpShuffle = false;   // host: acak urutan soal saat buat room
 let mpServerOffset = 0;   // selisih jam server vs perangkat (ms)
 let mpRoom = { meta: null, state: null, questions: [], players: {}, reveal: {}, answers: {} };
 let mpLocalQs = [];       // host saja: soal lengkap dengan kunci
@@ -74,9 +75,19 @@ async function mpCreateRoom() {
     code = mpGenCode();
   }
 
+  // Urutan soal: index asli, diacak kalau fitur acak aktif.
+  const order = qs.map((_, i) => i);
+  if (mpShuffle) {
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+  }
+  const ordered = order.map((i) => qs[i]);
+
   // Hanya teks, opsi, dan gambar soal yang dikirim. Kunci & penjelasan tidak ikut.
   const publicQs = {};
-  qs.forEach((q, i) => {
+  ordered.forEach((q, i) => {
     publicQs[i] = {
       question: q.question || "",
       options: q.options || {},
@@ -92,13 +103,15 @@ async function mpCreateRoom() {
       count: qs.length,
       difficulty: mpDiff,
       timerSeconds: cfg.timerSeconds,
+      shuffled: mpShuffle,
+      order,
       createdAt: firebase.database.ServerValue.TIMESTAMP,
     },
     [`rooms/${code}/state`]: { phase: "lobby", currentIdx: 0, revealed: false },
     [`rooms/${code}/questions`]: publicQs,
   });
 
-  mpLocalQs = qs;
+  mpLocalQs = ordered;
   await mpEnterRoom(code, true);
 }
 
@@ -114,7 +127,8 @@ async function mpVerifyCode(code) {
     if (activePackage?.id !== meta.packageId || qs.length !== meta.count) {
       throw new Error(`Buka paket "${meta.title}" dulu untuk masuk sebagai host`);
     }
-    mpLocalQs = qs;
+    const order = mpArr(meta.order);
+    mpLocalQs = order.length ? order.map((i) => qs[i]) : qs;
     await mpEnterRoom(code, true);
     return;
   }
@@ -309,6 +323,9 @@ async function mpAct(act, el) {
       case "back":
         mpScreen = null;
         pickerOpen = true;
+        break;
+      case "toggleshuffle":
+        mpShuffle = !mpShuffle;
         break;
       case "pickdiff":
         mpDiff = el.dataset.diff;
