@@ -311,6 +311,24 @@ export const packages = [
     "source": "Bank_Soal_PA_Sistem_Saraf_Pusat.docx"
   },
   {
+    "id": "2h-pa-sistem-saraf__latihan-pa-2h-theory-v2",
+    "category": "2H PA - Sistem Saraf",
+    "title": "Latihan PA 2H - Theory V2",
+    "file": "./data/packages/2h-pa-sistem-saraf__latihan-pa-2h-theory-v2/questions.js",
+    "count": 30,
+    "convertedAt": "2026-10-13T14:27:13.666Z",
+    "source": "Soalin_Softfile_2H_Patologi_Anatomi_SSP_Bagian1.docx"
+  },
+  {
+    "id": "2h-pa-sistem-saraf__latihan-pa-2h-theory-v3",
+    "category": "2H PA - Sistem Saraf",
+    "title": "Latihan PA 2H - Theory V3",
+    "file": "./data/packages/2h-pa-sistem-saraf__latihan-pa-2h-theory-v3/questions.js",
+    "count": 70,
+    "convertedAt": "2026-10-13T14:27:37.268Z",
+    "source": "Soalin_Softfile_2H_Patologi_Anatomi_SSP_Lengkap_70soal.docx"
+  },
+  {
     "id": "2h-pk-lcs-cairan-otak__latihan-pretes-lcs-cairan",
     "category": "2H PK - LCS Cairan Otak",
     "title": "Latihan Pretes Analisis LCS",
