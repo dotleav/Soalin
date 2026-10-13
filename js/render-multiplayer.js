@@ -11,6 +11,13 @@ function mpModeLabel(meta) {
   return meta.shuffled ? `${base} · soal diacak` : base;
 }
 
+// Daftar pemain. Host bisa mengeluarkan pemain lewat tombol ✕.
+function mpPlayerList(kickable) {
+  return Object.entries(mpRoom.players || {}).map(([uid, p]) => kickable
+    ? `<button class="mpChip" data-mp-act="kick" data-uid="${uid}">${escapeHtml(p.name)} \u2715</button>`
+    : `<span class="mpChip">${escapeHtml(p.name)}</span>`).join("");
+}
+
 function renderMultiplayerScreen() {
   if (mpScreen === "join") return renderMpJoin();
   if (mpScreen === "name") return renderMpName();
@@ -104,7 +111,7 @@ function renderMpRoom() {
 
 function renderMpLobby() {
   const names = Object.values(mpRoom.players || {}).map((p) => p.name);
-  const chips = names.map((n) => `<span class="mpChip">${escapeHtml(n)}</span>`).join("");
+  const chips = mpPlayerList(mpIsHost);
   return `
     <p class="mpSub">${escapeHtml(mpRoom.meta.title)} \u00B7 ${mpRoom.meta.count} soal</p>
     <p class="mpSub">${escapeHtml(mpModeLabel(mpRoom.meta))}</p>
@@ -124,7 +131,7 @@ function renderMpPlaying() {
   const total = mpRoom.meta.count;
   const rev = mpRoom.reveal?.[i];
   const my = mpMyAnswers[i];
-  const picks = (mpRoom.answers && mpRoom.answers[i]) || {};
+  const picks = mpCurrentPicks(i);
   const pickCount = {};
   Object.values(picks).forEach((l) => { pickCount[l] = (pickCount[l] || 0) + 1; });
   const playerCount = Object.keys(mpRoom.players || {}).length;
@@ -180,6 +187,7 @@ function renderMpPlaying() {
       .join(" \u00B7 ");
     hostControls = `
       <div class="mpHostInfo mono">${answeredCount}/${playerCount} sudah menjawab</div>
+      <div class="mpPlayers">${mpPlayerList(true)}</div>
       ${names ? `<div class="mpSub mpPicks">${names}</div>` : ""}
       ${timed ? `<div class="mpSub">Otomatis: jawaban dibuka saat waktu habis.</div>` : ""}
       ${rev

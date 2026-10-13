@@ -20,6 +20,7 @@ let mpMyAnswers = {};     // pemain: index soal -> huruf (disimpan per room)
 let mpListeners = [];     // [ref, cb] untuk dilepas saat keluar room
 let mpHostTimer = null;   // host: timer auto reveal / auto next
 let mpTickHandle = null;  // render ulang tiap 500ms untuk hitung mundur
+let mpRevealingIdx = null; // host: soal yang sedang dibuka otomatis
 const MP_NAME_KEY = "soalin-mp-name";
 const MP_CODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
@@ -189,9 +190,18 @@ function mpAttachListeners() {
     if (mpIsHost) mpHostSchedule();
   });
   mpOn("questions", (v) => { mpRoom.questions = mpArr(v); });
-  mpOn("players", (v) => { mpRoom.players = v || {}; });
+  mpOn("players", (v) => {
+    mpRoom.players = v || {};
+    if (!mpIsHost && mpRoom.meta && !mpRoom.players[mpUid]) {
+      mpLeave();
+      mpError = "Kamu dikeluarkan dari room oleh host";
+      render();
+      return;
+    }
+    if (mpIsHost) mpHostSchedule();
+  });
   mpOn("reveal", (v) => { mpRoom.reveal = v || {}; });
-  if (mpIsHost) mpOn("answers", (v) => { mpRoom.answers = v || {}; });
+  if (mpIsHost) mpOn("answers", (v) => { mpRoom.answers = v || {}; mpHostSchedule(); });
 }
 
 function mpDetachListeners() {
@@ -281,17 +291,40 @@ function mpHostNext(fromIdx) {
 }
 
 // Mode timer: host otomatis buka jawaban saat waktu habis, lalu lanjut 2 detik kemudian
+// Jawaban semua peserta aktif sudah masuk untuk soal i
+function mpCurrentPicks(i) {
+  const all = (mpRoom.answers && mpRoom.answers[i]) || {};
+  const out = {};
+  Object.keys(mpRoom.players || {}).forEach((u) => { if (all[u] !== undefined) out[u] = all[u]; });
+  return out;
+}
+
+function mpAllAnswered(i) {
+  const uids = Object.keys(mpRoom.players || {});
+  if (!uids.length) return false;
+  const picks = mpCurrentPicks(i);
+  return uids.every((u) => picks[u] !== undefined);
+}
+
+// Host: buka jawaban saat semua sudah menjawab, atau saat waktu habis (mode timer)
 function mpHostSchedule() {
   clearTimeout(mpHostTimer);
   mpHostTimer = null;
   const st = mpRoom.state;
   const timer = mpTimerSec();
-  if (!mpIsHost || !st || !timer || st.phase !== "playing") return;
+  if (!mpIsHost || !st || st.phase !== "playing") return;
   const i = st.currentIdx;
   if (!st.revealed) {
-    const wait = (st.startedAt || mpNow()) + timer * 1000 - mpNow();
-    mpHostTimer = setTimeout(() => mpHostReveal(i).catch(console.error), Math.max(0, wait));
-  } else {
+    if (mpRoom.reveal?.[i] === undefined && mpRevealingIdx !== i && mpAllAnswered(i)) {
+      mpRevealingIdx = i;
+      mpHostReveal(i).catch(console.error);
+      return;
+    }
+    if (timer) {
+      const wait = (st.startedAt || mpNow()) + timer * 1000 - mpNow();
+      mpHostTimer = setTimeout(() => mpHostReveal(i).catch(console.error), Math.max(0, wait));
+    }
+  } else if (timer) {
     mpHostTimer = setTimeout(() => mpHostNext(i).catch(console.error), 2000);
   }
 }
@@ -304,9 +337,9 @@ function mpLeaderboard() {
   const scores = {};
   Object.keys(mpRoom.players || {}).forEach((uid) => { scores[uid] = 0; });
   Object.keys(mpRoom.answers || {}).forEach((i) => {
-    const key = mpLocalQs[i]?.answer;
     if (!mpRoom.reveal?.[i]) return;
-    Object.entries(mpRoom.answers[i] || {}).forEach(([uid, letter]) => {
+    const key = mpLocalQs[i]?.answer;
+    Object.entries(mpCurrentPicks(i)).forEach(([uid, letter]) => {
       scores[uid] = (scores[uid] || 0) + (letter === key ? 1 : 0);
     });
   });
@@ -351,6 +384,14 @@ async function mpAct(act, el) {
       case "start": await mpHostStart(); break;
       case "reveal": await mpHostReveal(); break;
       case "next": await mpHostNext(mpRoom.state.currentIdx); break;
+      case "kick": {
+        const uid = el.dataset.uid;
+        const name = mpRoom.players?.[uid]?.name || "pemain";
+        if (confirm(`Keluarkan ${name} dari room?`)) {
+          await mpDb().ref(`rooms/${mpRoomCode}/players/${uid}`).remove();
+        }
+        break;
+      }
       case "close":
         if (confirm("Tutup room? Semua pemain akan keluar.")) await mpHostClose();
         break;
