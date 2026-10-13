@@ -262,6 +262,7 @@ async function mpAct(act, el) {
         mpBusy = true; render();
         await mpJoinWithName(name);
         break;
+      }
       case "start": await mpHostStart(); break;
       case "reveal": await mpHostReveal(); break;
       case "next": await mpHostNext(); break;
