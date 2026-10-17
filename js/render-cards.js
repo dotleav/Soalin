@@ -99,6 +99,7 @@ function renderIsianCard(q, qNum, answeredValue) {
 function renderQuestionCard(q, qNum, chosen, revealAnswer) {
   const isAnswered = chosen !== undefined && chosen !== null;
   const showState = revealAnswer && isAnswered;
+  const oExp = q.optionExplanations || {};
 
   const optionsHtml = Object.entries(q.options).map(([letter, text]) => {
     let cls = "option";
@@ -122,10 +123,19 @@ function renderQuestionCard(q, qNum, chosen, revealAnswer) {
       }
     }
 
+    // Penjelasan per opsi: hanya tampil setelah jawab, dan hanya kalau memang ada.
+    let expTag = "";
+    if (letter === q.answer) expTag = `<span class="optExpTag ok">\u2713 Jawaban yang benar</span>`;
+    else if (letter === chosen) expTag = `<span class="optExpTag no">\u2715 Kurang tepat</span>`;
+    const expHtml = (showState && oExp[letter]) ? `<span class="optExp">${expTag}${escapeHtml(oExp[letter])}</span>` : "";
+
     return `
       <button class="${cls}${locked}" data-qid="${escapeAttr(q.id)}" data-letter="${escapeAttr(letter)}">
         <span class="${letterCls}" data-letter="${letter}">${(window._dkOn() && window._dkImg) ? `<img class="doksli-letter-img" src="${window._dkImg()}" aria-hidden="true">` : letter}</span>
-        <span class="optText">${escapeHtml(text)}</span>
+        <span class="optBody">
+          <span class="optText">${escapeHtml(text)}</span>
+          ${expHtml}
+        </span>
         ${icon}
       </button>
     `;
@@ -135,10 +145,12 @@ function renderQuestionCard(q, qNum, chosen, revealAnswer) {
     ? `<div class="skipNote">\u23ED\uFE0F Soal ini dilewati (waktu habis)</div>`
     : "";
 
-  const explanationHtml = showState ? `
+  // Card Gambar Penjelasan: teks opsional, utamanya gambar. Tidak tampil kalau kosong.
+  const hasGambarPenj = !!q.explanation || (q.explanationImages || []).length > 0;
+  const explanationHtml = (showState && hasGambarPenj) ? `
     <div class="explanation">
-      <div class="tag">\uD83D\uDCD6 Penjelasan</div>
-      <p>${escapeHtml(q.explanation || "(tidak ada penjelasan)")}</p>
+      <div class="tag">\uD83D\uDDBC\uFE0F Gambar Penjelasan</div>
+      ${q.explanation ? `<p>${escapeHtml(q.explanation)}</p>` : ""}
       ${(q.explanationImages || []).map(src => `<img class="exImg" src="${src}" alt="gambar penjelasan">`).join("")}
     </div>
   ` : "";

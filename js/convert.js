@@ -179,39 +179,59 @@ async function convertDocx(buf) {
 
   // ── Bagian 1: soal MCQ (sama persis dengan scripts/convert-docx.js) ──
   // Fallback: soal + opsi + kunci kadang ada dalam SATU paragraf tanpa line-break.
+  // Penjelasan per opsi ada di dalam {...} di akhir baris opsi (sama dengan scripts/convert-docx.js).
+  function parseOptionBody(raw) {
+    const i = raw.indexOf("{");
+    if (i < 0) return { text: raw.trim(), exp: "", open: false };
+    const j = raw.indexOf("}", i);
+    const text = raw.slice(0, i).trim();
+    if (j < 0) return { text, exp: raw.slice(i + 1).trim(), open: true };
+    return { text, exp: raw.slice(i + 1, j).trim(), open: false };
+  }
+
   function splitInlineQuestion(rawText) {
     let text = rawText, answer = "";
     const ansMatch = text.match(/\bKunci(?:\s*Jawaban)?\s*:?\s*([A-Ea-e])\b\s*$/i);
     if (ansMatch) { answer = ansMatch[1].toUpperCase(); text = text.slice(0, ansMatch.index).trim(); }
     const matches = [...text.matchAll(/\s([A-Ea-e])[.)]\s+/g)];
     if (matches.length < 3 || matches[0][1].toUpperCase() !== "A") return null;
-    const options = {};
+    const options = {}, optionExplanations = {};
     matches.forEach((m, i) => {
       const end = i + 1 < matches.length ? matches[i + 1].index : text.length;
-      options[m[1].toUpperCase()] = text.slice(m.index + m[0].length, end).trim();
+      const body = parseOptionBody(text.slice(m.index + m[0].length, end));
+      options[m[1].toUpperCase()] = body.text;
+      if (body.exp) optionExplanations[m[1].toUpperCase()] = body.exp;
     });
-    return { question: text.slice(0, matches[0].index).trim(), options, answer };
+    return { question: text.slice(0, matches[0].index).trim(), options, answer, optionExplanations };
   }
 
   function parsePart1(lines) {
     const questions = [];
-    let current = null, pendingId = null, currentCategory = "", mode = null;
+    let current = null, pendingId = null, currentCategory = "", mode = null, pendingOpt = null;
     const questionStart = /^(\d+)[.)]\s*(.*)$/, idLine = /^ID\s*:\s*(.+)$/i, optionLine = /^([A-Ea-e])[.)]\s*(.*)$/;
     const answerLine = /^(?:Kunci\s*Jawaban|Jawaban\s*Kunci|Kunci|Jawaban)\s*:?\s*([A-Ea-e])\b.*$/i;
-    const explanationLine = /^Penjelasan\s*:?\s*(.*)$/i, categoryLine = /^Kategori\s*:\s*(.+)$/i;
+    const explanationLine = /^(?:Gambar\s+)?Penjelasan\s*:?\s*(.*)$/i, categoryLine = /^Kategori\s*:\s*(.+)$/i;
     const startQuestion = (rawText, images) => {
       if (current) questions.push(current);
       const inline = splitInlineQuestion(rawText);
       current = {
         id: pendingId || `Q${questions.length + 1}`, category: currentCategory,
         question: inline ? inline.question : rawText, questionImages: [...images],
-        options: inline ? inline.options : {}, answer: inline ? inline.answer : "",
+        options: inline ? inline.options : {}, optionExplanations: inline ? inline.optionExplanations : {}, answer: inline ? inline.answer : "",
         explanation: "", explanationImages: [], isBroken: false,
       };
       pendingId = null;
       mode = inline ? "answer" : "question";
     };
     for (const { text, images, isHeading, isListItem } of lines) {
+      if (pendingOpt && current) {
+        const close = text.indexOf("}");
+        const chunk = close < 0 ? text : text.slice(0, close);
+        current.optionExplanations[pendingOpt] = `${current.optionExplanations[pendingOpt] || ""} ${chunk}`.trim();
+        current.explanationImages.push(...images);
+        if (close >= 0) pendingOpt = null;
+        continue;
+      }
       if (isHeading) { currentCategory = text; continue; }
       if (categoryLine.test(text)) { currentCategory = text.match(categoryLine)[1].trim(); continue; }
       if (idLine.test(text)) { pendingId = text.match(idLine)[1].trim(); continue; }
@@ -221,7 +241,11 @@ async function convertDocx(buf) {
       if (!current) continue;
       const optMatch = text.match(optionLine), ansMatch = text.match(answerLine), expMatch = text.match(explanationLine);
       if (optMatch) {
-        current.options[optMatch[1].toUpperCase()] = optMatch[2].trim();
+        const letter = optMatch[1].toUpperCase();
+        const body = parseOptionBody(optMatch[2]);
+        current.options[letter] = body.text;
+        if (body.exp) current.optionExplanations[letter] = body.exp;
+        if (body.open) pendingOpt = letter;
         current.questionImages.push(...images);
         mode = "options";
       } else if (ansMatch) {
