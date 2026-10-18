@@ -226,8 +226,8 @@ $btnBrowse.FlatAppearance.BorderColor = $colBorder
 $btnBrowse.Cursor = [System.Windows.Forms.Cursors]::Hand
 $btnBrowse.Add_Click({
     $dialog = New-Object System.Windows.Forms.OpenFileDialog
-    $dialog.Title = "Pilih file .docx"
-    $dialog.Filter = "Word Document (*.docx)|*.docx"
+    $dialog.Title = "Pilih file .docx atau .pdf"
+    $dialog.Filter = "Word / PDF (*.docx;*.pdf)|*.docx;*.pdf|Word Document (*.docx)|*.docx|PDF (*.pdf)|*.pdf"
     $currentPath = if ($txtPath.Text -ne $placeholderText) { $txtPath.Text } else { "" }
     $dialog.InitialDirectory = if ($currentPath -and (Test-Path (Split-Path $currentPath))) {
         Split-Path $currentPath
@@ -309,7 +309,7 @@ $btnConvert.Add_Click({
 
     if (-not $docxPath) { Write-Log "Belum ada file dipilih." "error"; return }
     if (-not (Test-Path $docxPath)) { Write-Log "File tidak ditemukan: $docxPath" "error"; return }
-    if ([System.IO.Path]::GetExtension($docxPath).ToLower() -ne ".docx") { Write-Log "Bukan file .docx." "error"; return }
+    if ([System.IO.Path]::GetExtension($docxPath).ToLower() -notin @(".docx", ".pdf")) { Write-Log "Bukan file .docx atau .pdf." "error"; return }
 
     $btnConvert.Enabled = $false
     $btnBrowse.Enabled = $false

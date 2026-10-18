@@ -38,6 +38,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import mammoth from "mammoth";
+import { pdfToHtml } from "./pdf-lines.js";
 import JSZip from "jszip";
 
 // sharp dipakai buat crop/rotasi gambar "literal" (lihat bagian 0 di bawah).
@@ -148,7 +149,7 @@ function extractDrawingTransforms(documentXml) {
 }
 
 let drawingTransforms = [];
-try {
+if (!/\.pdf$/i.test(docxPath)) try {
   const docxBuffer = fs.readFileSync(docxPath);
   const zip = await JSZip.loadAsync(docxBuffer);
   const documentXmlFile = zip.file("word/document.xml");
@@ -206,7 +207,8 @@ async function applyImageTransform(buffer, transform, filename) {
 }
 
 // --- 1. Convert docx -> HTML, ekstrak gambar ke /images ---
-const result = await mammoth.convertToHtml(
+const isPdf = /\.pdf$/i.test(docxPath); // PDF: hanya teks (tanpa gambar)
+const result = isPdf ? { value: await pdfToHtml(docxPath), messages: [] } : await mammoth.convertToHtml(
   { path: docxPath },
   {
     convertImage: mammoth.images.imgElement(async (image) => {
