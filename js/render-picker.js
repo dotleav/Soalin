@@ -76,7 +76,7 @@ function renderCustomCard() {
         <span class="catName">Custom Quiz (${customQuiz ? 1 : 0}/1)</span>
         <span class="catMeta">maks. 1 kuis</span>
       </div>
-      <input type="file" id="docxInput" accept=".docx" hidden>
+      <input type="file" id="docxInput" accept=".docx,.pdf" hidden>
       ${customQuiz ? `
         <button class="packageItem${active ? " active" : ""}" data-pkg="${CUSTOM_ID}">
           <span class="pkgTitle">${escapeHtml(customQuiz.title)}</span>
@@ -88,11 +88,12 @@ function renderCustomCard() {
         </div>` : `
         <label class="dropZone" for="docxInput">
           <span class="dropIcon">\uD83D\uDCC4</span>
-          <span class="dropTitle">Seret &amp; lepas file .docx di mana saja</span>
-          <span class="dropHint">atau ketuk untuk memilih file</span>
+          <span class="dropTitle">Drag and drop</span>
+          <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks saja</span></span>
         </label>`}
-      ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}
-      <div class="dropFormat">Format: <code>1. Soal</code> \u00B7 opsi <code>A.</code>\u2013<code>E.</code> \u00B7 <code>Kunci: X</code> \u00B7 <code>Penjelasan: \u2026</code></div>
+      <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
+       ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}
+      <div class="dropFormat">Format: <code>1. Soal</code> \u00B7 opsi <code>A.</code>\u2013<code>E.</code> \u00B7 <code>Kunci: X</code> \u00B7 <code>{penjelasan}</code></div>
     </div>`;
 }
 

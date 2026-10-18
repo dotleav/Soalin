@@ -57,7 +57,7 @@ async function transformImage(blob, s, type) {
 }
 
 async function convertDocx(buf) {
-  const read = await openZip(buf), td = new TextDecoder(), { w: W, a: A, r: R, mc: MC, v: V } = DOCX_NS;
+  const read = isPdfBuffer(buf) ? await pdfDocxReader(buf) : await openZip(buf), td = new TextDecoder(), { w: W, a: A, r: R, mc: MC, v: V } = DOCX_NS;
   const readXml = async (name) => {
     const b = await read(name);
     if (!b) return null;

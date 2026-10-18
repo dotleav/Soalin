@@ -156,7 +156,7 @@ async function loadCustom() {
 
 // Seret-lepas / pilih .docx → konversi → langsung jadi kuis (menggantikan kuis custom lama).
 async function handleDocx(fileList) {
-  const file = [...fileList].find((f) => /\.docx$/i.test(f.name));
+  const file = [...fileList].find((f) => /\.(docx|pdf)$/i.test(f.name));
   if (!file) { pickerOpen = true; dropMsg = "⚠️ Pilih file Word berformat .docx."; render(); return; }
   if (customQuiz && !confirm(`Ganti kuis custom "${customQuiz.title}" dengan "${file.name}"?\nKuis lama dan progresnya akan dihapus.`)) { render(); return; }
   pickerOpen = true; // pesan (proses/gagal) harus kelihatan walau lagi di tengah kuis
@@ -166,7 +166,7 @@ async function handleDocx(fileList) {
   try {
     const { questions, blobs, stats } = await convertDocx(await file.arrayBuffer());
     if (!stats.normal && !stats.rusak && !stats.isian) throw new Error("Tidak ada soal terdeteksi. Format: 1. Soal / A. … E. / Kunci: X / Penjelasan: …");
-    const rec = { title: file.name.replace(/\.docx$/i, ""), questions, blobs, savedAt: Date.now() };
+    const rec = { title: file.name.replace(/\.(docx|pdf)$/i, ""), questions, blobs, savedAt: Date.now() };
     let saved = true;
     await idb("readwrite", (st) => st.put(rec, "custom")).catch(() => { saved = false; });
     setCustom(rec);
