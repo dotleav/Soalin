@@ -128,10 +128,10 @@ async function boot() {
 
   let savedId;
   try { savedId = localStorage.getItem(ACTIVE_PKG_KEY); } catch { savedId = null; }
-  const saved = savedId === CUSTOM_ID ? customPkg() : packageManifest.find((p) => p.id === savedId);
+  const saved = isCustomId(savedId) ? customPkg(customRec(savedId.slice(CUSTOM_PREFIX.length))) : packageManifest.find((p) => p.id === savedId);
   if (saved) {
     await selectPackage(saved);
-  } else if (packageManifest.length > 0 || customQuiz) {
+  } else if (packageManifest.length > 0 || customQuizzes.length) {
     pickerOpen = true; // belum pernah pilih paket — langsung tampilkan pemilih
   } else {
     // Tidak ada paket terdaftar & tidak ada kuis custom — pakai mode lama (data/questions.js).

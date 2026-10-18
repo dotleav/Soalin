@@ -32,10 +32,9 @@ let pickerOpen = false; // true = layar pilih kategori/paket sedang ditampilkan
 let themeMenuOpen = false; // true = pilihan "Mode UI" (Terang/Gelap/Persona 5) lagi kebuka
 let expandedCategories = new Set();
 
-// ── State: Custom Quiz — 1 slot, diingat di IndexedDB (docx dikonversi di browser) ──
-const CUSTOM_ID = "custom-quiz";
-let customQuiz = null; // { title, questions (gambar = index blob), blobs, savedAt } atau null
-let customQs = []; // customQuiz.questions dgn index gambar diganti object URL — siap dimainkan
+// ── State: Custom Quiz — banyak kuis, diingat di IndexedDB (docx/pdf dikonversi di browser) ──
+const CUSTOM_PREFIX = "custom:"; // id paket custom = CUSTOM_PREFIX + id kuis
+let customQuizzes = []; // [{ id, title, questions, blobs, savedAt, key }] — semua kuis custom tersimpan
 let customUrls = []; // object URL gambar kuis custom (di-revoke saat ganti/hapus)
 let dropMsg = ""; // pesan status konversi/hapus di kartu Custom Quiz
 
@@ -101,7 +100,7 @@ function resetQuizStateForNewPackage() {
 
 async function selectPackage(pkg) {
   try {
-    const mod = pkg.custom ? { questions: customQs } : await import(new URL(pkg.file, document.baseURI).href);
+    const mod = pkg.custom ? { questions: prepareCustomQs(customRec(pkg.recId)) } : await import(new URL(pkg.file, document.baseURI).href);
     allQuestions = Array.isArray(mod.questions) ? mod.questions : [];
   } catch {
     allQuestions = [];
@@ -131,62 +130,78 @@ function idb(mode, run) {
   }));
 }
 
-const customPkg = () => customQuiz && { id: CUSTOM_ID, title: customQuiz.title, category: "Custom Quiz", custom: true };
+const customPkg = (rec) => rec && { id: CUSTOM_PREFIX + rec.id, title: rec.title, category: "Custom Quiz", custom: true, recId: rec.id };
+const customRec = (recId) => customQuizzes.find((r) => r.id === recId) || null;
+const isCustomId = (id) => typeof id === "string" && id.startsWith(CUSTOM_PREFIX);
 
-function clearCustomProgress() {
-  try { localStorage.removeItem(`${LS_KEY_PREFIX}__${CUSTOM_ID}`); } catch { /* noop */ }
+function clearCustomProgress(recId) {
+  try { localStorage.removeItem(`${LS_KEY_PREFIX}__${CUSTOM_PREFIX}${recId}`); } catch { /* noop */ }
 }
 
-// rec = { title, questions, blobs, savedAt } atau null (kosongkan slot)
-function setCustom(rec) {
-  const urls = rec ? rec.blobs.map((b) => b && URL.createObjectURL(b)) : [];
-  const pick = (idxs) => idxs.map((i) => urls[i]);
+// Rekaman IndexedDB → soal siap main (index gambar diganti object URL).
+function prepareCustomQs(rec) {
   customUrls.forEach((u) => u && URL.revokeObjectURL(u));
+  const urls = rec.blobs.map((b) => b && URL.createObjectURL(b));
   customUrls = urls;
-  customQs = rec ? rec.questions.map((q) => ({ ...q, questionImages: pick(q.questionImages), explanationImages: pick(q.explanationImages) })) : [];
-  customQuiz = rec;
+  const pick = (idxs) => idxs.map((i) => urls[i]);
+  return rec.questions.map((q) => ({ ...q, questionImages: pick(q.questionImages), explanationImages: pick(q.explanationImages) }));
 }
 
+// Muat semua kuis custom dari IndexedDB. Kunci "custom" (format lama, 1 kuis) ikut dibaca.
 async function loadCustom() {
+  customQuizzes = [];
   try {
-    const rec = await idb("readonly", (st) => st.get("custom"));
-    if (rec?.questions) setCustom(rec);
-  } catch { /* rekaman rusak / IndexedDB diblokir → slot kosong */ }
+    const keys = await idb("readonly", (st) => st.getAllKeys());
+    for (const key of keys) {
+      if (!(key === "custom" || (typeof key === "string" && key.startsWith("cq:")))) continue;
+      const rec = await idb("readonly", (st) => st.get(key));
+      if (rec?.questions) customQuizzes.push({ ...rec, id: rec.id || "legacy", key });
+    }
+    customQuizzes.sort((a, b) => b.savedAt - a.savedAt);
+  } catch { /* IndexedDB diblokir → daftar kosong */ }
 }
 
-// Seret-lepas / pilih .docx → konversi → langsung jadi kuis (menggantikan kuis custom lama).
+// Pilih/seret satu atau beberapa file → konversi → simpan sebagai kuis baru (tidak menimpa kuis lain).
 async function handleDocx(fileList) {
-  const file = [...fileList].find((f) => /\.(docx|pdf)$/i.test(f.name));
-  if (!file) { pickerOpen = true; dropMsg = "⚠️ Pilih file Word berformat .docx."; render(); return; }
-  if (customQuiz && !confirm(`Ganti kuis custom "${customQuiz.title}" dengan "${file.name}"?\nKuis lama dan progresnya akan dihapus.`)) { render(); return; }
+  const files = [...fileList].filter((f) => /\.(docx|pdf)$/i.test(f.name));
   pickerOpen = true; // pesan (proses/gagal) harus kelihatan walau lagi di tengah kuis
-  dropMsg = `⏳ Mengonversi ${file.name}…`;
-  render();
-  const t0 = performance.now();
-  try {
-    const { questions, blobs, stats } = await convertDocx(await file.arrayBuffer());
-    if (!stats.normal && !stats.rusak && !stats.isian) throw new Error("Tidak ada soal terdeteksi. Format: 1. Soal / A. … E. / Kunci: X / Penjelasan: …");
-    const rec = { title: file.name.replace(/\.(docx|pdf)$/i, ""), questions, blobs, savedAt: Date.now() };
-    let saved = true;
-    await idb("readwrite", (st) => st.put(rec, "custom")).catch(() => { saved = false; });
-    setCustom(rec);
-    clearCustomProgress(); // progres kuis lama ikut dibuang
-    await selectPackage(customPkg());
-    const skipped = stats.skippedExt.length ? ` ⚠️ Gambar .${stats.skippedExt.join(", .")} dilewati (browser tidak bisa menampilkan) — tempel ulang di Word sebagai PNG/JPG.` : "";
-    dropMsg = `✅ ${stats.normal} soal${stats.rusak ? ` + ${stats.rusak} soal rusak` : ""}${stats.isian ? ` + ${stats.isian} soal isian` : ""}, ${stats.images} gambar — ${Math.round(performance.now() - t0)} ms.${skipped}${saved ? "" : " ⚠️ Gagal menyimpan ke browser — kuis hilang kalau tab ditutup."}`;
-    pickerOpen = !!skipped || !saved; // ada peringatan → tetap di layar ini supaya terbaca
-  } catch (e) {
-    dropMsg = e instanceof ReferenceError ? "❌ Browser terlalu lama (butuh DecompressionStream). Pakai Chrome/Edge/Firefox/Safari terbaru." : `❌ ${e.message}`;
+  if (!files.length) { dropMsg = "⚠️ Pilih file Word (.docx) atau PDF (.pdf)."; render(); return; }
+  const msgs = [];
+  let last = null;
+  for (const file of files) {
+    dropMsg = [...msgs, `⏳ Mengonversi ${file.name}…`].join("\n");
+    render();
+    try {
+      const { questions, blobs, stats } = await convertDocx(await file.arrayBuffer());
+      if (!stats.normal && !stats.rusak && !stats.isian) throw new Error("Tidak ada soal terdeteksi. Format: 1. Soal / A. … E. / Kunci: X / {penjelasan}");
+      const rec = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title: file.name.replace(/\.(docx|pdf)$/i, ""), questions, blobs, savedAt: Date.now() };
+      let saved = true;
+      await idb("readwrite", (st) => st.put(rec, "cq:" + rec.id)).catch(() => { saved = false; });
+      customQuizzes.unshift({ ...rec, key: "cq:" + rec.id });
+      clearCustomProgress(rec.id);
+      last = rec;
+      const skipped = stats.skippedExt.length ? ` ⚠️ gambar .${stats.skippedExt.join(", .")} dilewati (browser tidak bisa menampilkan)` : "";
+      msgs.push(`✅ ${file.name}: ${stats.normal} soal${stats.rusak ? ` + ${stats.rusak} soal rusak` : ""}${stats.isian ? ` + ${stats.isian} soal isian` : ""}, ${stats.images} gambar${skipped}${saved ? "" : " ⚠️ tidak tersimpan (IndexedDB)"}`);
+    } catch (e) {
+      msgs.push(`❌ ${file.name}: ${e instanceof ReferenceError ? "Browser terlalu lama (butuh DecompressionStream). Pakai Chrome/Edge/Firefox/Safari terbaru." : e.message}`);
+    }
+  }
+  dropMsg = msgs.join("\n");
+  // Satu file yang sukses langsung dimainkan; banyak file → tetap di pemilih paket.
+  if (files.length === 1 && last) {
+    await selectPackage(customPkg(last));
+    pickerOpen = msgs[0].includes("⚠️");
   }
   render();
 }
 
-async function deleteCustom() {
-  if (!customQuiz || !confirm(`Hapus kuis custom "${customQuiz.title}"?\nProgresnya ikut hilang.`)) return;
-  const wasActive = activePackage?.id === CUSTOM_ID;
-  setCustom(null);
-  clearCustomProgress();
-  await idb("readwrite", (st) => st.delete("custom")).catch(() => {});
+async function deleteCustom(recId) {
+  const rec = customRec(recId);
+  if (!rec || !confirm(`Hapus kuis custom "${rec.title}"?\nProgresnya ikut hilang.`)) return;
+  const wasActive = activePackage?.id === CUSTOM_PREFIX + recId;
+  customQuizzes = customQuizzes.filter((r) => r.id !== recId);
+  clearCustomProgress(recId);
+  await idb("readwrite", (st) => st.delete(rec.key)).catch(() => {});
   if (wasActive) {
     allQuestions = [];
     activePackage = null;

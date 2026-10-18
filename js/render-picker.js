@@ -69,30 +69,33 @@ function renderSettingsCard() {
 
 // ── Render: kartu Custom Quiz (1 slot) — di paling atas layar pilih paket ──
 function renderCustomCard() {
-  const active = activePackage?.id === CUSTOM_ID;
+  const list = customQuizzes.map((rec) => {
+    const id = CUSTOM_PREFIX + rec.id;
+    const active = activePackage?.id === id;
+    return `
+        <div class="customRow">
+          <button class="packageItem${active ? " active" : ""}" data-pkg="${escapeAttr(id)}">
+            <span class="pkgTitle">${escapeHtml(rec.title)}</span>
+            <span class="pkgMeta">${rec.questions.length} soal \u00B7 ${formatDateShort(rec.savedAt)}</span>
+          </button>
+          <button class="resetBtn customDelBtn" data-del-custom="${escapeAttr(rec.id)}" title="Hapus kuis">\uD83D\uDDD1\uFE0F</button>
+        </div>`;
+  }).join("");
   return `
     <div class="categoryGroup">
       <div class="customHead">
-        <span class="catName">Custom Quiz (${customQuiz ? 1 : 0}/1)</span>
-        <span class="catMeta">maks. 1 kuis</span>
+        <span class="catName">Custom Quiz (${customQuizzes.length})</span>
+        <span class="catMeta">tanpa batas</span>
       </div>
-      <input type="file" id="docxInput" accept=".docx,.pdf" hidden>
-      ${customQuiz ? `
-        <button class="packageItem${active ? " active" : ""}" data-pkg="${CUSTOM_ID}">
-          <span class="pkgTitle">${escapeHtml(customQuiz.title)}</span>
-          <span class="pkgMeta">${customQuiz.questions.length} soal \u00B7 ${formatDateShort(customQuiz.savedAt)}</span>
-        </button>
-        <div class="customActions">
-          <button class="pkgSwitchBtn" id="customReplaceBtn">\uD83D\uDD04 Ganti kuis</button>
-          <button class="resetBtn" id="customDeleteBtn">\uD83D\uDDD1\uFE0F Hapus kuis</button>
-        </div>` : `
-        <label class="dropZone" for="docxInput">
-          <span class="dropIcon">\uD83D\uDCC4</span>
-          <span class="dropTitle">Drag and drop</span>
-          <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks saja</span></span>
-        </label>`}
+      <input type="file" id="docxInput" accept=".docx,.pdf" multiple hidden>
+      ${list}
+      <label class="dropZone" for="docxInput">
+        <span class="dropIcon">\uD83D\uDCC4</span>
+        <span class="dropTitle">Drag and drop</span>
+        <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks saja</span></span>
+      </label>
       <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
-       ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}
+      ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}
       <div class="dropFormat">Format: <code>1. Soal</code> \u00B7 opsi <code>A.</code>\u2013<code>E.</code> \u00B7 <code>Kunci: X</code> \u00B7 <code>{penjelasan}</code></div>
     </div>`;
 }
@@ -157,7 +160,7 @@ function attachPickerHandlers() {
   });
   app.querySelectorAll(".packageItem[data-pkg]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      const pkg = btn.dataset.pkg === CUSTOM_ID ? customPkg() : packageManifest.find((p) => p.id === btn.dataset.pkg);
+      const pkg = isCustomId(btn.dataset.pkg) ? customPkg(customRec(btn.dataset.pkg.slice(CUSTOM_PREFIX.length))) : packageManifest.find((p) => p.id === btn.dataset.pkg);
       if (!pkg) return;
       const proceed = async () => {
         await selectPackage(pkg);
@@ -177,10 +180,7 @@ function attachPickerHandlers() {
 
   const docxInput = document.getElementById("docxInput");
   docxInput.addEventListener("change", (e) => handleDocx(e.target.files));
-  const replaceBtn = document.getElementById("customReplaceBtn");
-  if (replaceBtn) replaceBtn.addEventListener("click", () => docxInput.click());
-  const deleteBtn = document.getElementById("customDeleteBtn");
-  if (deleteBtn) deleteBtn.addEventListener("click", deleteCustom);
+  app.querySelectorAll("[data-del-custom]").forEach((btn) => btn.addEventListener("click", () => deleteCustom(btn.dataset.delCustom)));
 
   const mpOpenBtn = document.getElementById("mpOpenBtn");
   if (mpOpenBtn) mpOpenBtn.addEventListener("click", () => {
