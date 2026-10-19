@@ -39,6 +39,7 @@ import path from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import mammoth from "mammoth";
 import { pdfToHtml } from "./pdf-lines.js";
+import { HL_MARK, docxWithHighlightMarks, finishHighlightQuestion } from "./highlight.js";
 import JSZip from "jszip";
 
 // sharp dipakai buat crop/rotasi gambar "literal" (lihat bagian 0 di bawah).
@@ -208,8 +209,9 @@ async function applyImageTransform(buffer, transform, filename) {
 
 // --- 1. Convert docx -> HTML, ekstrak gambar ke /images ---
 const isPdf = /\.pdf$/i.test(docxPath); // PDF: hanya teks (tanpa gambar)
+const markedDocx = isPdf ? null : await docxWithHighlightMarks(docxPath); // tandai teks ber-highlight
 const result = isPdf ? { value: await pdfToHtml(docxPath), messages: [] } : await mammoth.convertToHtml(
-  { path: docxPath },
+  markedDocx ? { buffer: markedDocx } : { path: docxPath },
   {
     convertImage: mammoth.images.imgElement(async (image) => {
       imageCounter += 1;
@@ -410,12 +412,14 @@ function parsePart1(html) {
   const sumberLine = /^Sumber\s*:/i; // rujukan hal. PPT, bukan bagian soal
 
   function pushCurrent() {
-    if (current) questions.push(current);
+    if (current) questions.push(finishHighlightQuestion(current));
     current = null;
   }
 
-  for (const line of lines) {
-    const { text, images, isHeading, isListItem } = line;
+  for (const rawLine of lines) {
+    const hl = rawLine.text.startsWith(HL_MARK); // baris ini di-highlight (penanda kunci)
+    const { images, isHeading, isListItem } = rawLine;
+    const text = hl ? rawLine.text.slice(HL_MARK.length).trimStart() : rawLine.text;
 
     if (pendingOpt && current) {
       // Lanjutan penjelasan opsi (kurung belum tertutup) sampai ketemu "}".
@@ -497,6 +501,7 @@ function parsePart1(html) {
       current.options[letter] = body.text;
       if (body.exp) current.optionExplanations[letter] = body.exp;
       if (body.open) pendingOpt = letter;
+      if (hl) current.highlight = letter;
       current.questionImages.push(...images);
       mode = "options";
       continue;

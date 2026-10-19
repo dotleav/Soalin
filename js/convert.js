@@ -61,7 +61,8 @@ async function convertDocx(buf) {
   const readXml = async (name) => {
     const b = await read(name);
     if (!b) return null;
-    const d = new DOMParser().parseFromString(td.decode(b), "application/xml");
+    const xmlText = td.decode(b);
+    const d = new DOMParser().parseFromString(name === "word/document.xml" ? markHighlightsInXml(xmlText) : xmlText, "application/xml");
     if (d.getElementsByTagName("parsererror").length) throw new Error(`XML rusak di ${name}.`);
     return d;
   };
@@ -212,7 +213,7 @@ async function convertDocx(buf) {
     const answerLine = /^(?:Kunci\s*Jawaban|Jawaban\s*Kunci|Kunci|Jawaban)\s*:?\s*([A-Ea-e])\b.*$/i;
     const explanationLine = /^(?:Gambar\s+)?Penjelasan\s*:?\s*(.*)$/i, categoryLine = /^Kategori\s*:\s*(.+)$/i;
     const startQuestion = (rawText, images) => {
-      if (current) questions.push(current);
+      if (current) questions.push(finishHighlightQuestion(current));
       const inline = splitInlineQuestion(rawText);
       current = {
         id: pendingId || `Q${questions.length + 1}`, category: currentCategory,
@@ -223,7 +224,10 @@ async function convertDocx(buf) {
       pendingId = null;
       mode = inline ? "answer" : "question";
     };
-    for (const { text, images, isHeading, isListItem } of lines) {
+    for (const rawLine of lines) {
+      const hl = rawLine.text.startsWith(HL_MARK); // baris ini di-highlight (penanda kunci)
+      const { images, isHeading, isListItem } = rawLine;
+      const text = hl ? rawLine.text.slice(HL_MARK.length).trimStart() : rawLine.text;
       if (pendingOpt && current) {
         const close = text.indexOf("}");
         const chunk = close < 0 ? text : text.slice(0, close);
@@ -246,6 +250,7 @@ async function convertDocx(buf) {
         current.options[letter] = body.text;
         if (body.exp) current.optionExplanations[letter] = body.exp;
         if (body.open) pendingOpt = letter;
+        if (hl) current.highlight = letter;
         current.questionImages.push(...images);
         mode = "options";
       } else if (ansMatch) {
@@ -265,7 +270,7 @@ async function convertDocx(buf) {
         current.questionImages.push(...images);
       }
     }
-    if (current) questions.push(current);
+    if (current) questions.push(finishHighlightQuestion(current));
     return questions;
   }
 
