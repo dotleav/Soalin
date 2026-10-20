@@ -69,12 +69,19 @@ let tentamenFadeKey = null;
 
 // ── Paket soal / kategori: manifest, load, switch ─────────────────────────
 async function loadManifest() {
+  let local = [];
   try {
     const mod = await import("../data/manifest.js");
-    packageManifest = Array.isArray(mod.packages) ? mod.packages : [];
+    local = Array.isArray(mod.packages) ? mod.packages : [];
   } catch {
-    packageManifest = []; // belum pernah convert pakai kategori — tidak apa-apa
+    local = []; // belum pernah convert pakai kategori — tidak apa-apa
   }
+  let remote = [];
+  try {
+    remote = (await loadRemoteIndex()).map((p) => ({ ...p, remote: true }));
+  } catch { /* offline & belum ada cache — cukup paket lokal */ }
+  const localIds = new Set(local.map((p) => p.id));
+  packageManifest = [...local, ...remote.filter((p) => !localIds.has(p.id))];
 }
 
 async function loadLegacyQuestions() {
@@ -100,7 +107,11 @@ function resetQuizStateForNewPackage() {
 
 async function selectPackage(pkg) {
   try {
-    const mod = pkg.custom ? { questions: prepareCustomQs(customRec(pkg.recId)) } : await import(new URL(pkg.file, document.baseURI).href);
+    const mod = pkg.custom
+      ? { questions: prepareCustomQs(customRec(pkg.recId)) }
+      : pkg.remote
+        ? { questions: await loadRemoteQuestions(pkg) }
+        : await import(new URL(pkg.file, document.baseURI).href);
     allQuestions = Array.isArray(mod.questions) ? mod.questions : [];
   } catch {
     allQuestions = [];
