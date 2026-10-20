@@ -69,37 +69,12 @@ let tentamenFadeKey = null;
 
 // ── Paket soal / kategori: manifest, load, switch ─────────────────────────
 async function loadManifest() {
-<<<<<<< HEAD
-  let local = [];
-  try {
-    const mod = await import("../data/manifest.js");
-    local = Array.isArray(mod.packages) ? mod.packages : [];
-  } catch {
-    local = []; // belum pernah convert pakai kategori — tidak apa-apa
-  }
-  let remote = [];
-  try {
-    remote = (await loadRemoteIndex()).map((p) => ({ ...p, remote: true }));
-  } catch { /* offline & belum ada cache — cukup paket lokal */ }
-  const localIds = new Set(local.map((p) => p.id));
-  packageManifest = [...local, ...remote.filter((p) => !localIds.has(p.id))];
-}
-
-async function loadLegacyQuestions() {
-  try {
-    const mod = await import("../data/questions.js");
-    allQuestions = Array.isArray(mod.questions) ? mod.questions : [];
-  } catch {
-    allQuestions = [];
-  }
-=======
   // Satu-satunya sumber paket: bank online (repo soalin-bank). Data lokal repo ini tidak dipakai.
   let remote = [];
   try {
     remote = (await loadRemoteIndex()).map((p) => ({ ...p, remote: true }));
   } catch { /* offline & belum ada cache */ }
   packageManifest = remote;
->>>>>>> 1c664bb (Database migration)
 }
 
 // Reset semua state kuis (Latihan & Tentamen) saat ganti paket soal.
@@ -120,11 +95,7 @@ async function selectPackage(pkg) {
       ? { questions: prepareCustomQs(customRec(pkg.recId)) }
       : pkg.remote
         ? { questions: await loadRemoteQuestions(pkg) }
-<<<<<<< HEAD
-        : await import(new URL(pkg.file, document.baseURI).href);
-=======
         : { questions: [] };
->>>>>>> 1c664bb (Database migration)
     allQuestions = Array.isArray(mod.questions) ? mod.questions : [];
   } catch {
     allQuestions = [];
