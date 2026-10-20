@@ -2,6 +2,11 @@
 // di IndexedDB (pakai helper idb() dari state.js). Kalau offline, pakai cache.
 const BANK_BASE = "https://raw.githubusercontent.com/dotleav/soalin-bank/main/";
 const BANK_TIMEOUT_MS = 8000;
+<<<<<<< HEAD
+=======
+// Tier yang boleh dimuat app ini. Soalin Reguler: ["reguler"]. Entri tanpa field tier dianggap reguler.
+const BANK_TIERS = ["reguler"];
+>>>>>>> 1c664bb (Database migration)
 
 async function bankFetchJson(url) {
   const ctrl = new AbortController();
@@ -34,7 +39,12 @@ async function bankCached(key, url) {
 
 async function loadRemoteIndex() {
   const idx = await bankCached("bank:index", BANK_BASE + "index.json");
+<<<<<<< HEAD
   return idx && Array.isArray(idx.packages) ? idx.packages : [];
+=======
+  if (!idx || !Array.isArray(idx.packages)) return [];
+  return idx.packages.filter((p) => BANK_TIERS.includes(p.tier || "reguler"));
+>>>>>>> 1c664bb (Database migration)
 }
 
 // Gambar di JSON disimpan relatif ("images/packages/...") seperti di app lokal.

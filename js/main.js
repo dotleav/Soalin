@@ -131,12 +131,8 @@ async function boot() {
   const saved = isCustomId(savedId) ? customPkg(customRec(savedId.slice(CUSTOM_PREFIX.length))) : packageManifest.find((p) => p.id === savedId);
   if (saved) {
     await selectPackage(saved);
-  } else if (packageManifest.length > 0 || customQuizzes.length) {
-    pickerOpen = true; // belum pernah pilih paket — langsung tampilkan pemilih
   } else {
-    // Tidak ada paket terdaftar & tidak ada kuis custom — pakai mode lama (data/questions.js).
-    await loadLegacyQuestions();
-    initBiasa();
+    pickerOpen = true; // belum pilih paket (atau bank belum termuat) — tampilkan pemilih
   }
 
   render();
