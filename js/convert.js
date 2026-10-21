@@ -1,6 +1,6 @@
 // ── Konverter .docx → soal, jalan 100% di browser (tanpa library) ───────────
 // Alur: zip (DecompressionStream bawaan browser) → word/document.xml (DOMParser
-// bawaan) → baris teks/gambar → parser soal yang SAMA dengan scripts/convert-docx.js.
+// bawaan) → baris teks/gambar → parser soal yang sama.
 // Gambar dipakai apa adanya (Blob langsung dari zip, tanpa re-encode); hanya
 // gambar yang di-crop/rotasi/flip di Word yang digambar ulang lewat canvas.
 const DOCX_NS = {
@@ -38,7 +38,7 @@ async function openZip(buf) {
   };
 }
 
-// Crop → flip → rotasi, urutan yang sama dengan scripts/convert-docx.js (sharp).
+// Crop → flip → rotasi, urutan yang sama (canvas).
 async function transformImage(blob, s, type) {
   try {
     const bmp = await createImageBitmap(blob);
@@ -178,9 +178,9 @@ async function convertDocx(buf) {
   const part2 = cut < 0 ? [] : blocks.slice(cut, cut3 < 0 ? blocks.length : cut3);
   const part3 = cut3 < 0 ? [] : blocks.slice(cut3);
 
-  // ── Bagian 1: soal MCQ (sama persis dengan scripts/convert-docx.js) ──
+  // ── Bagian 1: soal MCQ (parser Bagian 1) ──
   // Fallback: soal + opsi + kunci kadang ada dalam SATU paragraf tanpa line-break.
-  // Penjelasan per opsi ada di dalam {...} di akhir baris opsi (sama dengan scripts/convert-docx.js).
+  // Penjelasan per opsi ada di dalam {...} di akhir baris opsi.
   function parseOptionBody(raw) {
     const i = raw.indexOf("{");
     if (i < 0) return { text: raw.trim(), exp: "", open: false };

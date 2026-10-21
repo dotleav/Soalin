@@ -92,7 +92,7 @@ function renderCustomCard() {
       <label class="dropZone" for="docxInput">
         <span class="dropIcon">\uD83D\uDCC4</span>
         <span class="dropTitle">Drag and drop</span>
-        <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks saja</span></span>
+        <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks dan gambar</span></span>
       </label>
       <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
       ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}

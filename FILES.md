@@ -2,7 +2,7 @@
 
 | Mau ubah / debug | Kirim file ini |
 |---|---|
-| Parser .docx (Bagian 1/2/3) | `js/convert.js`, `scripts/convert-docx.js` |
+| Parser .docx (Bagian 1/2/3) | `js/convert.js` |
 | Konstanta, util, suara benar/salah | `js/core.js` |
 | Efek tema (P5 pedang, SxF, ransom, tema) | `js/fx.js`, `css/p5.css` / `css/sxf.css` / `css/doksli.css` |
 | Stiker tema Doksli/Koceng/Capy | `js/doksli.js`, `css/doksli.css` |

@@ -1,6 +1,12 @@
-// Baca teks PDF per baris (pakai koordinat y), lalu gabungkan baris lanjutan.
+// Baca teks + gambar PDF lewat pdf.js (browser), lalu ubah jadi "dokumen docx" sintetis
+// supaya parser soal yang sama (js/convert.js) bisa dipakai.
+// Teks: satu <p> per baris. Gambar: <p> berisi <a:blip> yang relasinya menunjuk ke
+// word/media/pdf-N.png (PNG dari objek gambar pdf.js).
 // Baris yang berada di dalam area highlight diberi penanda HL_MARK di awal.
 const PDF_START_RE = /^(\d+[.)]\s|[A-Ea-e][.)]\s|Kunci|Jawaban|Answer|Key|Correct|Penjelasan|Explanation|Gambar\s+Penjelasan|Sumber\s*:|ID\s*:|Kategori|Category|Bagian\s+\d)/i;
+
+// Gambar lebih kecil dari ini dianggap ornamen (bullet, garis, logo kecil) dan dilewati.
+const PDF_MIN_IMG_PX = 16;
 
 // Matriks PDF [a b c d e f]: m1 lalu m2 (CTM' = M × CTM).
 function pdfMulM(m1, m2) {
@@ -20,11 +26,10 @@ function pdfTransformBox(b, m) {
   return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
 }
 
-// Kotak highlight di satu halaman: anotasi bertipe "Highlight" + area berwarna
-// (gaya highlighter yang digambar langsung ke halaman, misal dari Word).
-// OPS = konstanta operator pdf.js (pdfjs.OPS).
-async function pdfHighlightRects(page, OPS) {
-  const rects = [];
+// Scan satu halaman: kotak highlight + gambar yang dipaint (beserta kotaknya).
+// Kotak highlight: anotasi "Highlight" + area berwarna. OPS = konstanta pdf.js (lib.OPS).
+async function pdfScanPage(page, OPS) {
+  const rects = [], images = [];
   try {
     for (const a of await page.getAnnotations()) {
       if (a.subtype === "Highlight" && a.rect) rects.push(a.rect);
@@ -45,12 +50,63 @@ async function pdfHighlightRects(page, OPS) {
       if (box && isColored(fill) && box[3] - box[1] < 40) rects.push(box);
       box = null;
     } else if (f === OPS.endPath) box = null;
+    else if (f === OPS.paintImageXObject || f === OPS.paintInlineImageXObject) {
+      // Gambar = unit square yang ditransformasi CTM. a[0] = id objek (string) atau data inline.
+      images.push({ obj: a[0], box: pdfTransformBox([0, 0, 1, 1], ctm) });
+    }
   }
-  return rects;
+  return { rects, images };
 }
 
-// items per halaman + kotak highlight per halaman → baris teks (dengan HL_MARK bila di-highlight).
-function pdfLinesFromPages(pages, rectsPerPage) {
+// Objek gambar pdf.js (page.objs) bisa belum ter-load; tunggu sebentar sampai siap.
+async function waitPdfObj(store, name) {
+  for (let i = 0; i < 150 && !store.has(name); i++) await new Promise((r) => setTimeout(r, 20));
+  return store.has(name) ? store.get(name) : null;
+}
+
+// Data piksel pdf.js → RGBA. pdf.js bisa memberi RGBA, RGB, gray 8-bit, atau gray 1-bit
+// (dipak per baris). Panjang data dipakai untuk menebak formatnya.
+function pdfRgba(data, w, h) {
+  const px = w * h, src = new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
+  const out = new Uint8ClampedArray(px * 4);
+  if (src.length === px * 4) out.set(src);
+  else if (src.length === px * 3) {
+    for (let i = 0; i < px; i++) {
+      out[i * 4] = src[i * 3]; out[i * 4 + 1] = src[i * 3 + 1]; out[i * 4 + 2] = src[i * 3 + 2]; out[i * 4 + 3] = 255;
+    }
+  } else if (src.length === px) {
+    for (let i = 0; i < px; i++) { const v = src[i]; out[i * 4] = out[i * 4 + 1] = out[i * 4 + 2] = v; out[i * 4 + 3] = 255; }
+  } else {
+    const rowBytes = Math.ceil(w / 8);
+    if (src.length < rowBytes * h) return null;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const v = ((src[y * rowBytes + (x >> 3)] >> (7 - (x & 7))) & 1) ? 255 : 0;
+        const o = (y * w + x) * 4;
+        out[o] = out[o + 1] = out[o + 2] = v; out[o + 3] = 255;
+      }
+    }
+  }
+  return out;
+}
+
+// Objek gambar → bytes PNG (lewat OffscreenCanvas). null kalau tidak bisa / terlalu kecil.
+async function pdfImagePng(page, obj) {
+  const img = typeof obj === "string" ? await waitPdfObj(page.objs, obj) : obj;
+  if (!img || img.width < PDF_MIN_IMG_PX || img.height < PDF_MIN_IMG_PX) return null;
+  const cv = new OffscreenCanvas(img.width, img.height), g = cv.getContext("2d");
+  if (img.bitmap) g.drawImage(img.bitmap, 0, 0);
+  else if (img.data) {
+    const rgba = pdfRgba(img.data, img.width, img.height);
+    if (!rgba) return null;
+    g.putImageData(new ImageData(rgba, img.width, img.height), 0, 0);
+  } else return null;
+  const blob = await cv.convertToBlob({ type: "image/png" });
+  return new Uint8Array(await blob.arrayBuffer());
+}
+
+// items per halaman + kotak highlight + gambar per halaman → blok: {text} atau {img: rId}.
+function pdfBlocksFromPages(pages, rectsPerPage, imgsPerPage) {
   const lines = [];
   pages.forEach((items, pi) => {
     const rects = (rectsPerPage && rectsPerPage[pi]) || [];
@@ -62,6 +118,7 @@ function pdfLinesFromPages(pages, rectsPerPage) {
         hl: inHi(it.transform[4] + (it.width || 0) / 2, it.transform[5] + (it.height || 8) / 2),
       }))
       .sort((a, b) => b.y - a.y || a.x - b.x);
+    const pageLines = [];
     let row = [], rowY = null;
     const flush = () => {
       if (!row.length) return;
@@ -73,7 +130,7 @@ function pdfLinesFromPages(pages, rectsPerPage) {
         endX = p.x + p.w;
       }
       const clean = text.replace(/\s+/g, " ").trim();
-      if (clean) lines.push({ text: clean, hl: row.some((p) => p.hl) });
+      if (clean) pageLines.push({ text: clean, hl: row.some((p) => p.hl), y: rowY });
       row = [];
     };
     for (const p of pts) {
@@ -81,22 +138,44 @@ function pdfLinesFromPages(pages, rectsPerPage) {
       row.push(p);
     }
     flush();
+    const pageImgs = ((imgsPerPage && imgsPerPage[pi]) || []).map((im) => ({ img: im.src, y: im.y }));
+    // Yang lebih tinggi di halaman (y besar) datang lebih dulu.
+    lines.push(...[...pageLines, ...pageImgs].sort((a, b) => b.y - a.y));
   });
   // Baris yang bukan penanda (nomor soal, opsi, Kunci, Penjelasan, dst.) dianggap lanjutan
-  // dari baris sebelumnya — jadi teks soal/opsi/penjelasan yang turun ke baris baru tetap utuh.
+  // dari baris sebelumnya. Gambar selalu memutus baris: teks setelah gambar mulai blok baru.
   const out = [];
   for (const l of lines) {
-    if (out.length && !PDF_START_RE.test(l.text)) out[out.length - 1].text += " " + l.text;
-    else out.push({ ...l });
+    if (l.img) { out.push({ img: l.img }); continue; }
+    const last = out[out.length - 1];
+    if (last && !last.img && !PDF_START_RE.test(l.text)) last.text += " " + l.text;
+    else out.push({ text: l.text, hl: l.hl });
   }
-  return out.map((l) => (l.hl ? HL_MARK : "") + l.text);
+  return out.map((b) => (b.img ? b : { text: (b.hl ? HL_MARK : "") + b.text }));
+}
+
+// Blok → word/document.xml sintetis (format docx yang dipahami parser).
+function pdfDocxXml(blocks) {
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const paras = blocks.map((b) => (b.img
+    ? `<p><r><a:blip r:embed="${b.img}"/></r></p>`
+    : `<p><r><t xml:space="preserve">${esc(b.text)}</t></r></p>`)).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><document xmlns="${PDF_W_NS}" xmlns:a="${PDF_A_NS}" xmlns:r="${PDF_R_NS}"><body>${paras}</body></document>`;
+}
+
+// Relasi word/_rels/document.xml.rels untuk gambar: rels = [{id, target}] (target relatif ke word/).
+function pdfRelsXml(rels) {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${PDF_PKG_NS}">` +
+    rels.map((r) => `<Relationship Id="${r.id}" Type="${PDF_R_NS}/image" Target="${r.target}"/>`).join("") +
+    `</Relationships>`;
 }
 
 // ── Browser: baca PDF lewat pdf.js (dimuat dari CDN saat pertama dipakai) ──
-// Teks PDF diubah jadi "dokumen docx" sintetis, jadi parser yang sama bisa dipakai.
-// Gambar di PDF belum diekstrak (hanya teks). Teks di area highlight diberi penanda HL_MARK.
 const PDFJS_BASE = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
 const PDF_W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+const PDF_A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
+const PDF_R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+const PDF_PKG_NS = "http://schemas.openxmlformats.org/package/2006/relationships";
 let pdfjsPromise = null;
 
 function isPdfBuffer(buf) {
@@ -121,21 +200,38 @@ function loadPdfJs() {
   return pdfjsPromise;
 }
 
-// Pengganti openZip() untuk PDF: hanya word/document.xml yang ada (satu paragraf per baris).
+// Pengganti openZip() untuk PDF: word/document.xml, relasi, dan media gambar (PNG) dari PDF.
 async function pdfDocxReader(buf) {
   const lib = await loadPdfJs();
   const doc = await lib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
-  const pages = [], rects = [];
+  const pages = [], rects = [], imgs = [], media = new Map(), rels = [];
   for (let p = 1; p <= doc.numPages; p++) {
     const page = await doc.getPage(p);
     pages.push((await page.getTextContent()).items);
-    rects.push(await pdfHighlightRects(page, lib.OPS));
+    const scan = await pdfScanPage(page, lib.OPS);
+    rects.push(scan.rects);
+    const pageImgs = [], seen = new Map(); // id objek gambar di halaman ini → rId (tidak ditulis dua kali)
+    for (const im of scan.images) {
+      const key = typeof im.obj === "string" ? im.obj : null;
+      let rid = key && seen.get(key);
+      if (!rid) {
+        const png = await pdfImagePng(page, im.obj);
+        if (!png) continue;
+        const n = rels.length + 1;
+        rid = `rIdPdf${n}`;
+        rels.push({ id: rid, target: `media/pdf-${n}.png` });
+        media.set(`word/media/pdf-${n}.png`, png);
+        if (key) seen.set(key, rid);
+      }
+      pageImgs.push({ y: im.box[3], src: rid });
+    }
+    imgs.push(pageImgs);
   }
-  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const paras = pdfLinesFromPages(pages, rects)
-    .map((l) => `<p><r><t xml:space="preserve">${esc(l)}</t></r></p>`)
-    .join("");
-  const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><document xmlns="${PDF_W_NS}"><body>${paras}</body></document>`;
-  const bytes = new TextEncoder().encode(xml);
-  return async (name) => (name === "word/document.xml" ? bytes : null);
+  const docBytes = new TextEncoder().encode(pdfDocxXml(pdfBlocksFromPages(pages, rects, imgs)));
+  const relsBytes = new TextEncoder().encode(pdfRelsXml(rels));
+  return async (name) => {
+    if (name === "word/document.xml") return docBytes;
+    if (name === "word/_rels/document.xml.rels") return relsBytes;
+    return media.get(name) || null;
+  };
 }

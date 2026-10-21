@@ -26,8 +26,8 @@ function clearBiasa() {
 }
 
 // ── State: paket soal / kategori ──────────────────────────────────────────
-let packageManifest = []; // dari data/manifest.js, diisi scripts/convert-docx.js
-let activePackage = null; // entry manifest yang lagi dipakai, atau null = mode lama (data/questions.js)
+let packageManifest = []; // diisi dari bank online (remote-bank.js)
+let activePackage = null; // entry paket yang lagi dipakai, atau null
 let pickerOpen = false; // true = layar pilih kategori/paket sedang ditampilkan
 let themeMenuOpen = false; // true = pilihan "Mode UI" (Terang/Gelap/Persona 5) lagi kebuka
 let expandedCategories = new Set();
