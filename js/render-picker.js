@@ -86,18 +86,17 @@ function renderCustomCard() {
     <div class="categoryGroup">
       <div class="customHead">
         <span class="catName">Custom Quiz (${customQuizzes.length})</span>
-        <span class="catMeta">tanpa batas</span>
+        <span class="catMeta">-</span>
       </div>
       <input type="file" id="docxInput" accept=".docx,.pdf" multiple hidden>
       ${list}
       <label class="dropZone" for="docxInput">
         <span class="dropIcon">\uD83D\uDCC4</span>
         <span class="dropTitle">Drag and drop</span>
-        <span class="dropFormats"><span><code>.docx</code> — soal, gambar, soal rusak &amp; isian</span><span><code>.pdf</code> — soal pilihan ganda, teks dan gambar</span></span>
+        <span class="dropFormats"><code>.docx</code><code>.pdf</code></span>
       </label>
       <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
       ${dropMsg ? `<div class="dropMsg">${escapeHtml(dropMsg)}</div>` : ""}
-      <div class="dropFormat">Format: <code>1. Soal</code> \u00B7 opsi <code>A.</code>\u2013<code>E.</code> \u00B7 <code>Kunci: X</code> \u00B7 <code>{penjelasan}</code></div>
     </div>`;
 }
 
@@ -112,8 +111,8 @@ function renderPickerScreen() {
   let html = `
     <main class="wrap">
       <div class="pickerHeader">
-        <h1>Pilih Paket Soal</h1>
-        <p class="pickerSub">${packageManifest.length ? "Ketuk kategori untuk membuka daftar paket soal di dalamnya." : "Upload file .docx untuk dijadikan kuis."}</p>
+        <h1>Soalin</h1>
+        <p class="pickerSub">${packageManifest.length ? "Belajar? Kau?" : "Upload file .docx untuk dijadikan kuis."}</p>
       </div>
       <div class="categoryList">
         ${renderCustomCard()}
