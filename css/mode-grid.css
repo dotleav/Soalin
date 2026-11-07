@@ -164,3 +164,6 @@ body.sxf .cbtTimer, body.sxf .cbtArrow { border-radius: 999px; }
 body.sxf .cbtNum { background: #fff; color: #3d1a2e; border-color: #f7c1da; }
 body.sxf .cbtNum.done { background: #7ed9b6; color: #1f4d3f; border-color: #7ed9b6; }
 body.sxf .cbtNum.current { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #e8557a; }
+
+/* ── Catatan kecil di tile (pacing per soal di pemilih Multiplayer) ── */
+.modeNote { font-family: "JetBrains Mono", monospace; font-size: 0.7rem; font-weight: 700; color: var(--mc); }

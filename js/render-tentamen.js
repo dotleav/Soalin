@@ -19,14 +19,7 @@ function renderTentamenSetup() {
     <div class="sectionLabel">Pilih mode</div>
     <div class="modeGrid">`;
   Object.keys(DIFFICULTY_CONFIG).forEach(d => {
-    const dcfg = DIFFICULTY_CONFIG[d];
-    const active = tentamenDifficulty === d;
-    html += `
-      <button class="modeTile${active ? " active" : ""}" data-diff="${d}" style="--mc:${dcfg.color};" aria-pressed="${active}" aria-label="${escapeAttr(dcfg.label)}${dcfg.tentamen ? ", Tentamen" : ""}">
-        ${dcfg.tentamen ? `<span class="modeBadge">Tentamen</span>` : ""}
-        <img class="modeSticker" src="${dcfg.sticker}" alt="" draggable="false">
-        <span class="modeCaption">${dcfg.descHtml || escapeHtml(dcfg.desc || "")}</span>
-      </button>`;
+    html += modeTileHtml(d, tentamenDifficulty === d);
   });
   html += `</div></div>`;
 

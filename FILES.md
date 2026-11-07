@@ -12,6 +12,7 @@
 | Header, mode bar, Default Mode (Latihan) | `js/render-latihan.js` |
 | Mode Tentamen (setup/running/hasil) | `js/render-tentamen.js` |
 | Other Modes (pemilih stiker) dan CBT (paket, navigasi, Submit) | `js/render-cbt.js`, `js/render-tentamen.js`, `css/mode-grid.css` |
+| Pemilih host Multiplayer (stiker, pacing, tombol Buat room) | `js/render-multiplayer.js`; helper `modeTileHtml` di `js/render-cbt.js` |
 | Pemilih paket, pengaturan, kartu Custom Quiz | `js/render-picker.js` |
 | render() utama + event listener + boot | `js/main.js` |
 | Kontrol gamepad / controller | `js/gamepad.js` |

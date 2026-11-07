@@ -273,3 +273,16 @@ document.addEventListener("input", (e) => {
   if (t.id === "cbtTimeRange" || t.id === "cbtTimeNum") cbtSetTimeFromInput(t);
   else if (t.classList && t.classList.contains("cbtIsianInput")) handleCbtIsianInput(t.value);
 });
+
+// ── Tile mode (stiker): dipakai pemilih Other Modes dan pemilih host Multiplayer ──
+// active: tile yang dipilih. attrs: atribut tambahan (mis. data-mp-act). note: teks kecil di bawah caption.
+function modeTileHtml(k, active, attrs = "", note = "") {
+  const c = DIFFICULTY_CONFIG[k];
+  return `
+    <button class="modeTile${active ? " active" : ""}" data-diff="${k}" ${attrs} style="--mc:${c.color};" aria-pressed="${active}" aria-label="${escapeAttr(c.label)}${c.tentamen ? ", Tentamen" : ""}">
+      ${c.tentamen ? `<span class="modeBadge">Tentamen</span>` : ""}
+      <img class="modeSticker" src="${c.sticker}" alt="" draggable="false">
+      <span class="modeCaption">${c.descHtml || escapeHtml(c.desc || "")}</span>
+      ${note}
+    </button>`;
+}
