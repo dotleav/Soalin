@@ -9,8 +9,9 @@
 | State, paket soal, Custom Quiz (IndexedDB) | `js/state.js` |
 | Klik jawaban, timer, mulai/reset Tentamen | `js/handlers.js` |
 | Kartu soal, soal rusak, soal isian | `js/render-cards.js` |
-| Header, mode bar, Mode Latihan | `js/render-latihan.js` |
+| Header, mode bar, Default Mode (Latihan) | `js/render-latihan.js` |
 | Mode Tentamen (setup/running/hasil) | `js/render-tentamen.js` |
+| Other Modes (pemilih stiker) dan CBT (paket, navigasi, Submit) | `js/render-cbt.js`, `js/render-tentamen.js`, `css/mode-grid.css` |
 | Pemilih paket, pengaturan, kartu Custom Quiz | `js/render-picker.js` |
 | render() utama + event listener + boot | `js/main.js` |
 | Kontrol gamepad / controller | `js/gamepad.js` |

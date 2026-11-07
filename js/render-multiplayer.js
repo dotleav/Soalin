@@ -28,7 +28,7 @@ function renderMultiplayerScreen() {
 }
 
 function renderMpJoin() {
-  const cards = Object.keys(DIFFICULTY_CONFIG).map((k) => {
+  const cards = Object.keys(DIFFICULTY_CONFIG).filter((k) => !DIFFICULTY_CONFIG[k].cbt).map((k) => {
     const c = DIFFICULTY_CONFIG[k];
     const on = mpDiff === k;
     const timer = c.timerSeconds === 0 ? "\u221E" : `${c.timerSeconds}s`;
