@@ -142,3 +142,32 @@ body.darkv2 .shuffleBtn.active, body.lightv2 .shuffleBtn.active { color: var(--a
 
 /* Teks yang tidak dibutuhkan konteksnya disembunyikan di v2 (angka dan ikon tetap tampil) */
 body.darkv2 .v2hide, body.lightv2 .v2hide { display: none; }
+
+/* Header ringkas (HP): judul dan folder sebaris dengan subtitle, angka di kanan */
+body.darkv2 .titleRow, body.lightv2 .titleRow { align-items: flex-start; gap: 12px; }
+body.darkv2 .titleRow > div:first-child, body.lightv2 .titleRow > div:first-child { display: flex; flex-wrap: wrap; align-items: center; column-gap: 10px; min-width: 0; flex: 1 1 auto; }
+body.darkv2 h1.pkgTitleActive, body.lightv2 h1.pkgTitleActive { flex-basis: 100%; font-size: 1.2rem; margin: 0; line-height: 1.25; }
+body.darkv2 .pkgSubtitle, body.lightv2 .pkgSubtitle { margin: 0; font-size: 0.8rem; }
+body.darkv2 .pkgSwitchBtn, body.lightv2 .pkgSwitchBtn { margin: 0; }
+body.darkv2 .tracker .count, body.lightv2 .tracker .count { color: var(--text); font-size: 1.05rem; }
+body.darkv2 .tracker .sub, body.lightv2 .tracker .sub { font-size: 0.85rem; font-weight: 700; }
+/* Progress: cukup bar, angka sudah di header */
+body.darkv2 .progressTop, body.lightv2 .progressTop { display: none; }
+/* Logo: teks tetap di tengah, ikon di kanan teks */
+body.darkv2 .brandH1, body.lightv2 .brandH1 { position: relative; display: inline-block; }
+body.darkv2 .brandMark, body.lightv2 .brandMark { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 0.3em; }
+
+/* Header HP satu baris: folder di samping judul, angka tracker sejajar folder, kategori tidak ditulis */
+body.darkv2 .titleRow, body.lightv2 .titleRow { align-items: center; gap: 10px; }
+body.darkv2 .titleRow > div:first-child, body.lightv2 .titleRow > div:first-child { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1 1 auto; }
+body.darkv2 h1.pkgTitleActive, body.lightv2 h1.pkgTitleActive { flex: 1 1 auto; min-width: 0; margin: 0; font-size: 1.2rem; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.darkv2 .pkgSubtitle, body.lightv2 .pkgSubtitle { display: none; }
+body.darkv2 .pkgSwitchBtn, body.lightv2 .pkgSwitchBtn { flex: none; margin: 0; }
+body.darkv2 .tracker, body.lightv2 .tracker { flex: none; align-self: center; }
+
+/* Satu baris: judul mengambil sisa lebar (tidak membungkus), folder selalu di sampingnya */
+body.darkv2 .titleRow > div:first-child, body.lightv2 .titleRow > div:first-child { flex-wrap: nowrap; }
+body.darkv2 h1.pkgTitleActive, body.lightv2 h1.pkgTitleActive { flex: 1 1 0; }
+
+/* Tracker sejajar folder: satu baris, tidak membungkus */
+body.darkv2 .titleRow, body.lightv2 .titleRow { display: flex; flex-wrap: nowrap; justify-content: space-between; }

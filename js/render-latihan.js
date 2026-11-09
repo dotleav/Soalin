@@ -9,14 +9,16 @@ function renderHeaderZone() {
     trackerHtml = `
       <div class="tracker">
         <div class="count mono">${answeredCount}/${totalQ}</div>
-        <div class="sub">dijawab \u00B7 benar <span class="ok">${correctCount}</span></div>
+        <div class="sub"><span class="ok">${correctCount}</span>/<span class="bad">${answeredCount - correctCount}</span></div>
       </div>
     `;
   } else if (quizMode === "tentamen" && tentamenState === "running") {
+    const tentAnswered = tentamenAnswers.filter((a) => a !== null && a !== undefined && a !== "skipped").length;
+    const tentCorrect = tentamenAnswers.filter((a, i) => a && a !== "skipped" && (tentamenQuestions[i]?.isIsian || a === tentamenQuestions[i]?.answer)).length;
     trackerHtml = `
       <div class="tracker">
-        <div class="count mono" id="trackerCount">${cbtActive() ? cbtAnsweredCount() + "/" + tentamenQuestions.length : (currentIdx + 1) + "/" + tentamenQuestions.length}</div>
-        <div class="sub">${cbtActive() ? "dijawab" : "soal"}</div>
+        <div class="count mono" id="trackerCount">${cbtActive() ? `${cbtAnsweredCount()}/${tentamenQuestions.length}` : `${tentAnswered}/${tentamenQuestions.length}`}</div>
+        <div class="sub">${cbtActive() ? "" : `<span class="ok">${tentCorrect}</span>/<span class="bad">${tentAnswered - tentCorrect}</span>`}</div>
       </div>
     `;
   }

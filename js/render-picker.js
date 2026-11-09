@@ -113,7 +113,7 @@ function renderPickerScreen() {
   let html = `
     <main class="wrap">
       <div class="pickerHeader">
-        <h1>${svgIcon("brand")} Soalin</h1>
+        <h1 class="brandH1">Soalin<span class="brandMark">${svgIcon("brand")}</span></h1>
         <p class="pickerSub">${packageManifest.length ? "Belajar? Kau?" : "Upload file .docx untuk dijadikan kuis."}</p>
       </div>
       <div class="categoryList">
