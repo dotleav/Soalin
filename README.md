@@ -1,11 +1,10 @@
 # Soalin
 
-Quiz app statis untuk belajar dari soal ujian. Tidak butuh server dan tidak butuh build step: buka `index.html` di browser, atau bungkus jadi APK.
+Quiz app statis untuk belajar dengan soal custom.
 
 ## Pakai
 
-- **Kuis dari file sendiri:** seret file `.docx` atau `.pdf` ke app (atau pilih lewat tombol). File dikonversi di browser, termasuk gambarnya, lalu disimpan sebagai kuis custom di browser (IndexedDB). Tidak perlu instal apa pun.
-- **Bank online:** paket soal dari repo `soalin-bank` dimuat otomatis saat online, lalu disimpan di cache.
+- **Kuis dari file sendiri:** seret file `.docx` atau `.pdf` ke app (atau pilih lewat tombol). File dikonversi di browser, termasuk gambarnya, lalu disimpan sebagai kuis custom di browser (IndexedDB).
 
 ## Format soal di file
 
