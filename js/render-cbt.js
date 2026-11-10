@@ -293,16 +293,14 @@ function resultStickerSrc(pct) {
   return DIFFICULTY_CONFIG[k].sticker;
 }
 
-// Judul paket di tema v2: ukuran huruf dikecilkan sampai muat satu baris (minimum 12px).
+// Judul paket: ukuran huruf dikecilkan sampai muat satu baris (11-20px), semua tema.
 function fitPkgTitle() {
   const h = document.querySelector("h1.pkgTitleActive");
   if (!h) return;
-  const v2 = document.body.classList.contains("darkv2") || document.body.classList.contains("lightv2");
   h.style.fontSize = "";
-  if (!v2) return;
-  let px = parseFloat(getComputedStyle(h).fontSize);
+  let px = Math.min(parseFloat(getComputedStyle(h).fontSize), 20);
   h.style.fontSize = px + "px";
-  while (h.scrollWidth > h.clientWidth && px - 0.5 >= 12) { px -= 0.5; h.style.fontSize = px + "px"; }
+  while (h.scrollWidth > h.clientWidth && px - 0.5 >= 11) { px -= 0.5; h.style.fontSize = px + "px"; }
 }
 window.addEventListener("resize", fitPkgTitle);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPkgTitle);

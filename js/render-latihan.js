@@ -35,9 +35,10 @@ function renderHeaderZone() {
           <div class="headerInner">
             <div class="titleRow">
               <div>
+                <button class="pkgSwitchBtn iconBtn" id="pkgSwitchBtn" title="${activePackage ? "Ganti paket" : "Pilih paket soal"}" aria-label="${activePackage ? "Ganti paket" : "Pilih paket soal"}">${svgIcon("folder")} <span class="lbl">${activePackage ? "Ganti paket" : "Pilih paket soal"}</span></button>
                 <h1${activePackage ? ` class="pkgTitleActive"` : ""}>${activePackage ? escapeHtml(activePackage.title) : "Quiz App"}</h1>
                 ${activePackage ? `<div class="pkgSubtitle">${escapeHtml(activePackage.category)}</div>` : ""}
-                <button class="pkgSwitchBtn iconBtn" id="pkgSwitchBtn" title="${activePackage ? "Ganti paket" : "Pilih paket soal"}" aria-label="${activePackage ? "Ganti paket" : "Pilih paket soal"}">${svgIcon("folder")} <span class="lbl">${activePackage ? "Ganti paket" : "Pilih paket soal"}</span></button>
+                
               </div>
               ${trackerHtml}
             </div>
