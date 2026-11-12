@@ -33,6 +33,9 @@ function answertoneDefault(item) {
 function answertoneGet(item) {
   return { ...answertoneDefault(item), ...(answertoneSettings[item.id] || {}) };
 }
+function answertoneAllSelected() {
+  return soundCatalog.length > 0 && soundCatalog.every((s) => answertoneGet(s).on);
+}
 function answertoneSet(id, patch) {
   answertoneSettings[id] = { ...(answertoneSettings[id] || {}), ...patch };
   answertoneSave();
@@ -192,9 +195,8 @@ function renderAnswertoneCard() {
         ${answertoneOpen ? `
         <div class="atBody">
           <div class="atBulk">
-            <button class="atBulkBtn" data-at-bulk="all">Centang semua</button>
-            <button class="atBulkBtn" data-at-bulk="none">Kosongkan</button>
-            <button class="atBulkBtn" id="atAddBtn">+ Suara sendiri</button>
+            <button class="atBulkBtn" data-at-bulk>${answertoneAllSelected() ? "Unsellect" : "Select"}</button>
+            <button class="atBulkBtn" id="atAddBtn">+ Custom</button>
             <input type="file" id="atFile" accept="audio/*" hidden>
           </div>
           ${items.length ? `<div class="atList">${rows}</div>` : `<div class="atEmpty">Suara belum termuat. Coba buka ulang halaman.</div>`}
@@ -216,7 +218,7 @@ function attachAnswertoneHandlers() {
   card.querySelectorAll("[data-at-play]").forEach((el) => el.addEventListener("click", () => answertonePreview(el.dataset.atPlay)));
   card.querySelectorAll("[data-at-del]").forEach((el) => el.addEventListener("click", () => answertoneDelete(el.dataset.atDel)));
   card.querySelectorAll("[data-at-bulk]").forEach((el) => el.addEventListener("click", () => {
-    const on = el.dataset.atBulk === "all";
+    const on = !answertoneAllSelected();
     soundCatalog.forEach((s) => answertoneSet(s.id, { on }));
     render();
   }));
