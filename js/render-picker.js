@@ -11,6 +11,8 @@ const THEME_OPTIONS = [
   { value: "dark", icon: svgIcon("moon"), label: "Gelap" },
   { value: "darkv2", icon: svgIcon("bulb"), label: "Gelap v2" },
   { value: "lightv2", icon: svgIcon("star"), label: "Terang v2" },
+  { value: "lightv3", icon: svgIcon("sun"), label: "Terang v3" },
+  { value: "darkv3", icon: svgIcon("moon"), label: "Gelap v3" },
   { value: "p5", icon: '<img src="./favicon.ico" style="width:16px;height:16px;vertical-align:middle;image-rendering:pixelated;">', label: "Persona 5" },
   { value: "doksli", icon: svgIcon("document"), label: "Dokumen Asli (Doksli)" },
   { value: "koceng", icon: svgIcon("paw"), label: "Koceng" },

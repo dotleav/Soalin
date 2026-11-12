@@ -1,0 +1,85 @@
+/* Hallmark v2.0.0 · redesign · genre editorial · theme ink-paper (Gelap, Terang, Gelap v3, Terang v3) */
+/* Critique: flat paper and ink, one teal accent, one typeface, no gradient, glow, bevel or tracked caps. Skins keep identity; vibe effects removed. */
+
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/atkinson-400.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/atkinson-700.woff2") format("woff2"); }
+
+:root[data-theme="dark"], :root[data-theme="darkv3"] {
+  --bg: #101312; --bg-alt: #0b0d0c;
+  --card: #171b19; --card-soft: #1d2320;
+  --border: #2e3733; --border-light: #232b27;
+  --text: #ecebe5; --text-secondary: #c9ccc5;
+  --muted: #98a09a; --muted2: #848c86; --muted3: #4f5854;
+  --accent: #7fd3bf; --accent-strong: #a6e6d6; --accent-soft: rgba(127, 211, 191, 0.14);
+  --accent2: #e9b25d; --accent2-soft: rgba(233, 178, 93, 0.14);
+  --on-accent: #0a1512; --on-correct: #0a1512; --on-wrong: #0a1512;
+  --correct: #86d6a6; --correct-strong: #5fc08a;
+  --wrong: #f09a86; --wrong-strong: #e8806b;
+  --blue: #7fd3bf; --blue-strong: #a6e6d6; --cbt: #7fd3bf; --cbt-done: #86d6a6;
+  --tint-correct-text: #c9f2da; --tint-wrong-text: #ffd0c4;
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 10px; --shadow-card: none;
+  --font-ui: "Atkinson Hyperlegible", system-ui, sans-serif;
+  color-scheme: dark;
+}
+:root[data-theme="light"], :root[data-theme="lightv3"] {
+  --bg: #f5f3ee; --bg-alt: #ebe8e0;
+  --card: #fffefb; --card-soft: #f7f5f0;
+  --border: #d6d1c4; --border-light: #e6e2d7;
+  --text: #1b1f24; --text-secondary: #3d444d;
+  --muted: #5f6670; --muted2: #666d77; --muted3: #a7aeb7;
+  --accent: #0c5c59; --accent-strong: #084441; --accent-soft: rgba(12, 92, 89, 0.10);
+  --accent2: #b5651d; --accent2-soft: rgba(181, 101, 29, 0.12);
+  --on-accent: #fbfaf6; --on-correct: #fbfaf6; --on-wrong: #fbfaf6;
+  --correct: #1f7a4d; --correct-strong: #17603b;
+  --wrong: #b23b2b; --wrong-strong: #8f2c20;
+  --blue: #0c5c59; --blue-strong: #084441; --cbt: #0c5c59; --cbt-done: #1f7a4d;
+  --tint-correct-text: #0f5a39; --tint-wrong-text: #7d2418;
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 10px; --shadow-card: none;
+  --font-ui: "Atkinson Hyperlegible", system-ui, sans-serif;
+  color-scheme: light;
+}
+:root[data-theme="dark"], :root[data-theme="darkv3"], :root[data-theme="light"], :root[data-theme="lightv3"] { overflow-x: clip; }
+
+:root[data-theme="dark"] body, :root[data-theme="darkv3"] body, :root[data-theme="light"] body, :root[data-theme="lightv3"] body {
+  color: var(--text); background: var(--bg); background-image: none;
+  font-family: var(--font-ui); line-height: 1.55;
+}
+
+:root[data-theme="dark"] body *, :root[data-theme="darkv3"] body *, :root[data-theme="light"] body *, :root[data-theme="lightv3"] body * {
+  background-image: none; box-shadow: none; text-shadow: none;
+  text-transform: none; letter-spacing: normal; font-family: inherit;
+  transition-property: color, background-color, border-color;
+  transition-duration: 120ms; transition-timing-function: ease-out;
+}
+:root[data-theme="dark"] body h1, :root[data-theme="darkv3"] body h1, :root[data-theme="light"] body h1, :root[data-theme="lightv3"] body h1, :root[data-theme="dark"] body h2, :root[data-theme="darkv3"] body h2, :root[data-theme="light"] body h2, :root[data-theme="lightv3"] body h2, :root[data-theme="dark"] body h3, :root[data-theme="darkv3"] body h3, :root[data-theme="light"] body h3, :root[data-theme="lightv3"] body h3 { font-weight: 700; letter-spacing: -0.01em; color: var(--text); text-wrap: balance; }
+
+:root[data-theme="dark"] body .headerZone::before, :root[data-theme="darkv3"] body .headerZone::before, :root[data-theme="light"] body .headerZone::before, :root[data-theme="lightv3"] body .headerZone::before { background: var(--accent); }
+:root[data-theme="dark"] body .pillBtn.active, :root[data-theme="darkv3"] body .pillBtn.active, :root[data-theme="light"] body .pillBtn.active, :root[data-theme="lightv3"] body .pillBtn.active, :root[data-theme="dark"] body .nextBtn, :root[data-theme="darkv3"] body .nextBtn, :root[data-theme="light"] body .nextBtn, :root[data-theme="lightv3"] body .nextBtn, :root[data-theme="dark"] body .restartBtn, :root[data-theme="darkv3"] body .restartBtn, :root[data-theme="light"] body .restartBtn, :root[data-theme="lightv3"] body .restartBtn { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+:root[data-theme="dark"] body .progressFill, :root[data-theme="darkv3"] body .progressFill, :root[data-theme="light"] body .progressFill, :root[data-theme="lightv3"] body .progressFill { background: var(--accent); color: var(--on-accent); }
+:root[data-theme="dark"] body .doneBanner, :root[data-theme="darkv3"] body .doneBanner, :root[data-theme="light"] body .doneBanner, :root[data-theme="lightv3"] body .doneBanner { background: var(--accent-soft); }
+:root[data-theme="dark"] body .letter.correct, :root[data-theme="darkv3"] body .letter.correct, :root[data-theme="light"] body .letter.correct, :root[data-theme="lightv3"] body .letter.correct { background: var(--correct); border-color: var(--correct); color: var(--on-correct); }
+:root[data-theme="dark"] body .letter.wrong, :root[data-theme="darkv3"] body .letter.wrong, :root[data-theme="light"] body .letter.wrong, :root[data-theme="lightv3"] body .letter.wrong { background: var(--wrong); border-color: var(--wrong); color: var(--on-wrong); }
+:root[data-theme="dark"] body .scoreHero, :root[data-theme="darkv3"] body .scoreHero, :root[data-theme="light"] body .scoreHero, :root[data-theme="lightv3"] body .scoreHero { background: var(--card); color: var(--text); }
+:root[data-theme="dark"] body .themeModeOption.active, :root[data-theme="darkv3"] body .themeModeOption.active, :root[data-theme="light"] body .themeModeOption.active, :root[data-theme="lightv3"] body .themeModeOption.active { background: var(--accent-soft); border-color: var(--accent); }
+
+:root[data-theme="dark"] body button, :root[data-theme="darkv3"] body button, :root[data-theme="light"] body button, :root[data-theme="lightv3"] body button, :root[data-theme="dark"] body [class*="Btn"], :root[data-theme="darkv3"] body [class*="Btn"], :root[data-theme="light"] body [class*="Btn"], :root[data-theme="lightv3"] body [class*="Btn"], :root[data-theme="dark"] body [class*="Badge"], :root[data-theme="darkv3"] body [class*="Badge"], :root[data-theme="light"] body [class*="Badge"], :root[data-theme="lightv3"] body [class*="Badge"], :root[data-theme="dark"] body [class*="chip" i], :root[data-theme="darkv3"] body [class*="chip" i], :root[data-theme="light"] body [class*="chip" i], :root[data-theme="lightv3"] body [class*="chip" i], :root[data-theme="dark"] body .option, :root[data-theme="darkv3"] body .option, :root[data-theme="light"] body .option, :root[data-theme="lightv3"] body .option, :root[data-theme="dark"] body .letter, :root[data-theme="darkv3"] body .letter, :root[data-theme="light"] body .letter, :root[data-theme="lightv3"] body .letter { border-radius: var(--radius-md); }
+:root[data-theme="dark"] body [class*="card" i], :root[data-theme="darkv3"] body [class*="card" i], :root[data-theme="light"] body [class*="card" i], :root[data-theme="lightv3"] body [class*="card" i] { border-radius: var(--radius-lg); }
+:root[data-theme="dark"] body .progressTrack, :root[data-theme="darkv3"] body .progressTrack, :root[data-theme="light"] body .progressTrack, :root[data-theme="lightv3"] body .progressTrack, :root[data-theme="dark"] body .progressFill, :root[data-theme="darkv3"] body .progressFill, :root[data-theme="light"] body .progressFill, :root[data-theme="lightv3"] body .progressFill, :root[data-theme="dark"] body .timerTrack, :root[data-theme="darkv3"] body .timerTrack, :root[data-theme="light"] body .timerTrack, :root[data-theme="lightv3"] body .timerTrack { border-radius: 3px; }
+
+:root[data-theme="dark"] body button:active:not(:disabled), :root[data-theme="darkv3"] body button:active:not(:disabled), :root[data-theme="light"] body button:active:not(:disabled), :root[data-theme="lightv3"] body button:active:not(:disabled) { background-color: var(--card-soft); }
+:root[data-theme="dark"] body .pillBtn.active:active, :root[data-theme="darkv3"] body .pillBtn.active:active, :root[data-theme="light"] body .pillBtn.active:active, :root[data-theme="lightv3"] body .pillBtn.active:active, :root[data-theme="dark"] body .nextBtn:active, :root[data-theme="darkv3"] body .nextBtn:active, :root[data-theme="light"] body .nextBtn:active, :root[data-theme="lightv3"] body .nextBtn:active, :root[data-theme="dark"] body .restartBtn:active, :root[data-theme="darkv3"] body .restartBtn:active, :root[data-theme="light"] body .restartBtn:active, :root[data-theme="lightv3"] body .restartBtn:active { background: var(--accent-strong); border-color: var(--accent-strong); }
+
+:root[data-theme="dark"] body :focus-visible, :root[data-theme="darkv3"] body :focus-visible, :root[data-theme="light"] body :focus-visible, :root[data-theme="lightv3"] body :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="dark"] body *, :root[data-theme="darkv3"] body *, :root[data-theme="light"] body *, :root[data-theme="lightv3"] body * { animation: none !important; transition: none !important; }
+}
+
+/* Skin: identitas dipertahankan, efek vibe dibuang (!important karena aturan skin spesifik) */
+body.p5, body.sxf, body.doksli, body.koceng, body.capy { background-image: none !important; }
+body.p5 *, body.sxf *, body.doksli *, body.koceng *, body.capy *, body.p5 *::before, body.sxf *::before, body.doksli *::before, body.koceng *::before, body.capy *::before, body.p5 *::after, body.sxf *::after, body.doksli *::after, body.koceng *::after, body.capy *::after {
+  background-image: none !important;
+  transition-property: color, background-color, border-color !important;
+  letter-spacing: normal !important;
+}
+body.sxf *, body.doksli *, body.koceng *, body.capy *, body.sxf h1, body.sxf .appTitle { text-transform: none !important; }
+body.sxf h1, body.sxf .appTitle { color: var(--text) !important; text-shadow: none !important; }
