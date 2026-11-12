@@ -9,8 +9,8 @@ function formatDateShort(iso) {
 const THEME_OPTIONS = [
   { value: "light", icon: svgIcon("sun"), label: "Terang" },
   { value: "dark", icon: svgIcon("moon"), label: "Gelap" },
-  { value: "darkv2", icon: svgIcon("layers"), label: "Gelap v2" },
-  { value: "lightv2", icon: svgIcon("contrast"), label: "Terang v2" },
+  { value: "darkv2", icon: svgIcon("bulb"), label: "Gelap v2" },
+  { value: "lightv2", icon: svgIcon("star"), label: "Terang v2" },
   { value: "p5", icon: '<img src="./favicon.ico" style="width:16px;height:16px;vertical-align:middle;image-rendering:pixelated;">', label: "Persona 5" },
   { value: "doksli", icon: svgIcon("document"), label: "Dokumen Asli (Doksli)" },
   { value: "koceng", icon: svgIcon("paw"), label: "Koceng" },
@@ -27,6 +27,7 @@ function renderSettingsCard() {
       <div class="settingsRow">
         <div class="settingsRowText">
           <span class="settingsRowTitle">${svgIcon("gamepad")} Multiplayer</span>
+          <span class="settingsRowDesc">Main bareng: masukkan kode room dari host</span>
         </div>
         <button class="themeModeToggle" id="mpOpenBtn" aria-label="Buka multiplayer">
           <span class="themeModeChevron">\u203A</span>
@@ -36,6 +37,7 @@ function renderSettingsCard() {
       <div class="settingsRow">
         <div class="settingsRowText">
           <span class="settingsRowTitle themeModeTitle">${current.icon} Mode UI: ${current.label}</span>
+          <span class="settingsRowDesc">Pilih tampilan!</span>
         </div>
         <button class="themeModeToggle" id="themeModeToggleBtn" aria-expanded="${themeMenuOpen}" aria-label="Pilih mode UI">
           <span class="themeModeChevron${themeMenuOpen ? " open" : ""}">${svgIcon("chevron-down")}</span>
@@ -54,6 +56,7 @@ function renderSettingsCard() {
       <div class="settingsRow settingsRow-noBorder">
         <div class="settingsRowText">
           <span class="settingsRowTitle">${svgIcon("speaker")} Volume Suara</span>
+          <span class="settingsRowDesc">Atur kerasnya suara pas jawaban benar/salah</span>
         </div>
       </div>
       <div class="volumeSliderRow">

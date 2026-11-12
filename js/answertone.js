@@ -185,7 +185,7 @@ function renderAnswertoneCard() {
         <div class="settingsRow atHead">
           <div class="settingsRowText">
             <span class="settingsRowTitle">${svgIcon("music")} Answertone</span>
-            <span class="settingsRowDesc">Aktif: ${onCount} dari ${items.length}</span>
+            <span class="settingsRowDesc">Suara yang hanya keluar saat jawaban terjawab. Aktif: ${onCount} dari ${items.length}.</span>
           </div>
           <button class="themeModeToggle" id="atToggleBtn" aria-expanded="${answertoneOpen}" aria-label="Buka daftar Answertone">
             <span class="themeModeChevron${answertoneOpen ? " open" : ""}">${svgIcon("chevron-down")}</span>

@@ -9,8 +9,6 @@ const ICON_PATHS = {
   "chevron-down": '<path d="M6 9.5l6 6 6-6"/>',
   "chevron-left": '<path d="M14.5 6l-6 6 6 6"/>',
   "chevron-right": '<path d="M9.5 6l6 6-6 6"/>',
-  layers: '<path d="M12 4 3.5 8.5 12 13l8.5-4.5z"/><path d="M3.5 12.5 12 17l8.5-4.5"/>',
-  contrast: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" stroke="none"/>',
   award: '<circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 21l5-2.6 5 2.6-1.5-7.5"/>',
   pen: '<path d="M4 20l1-4.2L15.6 5.2a2.1 2.1 0 0 1 3 3L8 18.8z"/><path d="M13.8 7l3.2 3.2"/>',
   key: '<circle cx="8" cy="12" r="3.5"/><path d="M11.5 12H20M17 12v3.2M14 12v2.4"/>',

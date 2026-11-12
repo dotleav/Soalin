@@ -193,14 +193,13 @@ function setVolume(v) {
 }
 
 // ── Tema (dark/light/p5) ──────────────────────────────────────────────────
-const THEME_VALUES = ["dark", "light", "p5", "sxf", "doksli", "koceng", "capy", "darkv2", "lightv2", "darkv3", "lightv3"];
+const THEME_VALUES = ["dark", "light", "p5", "sxf", "doksli", "koceng", "capy", "darkv2", "lightv2"];
 let theme = THEME_VALUES.includes(localStorage.getItem(THEME_KEY)) ? localStorage.getItem(THEME_KEY) : "dark";
 function setTheme(t) {
   theme = THEME_VALUES.includes(t) ? t : "dark";
   try { localStorage.setItem(THEME_KEY, theme); } catch { /* noop */ }
 }
 function syncThemeClass() {
-  document.documentElement.dataset.theme = theme;
   document.body.classList.toggle("light", theme === "light");
   document.body.classList.toggle("p5", theme === "p5");
   document.body.classList.toggle("sxf", theme === "sxf");
@@ -209,8 +208,6 @@ function syncThemeClass() {
   document.body.classList.toggle("capy", theme === "capy");
   document.body.classList.toggle("darkv2", theme === "darkv2");
   document.body.classList.toggle("lightv2", theme === "lightv2");
-  document.body.classList.toggle("darkv3", theme === "darkv3");
-  document.body.classList.toggle("lightv3", theme === "lightv3");
 }
 
 // ── P5 Mode: Ransom/cutout letter effect ──────────────────────────────────

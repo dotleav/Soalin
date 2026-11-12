@@ -92,7 +92,6 @@
 
   /* Collapsed state: no bar at all, just the floating triangle button */
   .collapsedToggleWrap { display: inline-block; padding: 6px 0 6px 16px; }
-  html body .collapsedToggleWrap .hideToggleBtn { opacity: 1; color: var(--text); border-color: var(--accent); background: var(--card); }
 
   .muteBtn {
     background: none;

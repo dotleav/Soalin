@@ -51,6 +51,42 @@
   }
 
   /* ── Mode Terang — semua komponen dipakai lewat var(...), jadi cukup timpa token-nya di sini ── */
+  body.light {
+    --bg: #fbf7ff;
+    --bg-alt: #f4eefc;
+    --card: #ffffff;
+    --card-soft: #f7f1ff;
+    --border: #e3d7f7;
+    --border-light: #eee5fa;
+    --text: #241a3f;
+    --text-secondary: #4b3f72;
+    --muted: #7c6da3;
+    --muted2: #9689b8;
+    --muted3: #beb0d9;
+
+    --accent: #d98600;
+    --accent-strong: #b96f00;
+    --accent-soft: #d9860020;
+    --accent2: #d43d76;
+    --accent2-soft: #d43d7618;
+
+    --correct: #17a06a;
+    --correct-strong: #0d8a58;
+    --wrong: #d6453c;
+    --wrong-strong: #b93227;
+    --blue: #2f7fd6;
+    --blue-strong: #1f66b3;
+
+    --tint-correct-text: #0d6b47;
+    --tint-wrong-text: #a3271f;
+
+    --shadow-card: 0 3px 0 rgba(70, 50, 110, 0.1);
+
+    background:
+      radial-gradient(600px 320px at 12% -8%, #d9860018, transparent 60%),
+      radial-gradient(560px 340px at 110% 12%, #d43d7614, transparent 55%),
+      var(--bg);
+  }
 
   /* Mode Koceng — krem hangat + oranye, stiker meme kucing random (images/theme/koceng) */
   body.koceng {
