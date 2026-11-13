@@ -33,9 +33,6 @@ function answertoneDefault(item) {
 function answertoneGet(item) {
   return { ...answertoneDefault(item), ...(answertoneSettings[item.id] || {}) };
 }
-function answertoneAllSelected() {
-  return soundCatalog.length > 0 && soundCatalog.every((s) => answertoneGet(s).on);
-}
 function answertoneSet(id, patch) {
   answertoneSettings[id] = { ...(answertoneSettings[id] || {}), ...patch };
   answertoneSave();
@@ -165,6 +162,8 @@ function answertonePreview(id) {
 // ── Kartu Answertone (di bawah Pengaturan Volume Suara) ───────────────────
 function renderAnswertoneCard() {
   const items = [...soundCatalog].sort((a, b) => a.name.localeCompare(b.name, "id"));
+  const onCount = items.filter((s) => answertoneGet(s).on).length;
+  const allSelected = items.length > 0 && onCount === items.length;
   const rows = items.map((s) => {
     const cfg = answertoneGet(s);
     const id = answertoneAttr(s.id);
@@ -195,7 +194,7 @@ function renderAnswertoneCard() {
         ${answertoneOpen ? `
         <div class="atBody">
           <div class="atBulk">
-            <button class="atBulkBtn" data-at-bulk>${answertoneAllSelected() ? "Unsellect" : "Select"}</button>
+            <button class="atBulkBtn" data-at-bulk="${allSelected ? "none" : "all"}">${allSelected ? "Unselect all" : "Select all"}</button>
             <button class="atBulkBtn" id="atAddBtn">+ Custom</button>
             <input type="file" id="atFile" accept="audio/*" hidden>
           </div>
@@ -218,7 +217,7 @@ function attachAnswertoneHandlers() {
   card.querySelectorAll("[data-at-play]").forEach((el) => el.addEventListener("click", () => answertonePreview(el.dataset.atPlay)));
   card.querySelectorAll("[data-at-del]").forEach((el) => el.addEventListener("click", () => answertoneDelete(el.dataset.atDel)));
   card.querySelectorAll("[data-at-bulk]").forEach((el) => el.addEventListener("click", () => {
-    const on = !answertoneAllSelected();
+    const on = el.dataset.atBulk === "all";
     soundCatalog.forEach((s) => answertoneSet(s.id, { on }));
     render();
   }));

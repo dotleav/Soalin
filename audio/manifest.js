@@ -1,4 +1,4 @@
-// File ini di-GENERATE OTOMATIS oleh scripts/generate-audio-manifest.js
+// File ini di-GENERATE OTOMATIS oleh scripts/generate-audio-manifest.cjs
 // JANGAN diedit manual — tiap kali nambah/hapus/rename file di
 // audio/benar/ atau audio/salah/, jalankan ulang: npm run audio-manifest
 // (di GitHub, workflow .github/workflows/audio-manifest.yml menjalankannya otomatis saat push)

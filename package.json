@@ -5,8 +5,5 @@
   "type": "module",
   "scripts": {
     "audio-manifest": "node scripts/generate-audio-manifest.cjs"
-  },
-  "dependencies": {
-    "sharp": "^0.33.5"
   }
 }

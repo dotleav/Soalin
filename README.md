@@ -15,5 +15,12 @@ Quiz app statis untuk belajar dengan soal custom.
 
 ## Pengembangan
 
-- `npm install` hanya diperlukan untuk `npm run audio-manifest`.
+- `npm run audio-manifest` tidak perlu `npm install` (tidak ada dependency).
+- Tes parser: `node --test test/convert.test.cjs`.
 - Setiap kali mengubah file, naikkan nama cache di `sw.js` supaya browser mengambil versi baru.
+
+## Firebase
+
+- Rules: `firebase/database.rules.json`.
+- Fungsi pembersih room (hapus room lebih dari 24 jam): folder `functions/`.
+- Deploy: `firebase deploy --only database,functions` (fungsi butuh paket Blaze).

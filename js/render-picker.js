@@ -76,7 +76,7 @@ function renderCustomCard() {
         <div class="customRow">
           <button class="packageItem${active ? " active" : ""}" data-pkg="${escapeAttr(id)}">
             <span class="pkgTitle">${escapeHtml(rec.title)}</span>
-            <span class="pkgMeta">${rec.questions.length} soal \u00B7 ${formatDateShort(rec.savedAt)}</span>
+            <span class="pkgMeta">${rec.count} soal \u00B7 ${formatDateShort(rec.savedAt)}</span>
           </button>
           <button class="resetBtn customDelBtn" data-del-custom="${escapeAttr(rec.id)}" title="Hapus kuis">${svgIcon("trash")}</button>
         </div>`;
@@ -142,7 +142,7 @@ function renderPickerScreen() {
   html += `</div>`;
   html += renderSettingsCard();
   if (allQuestions.length) {
-    html += `<button class="pickerCloseBtn iconBtn" id="pickerCloseBtn" title="Kembali ke paket" aria-label="Kembali ke paket">${svgIcon("chevron-left")} <span class="lbl">Kembali ke paket</span></button>`;
+    html += `<button class="pickerCloseBtn iconBtn" id="pickerCloseBtn" title="Kembali ke paket saat ini" aria-label="Kembali ke paket saat ini">${svgIcon("chevron-left")} <span class="lbl">Kembali ke paket saat ini</span></button>`;
   }
   html += `</main>`;
   return html;

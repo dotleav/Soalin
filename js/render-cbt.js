@@ -152,7 +152,7 @@ function renderCbtIsianCard(q, qNum, value, disabled) {
         ${imgs.length > 0 ? `<span class="imgBadge">${svgIcon("image")} Bergambar</span>` : ""}
       </div>
       <p class="qText"><span class="qNum mono">${qNum}.</span>${escapeHtml(q.question)}</p>
-      ${imgs.map(src => `<img class="qImg" src="${src}" alt="gambar soal">`).join("")}
+      ${imgs.map(src => `<img class="qImg" src="${escapeAttr(src)}" alt="gambar soal">`).join("")}
       <textarea class="cbtIsianInput" rows="3" placeholder="Ketik jawabanmu di sini\u2026 (boleh diganti sebelum Submit)" ${disabled ? "disabled" : ""}>${escapeHtml(v)}</textarea>
     </div>`;
 }

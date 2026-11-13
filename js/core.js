@@ -40,7 +40,7 @@ function escapeHtml(str) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
-function escapeAttr(str) { return escapeHtml(str); }
+function escapeAttr(str) { return escapeHtml(str).replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
 
 // ── Audio (benar/salah) ──────────────────────────────────────────────────
 // Suara bawaan: taruh file di audio/benar/ dan audio/salah/, lalu jalankan
