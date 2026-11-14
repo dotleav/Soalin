@@ -41,6 +41,7 @@
 .modeCaption b { color: var(--text); }
 .modeTile.active .modeCaption { color: var(--mc); font-weight: 700; }
 .modeTile.active .modeCaption b { color: var(--mc); }
+body .modeTile[data-diff="cbt"].active .modeCaption { color: var(--text); }
 .modeBadge {
   position: absolute; top: 0; right: 0; z-index: 2;
   padding: 3px 8px; border-radius: 999px;
@@ -160,6 +161,7 @@ body.sxf .modeBadge {
 body.sxf .modeCaption b { color: #6b3050; }
 body.sxf .modeTile.active .modeCaption { color: #e8557a; }
 body.sxf .modeTile.active .modeCaption b { color: #e8557a; }
+body.sxf .modeTile[data-diff="cbt"].active .modeCaption { color: var(--text); }
 body.sxf .cbtTimer, body.sxf .cbtArrow { border-radius: 999px; }
 body.sxf .cbtNum { background: #fff; color: #3d1a2e; border-color: #f7c1da; }
 body.sxf .cbtNum.done { background: #7ed9b6; color: #1f4d3f; border-color: #7ed9b6; }

@@ -57,7 +57,7 @@ function renderCbtTimeBar() {
   return `
     <div class="cbtTimeCard">
       <div class="cbtTimeHead">
-        <span class="sectionLabel cbtTimeTitle">Batas waktu satu paket</span>
+        <span class="sectionLabel cbtTimeTitle">Batas waktu</span>
         <span class="cbtTimeVal mono" id="cbtTimeVal">${cbtFmtDurasi(cbtTimeLimitSec)}</span>
       </div>
       <div class="cbtTimeRow">
@@ -67,7 +67,7 @@ function renderCbtTimeBar() {
           <span>menit</span>
         </label>
       </div>
-      <p class="cbtTimeHint">Default 2 jam. Ini batas total untuk mengerjakan paket: waktu tidak memaksa jawaban dan tidak menandai salah.</p>
+      <p class="cbtTimeHint">Default 2 jam.</p>
     </div>`;
 }
 function cbtSetTimeFromInput(src) {
