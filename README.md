@@ -17,6 +17,7 @@ Quiz app statis untuk belajar dengan soal custom.
 
 - `npm run audio-manifest` tidak perlu `npm install` (tidak ada dependency).
 - Tes parser: `node --test test/convert.test.cjs`.
+- Cek drift salinan Android: `node scripts/check-android-drift.cjs`.
 - Setiap kali mengubah file, naikkan nama cache di `sw.js` supaya browser mengambil versi baru.
 
 ## Firebase
