@@ -17,10 +17,11 @@ const ctx = {
   console, document: doc, localStorage: { getItem() { return null; }, setItem() {}, removeItem() {} },
   confirm: () => true, render: () => {}, Date, Math, JSON, Set, Map, Promise, setTimeout, clearTimeout, setInterval, clearInterval,
   addEventListener() {}, navigator: {}, writes,
+  theme: "dark", _dkOn: () => false, // dipakai renderQuestionCard (kartu soal bersama)
 };
 ctx.window = ctx;
 vm.createContext(ctx);
-for (const f of ["core.js", "state.js", "icons.js", "render-cbt.js", "multiplayer.js", "render-multiplayer.js"]) {
+for (const f of ["core.js", "state.js", "icons.js", "render-cards.js", "render-cbt.js", "multiplayer.js", "render-multiplayer.js"]) {
   vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), ctx, { filename: f });
 }
 // Database palsu: mencatat semua tulisan. Room dianggap belum ada (get -> exists false).
@@ -62,7 +63,7 @@ test("tampilan pemain: 3 nomor soal, tombol Selesai, timer", () => {
   setRoom(); const h = run("renderMpCbtPlaying()");
   assert.strictEqual((h.match(/class="cbtNum/g) || []).length, 3);
   assert.ok(h.includes('data-mp-act="cbtdone"'));
-  assert.ok(h.includes("mpTimer"));
+  assert.ok(h.includes("cbtTimerNum")); // timer CBT: kartu waktu paket
 });
 test("pemain sudah Selesai: opsi terkunci, tanpa tombol Selesai", () => {
   setRoom({ players: { u1: { name: "Andi", done: true } } });

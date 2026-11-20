@@ -94,3 +94,12 @@ test("kuis yang gagal disimpan tidak masuk indeks (hanya ada di sesi)", async ()
   await run("saveCustomIndex()");
   assert.equal(store.get("cqindex").some((m) => m.id === "tmp"), false);
 });
+
+test("hapus banyak kuis sekaligus: semua record terhapus, indeks ikut berkurang", async () => {
+  seedLegacy(); await run("loadCustom()");
+  await run("deleteCustoms(['q1', 'q2', 'q3'])");
+  for (const id of ["q1", "q2", "q3"]) assert.equal(store.has("cq:" + id), false);
+  const idx = store.get("cqindex");
+  assert.equal(idx.length, 37);
+  assert.equal(idx.some((m) => ["q1", "q2", "q3"].includes(m.id)), false);
+});

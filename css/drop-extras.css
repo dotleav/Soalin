@@ -16,3 +16,15 @@
 .customRow .packageItem { flex: 1; min-width: 0; }
 .customDelBtn { flex: none; padding: 0 10px; }
 .dropMsg { white-space: pre-line; }
+
+/* Mode pilih banyak kuis custom (tekan tahan baris): kotak centang + sorot baris terpilih. */
+.customRow .packageItem { position: relative; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.selBox {
+  position: absolute; left: 8px; top: 50%; transform: translateY(-50%); pointer-events: none;
+  width: 1.1em; height: 1.1em; display: inline-flex; align-items: center; justify-content: center;
+  border: 2px solid var(--muted2, var(--muted)); border-radius: 4px; color: var(--accent); font-size: 0.8rem;
+}
+.customRow.picked .selBox { border-color: var(--accent); background: var(--accent-soft); }
+.customRow.picked .packageItem { background: var(--accent-soft); }
+.customSelBar { flex-wrap: wrap; }
+#customSelDelBtn:disabled { opacity: 0.45; cursor: default; }
