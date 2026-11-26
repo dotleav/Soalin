@@ -1,6 +1,6 @@
 // ── AI Builder: unggah file → rekonstruksi soal (file soal) atau buat soal dari materi ──
 // Semua panggilan AI lewat Cloud Function aiChat (kunci Classai hanya di server).
-const AI_ENDPOINT = "https://soalin-ai.whyutakethisusername.workers.dev";
+const AI_ENDPOINT = "https://soalin.whyutakethisusername.workers.dev";
 const AI_W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 const AI_A = "http://schemas.openxmlformats.org/drawingml/2006/main";
 const AI_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
