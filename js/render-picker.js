@@ -101,6 +101,13 @@ function renderCustomCard() {
     <div class="categoryGroup">
       ${head}
       ${list}
+      <input type="file" id="customInput" accept=".docx,.pdf" multiple hidden>
+      <label class="dropZone" for="customInput">
+        <span class="dropIcon">${svgIcon("document")}</span>
+        <span class="dropTitle">Tambah kuis custom disini</span>
+        <span class="dropSub">Drag &amp; drop</span>
+        <span class="dropFormats"><code>.docx</code><code>.pdf</code></span>
+      </label>
       ${renderUploadPanel()}
       <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
       ${dropMsg ? `<div class="dropMsg">${markedMsgHtml(dropMsg)}</div>` : ""}

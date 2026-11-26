@@ -529,7 +529,7 @@ function renderUploadPanel() {
       </div>`).join("");
   return `
       <input type="file" id="docxInput" accept=".docx,.pdf" multiple hidden>
-      <label class="dropZone aiDropZone" for="docxInput">
+      <label class="dropZone aiDropZone" for="docxInput" data-drop="ai">
         <span class="dropIcon">${svgIcon("sparkle")}</span>
         <span class="dropTitle">Buat/perbaiki soal dengan AI disini</span>
         <span class="dropSub">Drag &amp; drop</span>
@@ -568,10 +568,11 @@ function renderSpecPanel(u) {
 
 // Delegasi klik / ganti file (panel dirender ulang, jadi tidak pakai listener per elemen).
 document.addEventListener("change", (e) => {
-  if (e.target.id !== "docxInput") return;
+  const run = { docxInput: handleUpload, customInput: handleDocx }[e.target.id];
+  if (!run) return;
   const files = [...e.target.files];
   e.target.value = "";
-  if (files.length) handleUpload(files);
+  if (files.length) run(files);
 });
 
 document.addEventListener("click", (e) => {

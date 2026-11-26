@@ -271,7 +271,10 @@ addEventListener("dragover", (e) => {
 addEventListener("drop", (e) => {
   e.preventDefault();
   document.body.classList.remove("dragging");
-  if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files);
+  if (!e.dataTransfer.files.length) return;
+  // Zona AI (data-drop="ai") → AI builder; selain itu → kuis custom biasa.
+  if (e.target.closest?.("[data-drop=ai]")) handleUpload(e.dataTransfer.files);
+  else handleDocx(e.dataTransfer.files);
 });
 
 // ── Init Mode Latihan dari localStorage ──────────────────────────────────
