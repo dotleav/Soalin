@@ -83,7 +83,7 @@ function renderCustomCard() {
             <span class="pkgTitle">${escapeHtml(rec.title)}</span>
             <span class="pkgMeta">${rec.count} soal \u00B7 ${formatDateShort(rec.savedAt)}</span>
           </button>
-          ${selecting ? "" : `<button class="resetBtn customDelBtn" data-del-custom="${escapeAttr(rec.id)}" title="Hapus kuis">${svgIcon("trash")}</button>`}
+          ${selecting ? "" : `<button class="resetBtn customDlBtn" data-dl-quiz="${escapeAttr(rec.id)}" title="Unduh .docx">${AI_DL_ICON}</button><button class="resetBtn customDelBtn" data-del-custom="${escapeAttr(rec.id)}" title="Hapus kuis">${svgIcon("trash")}</button>`}
         </div>`;
   }).join("");
   const head = selecting
@@ -100,13 +100,8 @@ function renderCustomCard() {
   return `
     <div class="categoryGroup">
       ${head}
-      <input type="file" id="docxInput" accept=".docx,.pdf" multiple hidden>
       ${list}
-      <label class="dropZone" for="docxInput">
-        <span class="dropIcon">${svgIcon("document")}</span>
-        <span class="dropTitle">Drag and drop</span>
-        <span class="dropFormats"><code>.docx</code><code>.pdf</code></span>
-      </label>
+      ${renderUploadPanel()}
       <a class="templateLink" href="https://drive.google.com/drive/folders/1WSxodjrD3jGzQKj0DBROVTUo7I5iBAun?usp=sharing" target="_blank" rel="noopener">Download template disini</a>
       ${dropMsg ? `<div class="dropMsg">${markedMsgHtml(dropMsg)}</div>` : ""}
     </div>`;
@@ -236,8 +231,6 @@ function attachPickerHandlers() {
   if (closeBtn) closeBtn.addEventListener("click", () => { customSelect = null; pickerOpen = false; render(); });
   attachAnswertoneHandlers();
 
-  const docxInput = document.getElementById("docxInput");
-  docxInput.addEventListener("change", (e) => handleDocx(e.target.files));
   app.querySelectorAll("[data-del-custom]").forEach((btn) => btn.addEventListener("click", () => deleteCustom(btn.dataset.delCustom)));
   // Tekan tahan (±500 ms) baris kuis custom → mode pilih banyak, kuis itu langsung terpilih.
   app.querySelectorAll(".customRow .packageItem[data-rec]").forEach((btn) => {

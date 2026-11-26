@@ -271,7 +271,7 @@ addEventListener("dragover", (e) => {
 addEventListener("drop", (e) => {
   e.preventDefault();
   document.body.classList.remove("dragging");
-  if (e.dataTransfer.files.length) handleDocx(e.dataTransfer.files);
+  if (e.dataTransfer.files.length) handleUpload(e.dataTransfer.files);
 });
 
 // ── Init Mode Latihan dari localStorage ──────────────────────────────────

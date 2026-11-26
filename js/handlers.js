@@ -192,7 +192,18 @@ function onOptionClick(qid, letter, btnEl) {
 }
 
 // ── Submit jawaban isian (delegasi, dipakai Latihan & Tentamen) ──────────
-function onIsianSubmit(qid, text) {
+async function onIsianSubmit(qid, text) {
+  const q = allQuestions.find((x) => x.id === qid);
+  if (!(text || "").trim() || isianBusyIds.has(qid)) return;
+  if (q && q.aiGrade) {
+    isianBusyIds.add(qid); render();
+    let v = null;
+    try { v = await gradeIsian(q, text.trim()); }
+    catch (e) { alert(`Penilaian AI gagal: ${e.message}\nCoba kirim lagi.`); }
+    isianBusyIds.delete(qid);
+    if (!v) { render(); return; }
+    setIsianVerdict(qid, v);
+  }
   if (quizMode === "biasa") {
     handleAnswerIsian(qid, text);
   } else if (quizMode === "tentamen" && tentamenState === "running" && qPhase === "answering") {

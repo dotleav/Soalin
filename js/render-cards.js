@@ -63,7 +63,7 @@ function renderIsianCard(q, qNum, answeredValue) {
     bodyHtml = `
       <div class="isianReveal">
         <div class="isianYourAnswer">
-          <div class="tag">${svgIcon("pen")} Jawaban kamu <span class="icon ok">${svgIcon("check")}</span> <span class="isianCorrectLabel">Benar</span></div>
+          <div class="tag">${svgIcon("pen")} Jawaban kamu ${isianVerdictTag(q)}</div>
           <p>${escapeHtml(answeredValue)}</p>
         </div>
         <div class="explanation">
@@ -74,6 +74,7 @@ function renderIsianCard(q, qNum, answeredValue) {
     `;
   } else {
     bodyHtml = `
+      ${isianBusyIds.has(q.id) ? `<div class="tapHint">${svgIcon("hourglass")} Menilai jawaban…</div>` : ""}
       <div class="isianInputRow">
         <textarea class="isianInput" data-qid="${escapeAttr(q.id)}" rows="2" placeholder="Ketik jawabanmu di sini…"></textarea>
         <button class="isianSubmitBtn" data-qid="${escapeAttr(q.id)}" title="Kirim jawaban" aria-label="Kirim jawaban">${svgIcon("chevron-right")}</button>
