@@ -23,7 +23,7 @@ exports.cleanupRooms = onSchedule("every 60 minutes", async () => {
 const CLASSAI_KEY = defineSecret("CLASSAI_KEY");
 const CLASSAI_URL = "https://router.classai.id/v1/chat/completions";
 const AI_MODEL = "claude-haiku-5.5"; // ganti kalau mau model lain, mis. claude-sonnet-5.5
-const ALLOWED_ORIGINS = ["https://dotleav.github.io", "http://localhost:8000", "http://127.0.0.1:8000"];
+const ALLOWED_ORIGINS = ["https://dotleav.github.io", "https://soalin-abcd.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000"];
 const MAX_INPUT_CHARS = 60000;
 const MAX_OUTPUT_TOKENS = 8000;
 
