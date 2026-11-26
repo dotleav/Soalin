@@ -1,0 +1,69 @@
+diff --git a/js/ai-builder.js b/js/ai-builder.js
+index 63294a9..c2be5a8 100644
+--- a/js/ai-builder.js
++++ b/js/ai-builder.js
+@@ -1,6 +1,6 @@
+ // ── AI Builder: unggah file → rekonstruksi soal (file soal) atau buat soal dari materi ──
+ // Semua panggilan AI lewat Cloud Function aiChat (kunci Classai hanya di server).
+-const AI_ENDPOINT = "https://asia-southeast1-soalin-multiplayer.cloudfunctions.net/aiChat";
++const AI_ENDPOINT = "https://soalin-ai.whyutakethisusername.workers.dev";
+ const AI_W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+ const AI_A = "http://schemas.openxmlformats.org/drawingml/2006/main";
+ const AI_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+diff --git a/worker/ai.js b/worker/ai.js
+new file mode 100644
+index 0000000..9474945
+--- /dev/null
++++ b/worker/ai.js
+@@ -0,0 +1,42 @@
++const CLASSAI_URL = "https://router.classai.id/v1/chat/completions";
++const AI_MODEL = "claude-haiku-5.5";
++const ALLOWED = ["https://dotleav.github.io", "https://soalin.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000"];
++
++export default {
++  async fetch(req, env) {
++    const origin = req.headers.get("origin") || "";
++    const cors = {
++      "Access-Control-Allow-Origin": origin,
++      "Access-Control-Allow-Methods": "POST, OPTIONS",
++      "Access-Control-Allow-Headers": "Content-Type",
++    };
++    const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
++
++    if (!ALLOWED.includes(origin)) return json({ error: "Origin tidak diizinkan." }, 403);
++    if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
++    if (req.method !== "POST") return json({ error: "Method tidak diizinkan." }, 405);
++
++    const { system = "", user = "", maxTokens = 4000 } = await req.json().catch(() => ({}));
++    if (typeof user !== "string" || !user.trim() || user.length > 60000 || typeof system !== "string") {
++      return json({ error: "Input tidak valid atau terlalu panjang." }, 400);
++    }
++
++    try {
++      const r = await fetch(CLASSAI_URL, {
++        method: "POST",
++        headers: { Authorization: `Bearer ${env.CLASSAI_KEY}`, "Content-Type": "application/json" },
++        body: JSON.stringify({
++          model: AI_MODEL,
++          messages: [...(system ? [{ role: "system", content: system }] : []), { role: "user", content: user }],
++          max_tokens: Math.min(Number(maxTokens) || 4000, 8000),
++          temperature: 0.2,
++        }),
++      });
++      const data = await r.json().catch(() => ({}));
++      if (!r.ok) return json({ error: data?.error?.message || `Router AI error ${r.status}` }, 502);
++      return json({ text: data?.choices?.[0]?.message?.content || "" });
++    } catch {
++      return json({ error: "Gagal menghubungi AI." }, 502);
++    }
++  },
++};
+diff --git a/wrangler.toml b/wrangler.toml
+new file mode 100644
+index 0000000..62cb3cd
+--- /dev/null
++++ b/wrangler.toml
+@@ -0,0 +1,3 @@
++name = "soalin-ai"
++main = "worker/ai.js"
++compatibility_date = "2025-09-01"
