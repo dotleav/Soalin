@@ -1,5 +1,5 @@
 // Network-first: selalu ambil versi terbaru, fallback ke cache kalau offline.
-const CACHE = "soalin-v8";
+const CACHE = "soalin-v9";
 
 self.addEventListener("install", () => self.skipWaiting());
 

@@ -16,6 +16,13 @@ const MCQ_MODES = {
 const GEN_LABEL = { "5": "Membuat soal 5 opsi", "4": "Membuat soal 4 opsi", "tf": "Membuat soal Benar-Salah", flash: "Membuat flashcards", isian: "Membuat soal isian" };
 const AI_DL_ICON = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14"/></svg>`;
 
+// Batas pemrosesan: tiap panggilan AI memegang beberapa soal utuh (tidak pernah terpotong di tengah soal).
+const RECON_BATCH = 8;      // maksimal soal per panggilan
+const RECON_CHARS = 7000;   // maksimal karakter per panggilan
+const RECON_CONC = 4;       // panggilan AI paralel
+const GEN_CAP = 30;         // maksimal soal yang dibuat dari materi
+const QSTART = /^(\d{1,3})(?:[.)]\s|\s*\|)/;  // baris pembuka soal: "12. ..." atau "12 | ..."
+
 let uploads = [];          // [{ id, name, kind: "soal"|"materi", ext, savedAt, blob }]
 let uploadSel = null;      // id file yang sedang dipilih
 let uploadsReady = null;   // promise: daftar upload sudah dibaca dari IndexedDB
@@ -132,8 +139,8 @@ function chunkLines(lines, max = 8000) {
 }
 
 // ── Prompt ────────────────────────────────────────────────────────────────
-function reconPrompt(chunk) {
-  return `Rekonstruksi soal ujian kedokteran berikut ke format kuis. Keluarkan SEMUA soal bernomor yang ada di teks. Jangan menambah atau membuang nomor, dan jangan membuat soal baru.
+function reconPrompt(chunk, nos) {
+  return `Rekonstruksi soal ujian kedokteran berikut ke format kuis. Keluarkan SETIAP soal dari nomor ${nos.join(", ")}, satu per satu, tanpa ada yang terlewat. Jangan menambah nomor lain, jangan membuang nomor, dan jangan membuat soal baru.
 
 ATURAN OPSI
 1. Soal dengan 3 opsi atau lebih: TIDAK rusak. Pertahankan opsi asli, lalu tambahkan opsi buatanmu sendiri sampai total 5 opsi (A–E).
@@ -162,12 +169,12 @@ ${chunk}`;
 
 const MCQ_STYLE = `Tulis setiap soal sebagai KASUS klinis singkat (vignette) dengan pertanyaan tentang diagnosis, pemeriksaan, tatalaksana, obat, mekanisme, atau langkah berikutnya. Jangan membuat pertanyaan hafalan, dan jangan memakai frasa "menurut materi".`;
 
-function mcqPrompt(chunk, mode) {
+function mcqPrompt(chunk, mode, q) {
   const m = MCQ_MODES[mode];
   const rule = m.tf
     ? `Buat pernyataan (bukan kasus) yang bisa benar atau salah. Opsi HANYA "A": "Benar" dan "B": "Salah". Kunci A atau B.`
     : `${MCQ_STYLE} Buat opsi ${m.letters.join(", ")}: satu kunci dan pengecoh yang masuk akal, setopik, serta setara panjang dan gayanya. Kunci tidak boleh ditandai dengan cara apa pun.`;
-  return `Buat maksimal 8 soal pilihan ganda dari materi berikut. ${rule}
+  return `Buat ${q} soal pilihan ganda dari materi berikut, tidak lebih. ${rule}
 Setiap opsi punya "penjelasanOpsi" singkat, dan soal punya "penjelasan" singkat.
 Format JSON: {"soal":[{"stem":"","opsi":{"A":""},"penjelasanOpsi":{"A":""},"kunci":"A","penjelasan":""}]}
 
@@ -175,13 +182,13 @@ MATERI:
 ${chunk}`;
 }
 
-const flashPrompt = (chunk) => `Buat maksimal 8 flashcard dari materi berikut. "depan" berisi istilah, konsep, atau pertanyaan singkat. "belakang" berisi definisi atau jawaban inti yang ringkas dengan terminologi baku.
+const flashPrompt = (chunk, q) => `Buat ${q} flashcard dari materi berikut, tidak lebih. "depan" berisi istilah, konsep, atau pertanyaan singkat. "belakang" berisi definisi atau jawaban inti yang ringkas dengan terminologi baku.
 Format JSON: {"kartu":[{"depan":"","belakang":""}]}
 
 MATERI:
 ${chunk}`;
 
-const isianPrompt = (chunk) => `Buat maksimal 8 soal isian singkat dari materi berikut. Setiap soal menanyakan konsep inti. "jawaban" berisi kunci jawaban yang inti dan ringkas (satu istilah atau satu kalimat pendek) dengan terminologi baku.
+const isianPrompt = (chunk, q) => `Buat ${q} soal isian singkat dari materi berikut, tidak lebih. Setiap soal menanyakan konsep inti. "jawaban" berisi kunci jawaban yang inti dan ringkas (satu istilah atau satu kalimat pendek) dengan terminologi baku.
 Format JSON: {"isian":[{"soal":"","jawaban":""}]}
 
 MATERI:
@@ -242,7 +249,7 @@ function reconBuild(soal, isian, images) {
     const stem = String(s.stem || "").trim();
     const m = s.rusak ? null : normMcq(s, LETTERS5);
     if (!m) {
-      broken.push({ id: `Q${no}`, category: "Soal Rusak", question: stem, questionImages: [], options: {}, optionExplanations: {}, answer: "", explanation: String(s.penjelasan || "").trim(), explanationImages: [], isBroken: true });
+      broken.push({ id: `Q${no}`, category: "Soal Rusak", question: stem, questionImages: (s.gambarSoal || []).map(imgRef).filter((x) => x !== null), options: {}, optionExplanations: {}, answer: "", explanation: String(s.penjelasan || "").trim(), explanationImages: [], isBroken: true });
       continue;
     }
     const imgs = (s.gambarSoal || []).map(imgRef).filter((x) => x !== null);
@@ -258,31 +265,124 @@ function reconBuild(soal, isian, images) {
   return { questions, blobs, nos, counts: { normal: normal.length, broken: broken.length, isian: isianQs.length } };
 }
 
-// ── Pemanggilan per bagian (paralel) ─────────────────────────────────────
+// ── Pemecahan soal per nomor, lalu pemanggilan AI per kelompok soal utuh ──
+// Blok soal = satu baris bernomor + semua baris sesudahnya sampai nomor berikutnya.
+// Soal tidak pernah terpotong di tengah, dan soal yang gagal tidak dibuang diam-diam.
+function splitQuestionBlocks(lines) {
+  const blocks = [], pre = [];
+  for (const l of lines) {
+    const m = l.match(QSTART);
+    if (m) blocks.push({ no: Number(m[1]), lines: [l] });
+    else if (blocks.length) blocks[blocks.length - 1].lines.push(l);
+    else pre.push(l);
+  }
+  if (blocks.length && pre.length) blocks[0].lines.unshift(...pre);
+  return blocks;
+}
+
+// Kelompokkan blok utuh: tiap kelompok maksimal maxQ soal dan maxChars karakter.
+function groupBlocks(blocks, maxQ = RECON_BATCH, maxChars = RECON_CHARS) {
+  const out = [];
+  let cur = [], len = 0;
+  for (const b of blocks) {
+    const size = b.lines.join("\n").length + 1;
+    if (cur.length && (cur.length >= maxQ || len + size > maxChars)) { out.push(cur); cur = []; len = 0; }
+    cur.push(b);
+    len += size;
+  }
+  if (cur.length) out.push(cur);
+  return out;
+}
+
+// Jalankan fn untuk tiap item, paling banyak `limit` sekaligus.
+async function poolRun(items, limit, fn) {
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      await fn(items[i], i);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+}
+
+// Satu panggilan AI untuk satu kelompok. Hanya nomor yang diminta yang diterima.
+async function reconBatchOnce(batch) {
+  const nos = [...new Set(batch.map((b) => b.no))];
+  const text = batch.map((b) => b.lines.join("\n")).join("\n");
+  const j = aiJson(await aiCall(AI_SYS_JSON, reconPrompt(text, nos), 8000));
+  const want = new Set(nos);
+  const keep = (arr) => (Array.isArray(arr) ? arr : []).filter((s) => want.has(Number(s.no)));
+  return { soal: keep(j.soal), isian: keep(j.isian) };
+}
+
 async function reconRun(dump, progress) {
-  const chunks = chunkLines(dump.lines, 8000);
-  if (chunks.length > 12) throw new Error(`File terlalu panjang (${chunks.length} bagian). Pecah file dulu.`);
-  const soal = [], isian = [];
-  let done = 0;
-  await Promise.all(chunks.map(async (c) => {
-    const j = aiJson(await aiCall(AI_SYS_JSON, reconPrompt(c), 8000));
-    soal.push(...(j.soal || []));
-    isian.push(...(j.isian || []));
-    progress(`Merekonstruksi bagian ${++done}/${chunks.length}…`);
+  const blocks = splitQuestionBlocks(dump.lines);
+  if (!blocks.length) throw new Error("Tidak ada nomor soal yang terbaca dari file ini.");
+  const soal = [], isian = [], got = new Set();
+  const take = (r) => {
+    for (const s of [...r.soal, ...r.isian]) got.add(Number(s.no));
+    soal.push(...r.soal);
+    isian.push(...r.isian);
+  };
+
+  const batches = groupBlocks(blocks);
+  let done = 0, failed = 0, firstErr = null;
+  progress(`Merekonstruksi bagian 0/${batches.length}…`);
+  await poolRun(batches, RECON_CONC, async (b) => {
+    try { take(await reconBatchOnce(b)); }
+    catch (e) { failed++; firstErr ??= e; }
+    progress(`Merekonstruksi bagian ${++done}/${batches.length}…`);
+  });
+  if (failed === batches.length) throw firstErr;
+
+  // Nomor yang belum kembali dari AI: ulangi dengan kelompok lebih kecil.
+  const missing = blocks.filter((b) => !got.has(b.no));
+  if (missing.length) {
+    progress(`Mengulang ${missing.length} soal yang belum terbaca…`);
+    await poolRun(groupBlocks(missing, 4, 5000), RECON_CONC, async (b) => {
+      try { take(await reconBatchOnce(b)); } catch { /* dihitung sebagai belum terbaca di bawah */ }
+    });
+  }
+
+  // Yang tetap tidak terbaca tidak dibuang: masuk sebagai soal rusak berisi teks aslinya.
+  const leftover = blocks.filter((b) => !got.has(b.no));
+  for (const b of leftover) {
+    const raw = b.lines.join("\n");
+    soal.push({
+      no: b.no,
+      stem: raw.replace(/\[\[IMG:\d+\]\]/g, "").split("\n").map((x) => x.trim()).filter(Boolean).join(" / "),
+      gambarSoal: [...raw.matchAll(/\[\[IMG:(\d+)\]\]/g)].map((m) => Number(m[1])),
+      rusak: true,
+      penjelasan: "Belum terbaca otomatis. Periksa teks soal asli.",
+    });
+  }
+  return { soal, isian, leftover: leftover.length };
+}
+
+// Bagi kuota (maks. GEN_CAP) merata ke seluruh materi. Kalau bagian lebih banyak dari kuota,
+// bagian yang dipakai diambil merata dari awal sampai akhir materi.
+function materiPlan(chunks, cap = GEN_CAP) {
+  if (!chunks.length) return [];
+  const n = Math.min(chunks.length, cap);
+  const base = Math.floor(cap / n), extra = cap % n;
+  return Array.from({ length: n }, (_, i) => ({
+    c: chunks[Math.floor((i * chunks.length) / n)],
+    q: base + (i < extra ? 1 : 0),
   }));
-  return { soal, isian };
 }
 
 async function materiRun(dump, mkPrompt, progress) {
   const all = chunkLines(dump.lines, 9000);
-  const chunks = all.slice(0, 6);
+  const plan = materiPlan(all);
   const parts = [];
   let done = 0;
-  await Promise.all(chunks.map(async (c, i) => {
-    parts[i] = aiJson(await aiCall(AI_SYS_JSON, mkPrompt(c), 6000));
-    progress(`Membuat soal ${++done}/${chunks.length}…`);
-  }));
-  return { parts: parts.filter(Boolean), truncated: all.length > 6 };
+  await poolRun(plan, RECON_CONC, async ({ c, q }, i) => {
+    try { parts[i] = aiJson(await aiCall(AI_SYS_JSON, mkPrompt(c, q), Math.min(8000, 400 * q + 800))); }
+    catch { /* bagian yang gagal dilewati; soal dari bagian lain tetap dipakai */ }
+    progress(`Membuat soal ${++done}/${plan.length}…`);
+  });
+  return { parts: parts.filter(Boolean), sampled: all.length > plan.length };
 }
 
 // ── Simpan kuis hasil AI sebagai Custom Quiz (memakai jalur IndexedDB yang sama dengan .docx) ──
@@ -302,20 +402,18 @@ async function jobRekon(u, progress) {
   const res = await reconRun(dump, progress);
   const built = reconBuild(res.soal, res.isian, dump.images);
   if (!built.questions.length) throw new Error("Tidak ada soal yang bisa dibaca dari file ini.");
-  const dumpNos = [...new Set(dump.lines.map((l) => l.match(/^(\d{1,3})(?:[.)]\s|\s*\|)/)?.[1]).filter(Boolean).map(Number))];
-  const missing = dumpNos.filter((n) => !built.nos.has(n));
   const rec = await saveBuiltQuiz(`${baseName(u.name)} (rekonstruksi)`, built.questions, built.blobs);
   const c = built.counts;
   const msg = `${c.normal} soal${c.broken ? ` + ${c.broken} soal rusak` : ""}${c.isian ? ` + ${c.isian} soal isian` : ""}.` +
-    (missing.length ? ` [warn] nomor tidak terbaca: ${missing.join(", ")}` : "");
+    (res.leftover ? ` [warn] ${res.leftover} soal belum terbaca otomatis, ditandai rusak.` : "");
   return { rec, msg };
 }
 
 // ── Job: buat soal dari materi ───────────────────────────────────────────
 async function jobMateri(u, kind, progress) {
   const dump = await dumpSource(await u.blob.arrayBuffer());
-  const mk = kind === "flash" ? flashPrompt : kind === "isian" ? isianPrompt : (c) => mcqPrompt(c, kind);
-  const { parts, truncated } = await materiRun(dump, mk, progress);
+  const mk = kind === "flash" ? flashPrompt : kind === "isian" ? isianPrompt : (c, q) => mcqPrompt(c, kind, q);
+  const { parts, sampled } = await materiRun(dump, mk, progress);
   const questions = [];
   const nextId = (p) => `${p}${questions.length + 1}`;
   for (const p of parts) {
@@ -336,10 +434,11 @@ async function jobMateri(u, kind, progress) {
       }
     }
   }
+  questions.splice(GEN_CAP);
   if (!questions.length) throw new Error("AI tidak menghasilkan soal dari materi ini.");
   const title = `${baseName(u.name)} — ${kind === "flash" ? "Flashcards" : kind === "isian" ? "Soal isian" : MCQ_MODES[kind].title}`;
   const rec = await saveBuiltQuiz(title, questions, []);
-  const msg = `${questions.length} soal dibuat.` + (truncated ? " [warn] Materi panjang: hanya 6 bagian pertama yang dibaca." : "");
+  const msg = `${questions.length} soal dibuat.` + (sampled ? " Soal diambil merata dari seluruh materi." : "");
   return { rec, msg };
 }
 
